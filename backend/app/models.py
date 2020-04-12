@@ -129,6 +129,7 @@ class BaseBouquet(models.Model):
     )
     reason = models.ManyToManyField(
         'app.Reason',
+        blank=True,
         verbose_name='Поводы',
     )
 

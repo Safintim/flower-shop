@@ -5,4 +5,5 @@ django-mptt==0.11.0
 django-nested-admin==3.2.4
 djangorestframework==3.11.0
 djangorestframework-filters==1.0.0.dev0
+django-cors-headers==3.2.1
 # wemake-python-styleguide==0.14.0
