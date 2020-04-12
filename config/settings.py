@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'app.apps.AppConfig',
     'nested_admin',
     'mptt',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
