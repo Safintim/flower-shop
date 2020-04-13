@@ -4,10 +4,12 @@ import { Badge } from 'react-bootstrap';
 
 const Cart = (props) => {
   return (<>
-    <a href="/">
-      <TiShoppingCart />
-      <Badge color="secondary">4</Badge>
-      <span> 100 ₽</span>
+    <a href="/" className="header-cart">
+      <span class="cart">
+        <span class="icon"><TiShoppingCart /></span>
+        <Badge className="cart-total">4</Badge>
+      </span>      
+      <span class="price">100 ₽</span>
     </a>
   </>);
 }

@@ -5,10 +5,10 @@ import Info from './Info';
 class Header extends Component {
   render() {
     return (
-      <div>
+      <header>
           <Navigation />
           <Info />
-      </div>
+      </header>
     );
   }
 }

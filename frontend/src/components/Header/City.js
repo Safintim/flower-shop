@@ -6,33 +6,54 @@ const City = (props) => {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);  
+  const handleShow = () => setShow(true);
+  props = {
+    ...props,
+    placeholder: "Введите название"
+  }
   return (<>
-    <Button variant="primary" onClick={handleShow}>
-      Launch demo modal
-    </Button>
+    <div className="header-city-title">
+      Город доставки
+    </div>
+    <div className="header-city-current" onClick={handleShow}>
+      <span>Казань</span>
+    </div>
 
-    <Modal show={show} onHide={handleClose} animation={false}>
+    <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
         <Modal.Title>Выберите город</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Search />
+        <Search {...props}/>
         <ul className="list">
-          <li className="col1">Test 1</li>
-          <li className="col1">Test 2</li>
-          <li className="col1">Test 3</li>
-          <li className="col1">Test 4</li>
-
-          <li className="col2">Test 5</li>
-          <li className="col2">Test 6</li>
-          <li className="col2">Test 7</li>
-          <li className="col2">Test 8</li>
-
-          <li className="col3">Test 9</li>
-          <li className="col3">Test 10</li>
-          <li className="col3">Test 11</li>
-          <li className="col3">Test 12</li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
+          <li><a href="/">Test 1</a></li>
         </ul>
 
       </Modal.Body>
