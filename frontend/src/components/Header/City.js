@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Modal } from 'react-bootstrap';
+import { Row, Modal, Col } from 'react-bootstrap';
 import { Search } from '../Common'
 
 const City = (props) => {
@@ -25,37 +25,11 @@ const City = (props) => {
       </Modal.Header>
       <Modal.Body>
         <Search {...props}/>
-        <ul className="list">
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-          <li><a href="/">Test 1</a></li>
-        </ul>
-
+        <Row>
+          <Col lg={4}>Казань</Col>
+          <Col lg={4}>Казань</Col>
+          <Col lg={4}>Казань</Col>
+        </Row>
       </Modal.Body>
     </Modal>
   </>);

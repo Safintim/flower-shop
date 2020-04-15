@@ -1,6 +1,7 @@
 import React from 'react';
-import Header from './components/Header'
-import { ControlledCarousel } from './components/Common'
+import Header from './components/Header';
+import Menu from './components/Menu';
+import { ControlledCarousel } from './components/Common';
 
 // class App extends Component {
 //   state = {
@@ -39,6 +40,7 @@ import { ControlledCarousel } from './components/Common'
 const App = (props) => {
   return (<>
     <Header />
+    <Menu />
     <ControlledCarousel />
   </>
   );

@@ -3,32 +3,6 @@ a {
   cursor: pointer;
 }
 
-.list {
-  flex-direction: column;
-  list-style: none;
-  flex-wrap: wrap;
-  height: 100vh;
-  display: flex;
-  padding: 0;
-  margin: 0;
-}
-  
-.list li {
-  border-bottom: 1px solid #fff;
-  border-right: 1px solid #fff;
-  display: list-item;
-
-  /* flex: 1 0 20%; */
-  padding-left: 10px;  
-  text-align: left;
-}
-
-.list li a {
-  font-size: 16px;
-  color: #222222;
-}
-
-
 .container {
   width: 100%;
   padding-right: 8px;
@@ -170,6 +144,72 @@ a {
   text-align: right;
 }
 
+.menu {
+  margin-bottom: 2px;
+}
+
+.menu .nav-link  {
+  margin-right: 10px;
+}
+.menu .menu-right-block {
+  float: right;
+  height: 100%;
+}
+.menu-right-block .menu-btn {
+  height: 50px;
+  float: left;
+  display: inline-block;
+  padding: 4px 0px;
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 15px;
+}
+
+ol.carousel-indicators li {
+  width: 100px;
+  height: 5px;
+}
+.carousel-control-next-icon {
+  width: 40px;
+  height: 40px;
+}
+.carousel-control-prev-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.modal-call-me-title {
+  margin: 10px 0 15px;
+  font-size: 32px;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.modal-call-me-form {
+  margin-bottom: 25px;
+}
+
+.modal-call-me-form form input {
+  display: block;
+  margin-bottom: 25px;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-bottom: 1px solid rgba(149, 152, 154, 0.3);
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  line-height: normal;
+}
+
+.modal-call-me-form form button {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 14px;
+  background: #E72551;
+  border: 1px solid #E72551;
+  color: #FFFFFF;
+  text-align: center;
+}
 
 @media (min-width: 576px) {
   .container {
