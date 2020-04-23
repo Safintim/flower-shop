@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin, Group
 from mptt.admin import MPTTModelAdmin
-
+from jet.admin import CompactInline
 import nested_admin
 
 from app import models
@@ -90,7 +90,7 @@ class FlowerAdmin(admin.ModelAdmin):
     list_filter = ('is_add_filter',)
 
 
-class FlowerInline(nested_admin.NestedStackedInline):
+class FlowerInline(nested_admin.NestedTabularInline):
     model = models.BouquetFlower
     extra = 0
 

@@ -113,6 +113,7 @@ class BaseBouquet(models.Model):
     )
     color = models.CharField(
         'Цвет',
+        choices=COLOR_CHOICE,
         max_length=6,
         blank=True,
         null=True,
@@ -120,6 +121,13 @@ class BaseBouquet(models.Model):
     )
     height = models.PositiveIntegerField('Высота', default=0)
     width = models.PositiveIntegerField('Ширина', default=0)
+
+    photo = models.ImageField(
+        'Фото',
+        upload_to='static/uploads/bouquets/',
+        blank=True,
+        null=True,
+    )
 
     category = TreeManyToManyField(
         'app.Category',

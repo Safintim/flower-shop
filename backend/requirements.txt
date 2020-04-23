@@ -6,4 +6,6 @@ django-nested-admin==3.2.4
 djangorestframework==3.11.0
 djangorestframework-filters==1.0.0.dev0
 django-cors-headers==3.2.1
+Pillow==7.1.1
+django-admin-thumbnails==0.2.5
 # wemake-python-styleguide==0.14.0
