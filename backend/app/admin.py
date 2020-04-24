@@ -95,9 +95,14 @@ class FlowerInline(nested_admin.NestedTabularInline):
     extra = 0
 
 
-class BouquetInline(nested_admin.NestedTabularInline):
+class FlowerCompactInline(CompactInline):
+    model = models.BouquetFlower
     extra = 0
-    model = models.Bouquet
+
+
+class ProductInline(nested_admin.NestedTabularInline):
+    extra = 0
+    model = models.Product
     inlines = (FlowerInline, )
 
 
@@ -113,16 +118,31 @@ class BaseBouquetAdmin(nested_admin.NestedModelAdmin):
 
     search_fields = ('title',)
     list_filter = ('is_active', 'color')
-    inlines = (BouquetInline, )
+    inlines = (ProductInline, )
 
 
-class OrderItemInline(nested_admin.NestedTabularInline):
+@admin.register(models.Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = list_display_links = (
+        'id',
+        'title',
+        'is_active',
+        'kind',
+        'price',
+    )
+
+    search_fields = ('title',)
+    list_filter = ('is_active', 'kind')
+    inlines = (FlowerCompactInline, )
+
+
+class OrderItemInline(CompactInline):
     extra = 0
     model = models.OrderItem
 
 
 @admin.register(models.Order)
-class OrderAdmin(nested_admin.NestedModelAdmin):
+class OrderAdmin(admin.ModelAdmin):
     list_display = list_display_links = (
         'id',
         'status',

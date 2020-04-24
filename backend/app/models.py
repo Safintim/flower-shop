@@ -107,6 +107,8 @@ class BaseBouquet(models.Model):
     is_new = models.BooleanField('Новика', default=False)
     is_hit = models.BooleanField('Хит', default=False)
     discount = models.FloatField('Скидка', default=0)
+    height = models.PositiveIntegerField('Высота', default=0)
+    width = models.PositiveIntegerField('Ширина', default=0)
     COLOR_CHOICE = (
         ('SOFT', 'Нежный'),
         ('BRIGHT', 'Яркий'),
@@ -119,9 +121,6 @@ class BaseBouquet(models.Model):
         null=True,
         default=None,
     )
-    height = models.PositiveIntegerField('Высота', default=0)
-    width = models.PositiveIntegerField('Ширина', default=0)
-
     photo = models.ImageField(
         'Фото',
         upload_to='static/uploads/bouquets/',
@@ -150,9 +149,14 @@ class BaseBouquet(models.Model):
         return self.title
 
 
-class Bouquet(models.Model):
+class Product(models.Model):
     title = models.CharField('Название', max_length=200)
     price = models.DecimalField('Цена', max_digits=10, decimal_places=2)
+    description = models.TextField('Описание', blank=True, null=True)
+    is_active = models.BooleanField('Активный', default=True)
+    is_new = models.BooleanField('Новика', default=False)
+    is_hit = models.BooleanField('Хит', default=False)
+    discount = models.FloatField('Скидка', default=0)
     SIZE_CHOICE = (
         ('SMALL', 'Маленький'),
         ('MEDIUM', 'Средний'),
@@ -162,23 +166,43 @@ class Bouquet(models.Model):
         'Размер',
         choices=SIZE_CHOICE,
         max_length=200,
-        default='MEDIUM',
+        null=True,
+        blank=True,
     )
-
+    KIND_CHOICE = (
+        ('PRESENT', 'Подарок'),
+        ('BOUQUET', 'Букет'),
+    )
+    kind = models.CharField(
+        'Тип продукта',
+        choices=KIND_CHOICE,
+        max_length=7,
+        default='BOUQUET',
+    )
+    photo = models.ImageField(
+        'Фото',
+        upload_to='static/uploads/bouquets/',
+        blank=True,
+        null=True,
+    )
     base = models.ForeignKey(
         'app.BaseBouquet',
         on_delete=models.CASCADE,
         verbose_name='Базовый букет',
+        null=True,
+        blank=True,
+
     )
     flowers = models.ManyToManyField(
         'app.Flower',
         through='app.BouquetFlower',
         verbose_name='Цветы',
+        blank=True
     )
 
     class Meta:
-        verbose_name = 'Букет'
-        verbose_name_plural = 'Букеты'
+        verbose_name = 'Продукт'
+        verbose_name_plural = 'Продукты'
         ordering = ('title', )
 
     def __str__(self):
@@ -193,7 +217,7 @@ class BouquetFlower(models.Model):
         verbose_name='Цветок',
     )
     bouquet = models.ForeignKey(
-        'app.Bouquet',
+        'app.Product',
         on_delete=models.CASCADE,
         verbose_name='Букет',
     )
@@ -311,7 +335,7 @@ class OrderItem(models.Model):
         verbose_name='Заказ',
     )
     product = models.ForeignKey(
-        'app.Bouquet',
+        'app.Product',
         on_delete=models.CASCADE,
         verbose_name='Товар',
     )
