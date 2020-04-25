@@ -1,3 +1,5 @@
+from django import forms
+from django.db import models as django_models
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin, Group
 from mptt.admin import MPTTModelAdmin
@@ -43,6 +45,7 @@ class CityAdmin(admin.ModelAdmin):
         'id',
         'title',
     )
+    search_fields = ('title',)
 
 
 @admin.register(models.Reason)
@@ -51,6 +54,8 @@ class ReasonAdmin(admin.ModelAdmin):
         'id',
         'title',
     )
+
+    search_fields = ('title',)
 
 
 @admin.register(models.Review)
@@ -83,11 +88,12 @@ class FlowerAdmin(admin.ModelAdmin):
         'id',
         'title',
         'price',
-        'is_add_filter',
     )
 
     search_fields = ('title',)
-    list_filter = ('is_add_filter',)
+    list_filter = (
+        'is_add_filter',
+    )
 
 
 class FlowerInline(nested_admin.NestedTabularInline):
@@ -100,22 +106,56 @@ class FlowerCompactInline(CompactInline):
     extra = 0
 
 
-class ProductInline(nested_admin.NestedTabularInline):
+class ProductInline(nested_admin.NestedStackedInline):
     extra = 0
     model = models.Product
     inlines = (FlowerInline, )
+    formfield_overrides = {
+        django_models.TextField: {
+            'widget': forms.Textarea(attrs={'rows': 4, 'cols': 40}),
+        },
+    }
+    fields = (
+        'size',
+        'title',
+        'price',
+        'description',
+    )
+    readonly_fields = ('price', )
+    verbose_name = 'Букет'
+    verbose_name_plural = 'Букеты'
 
 
 @admin.register(models.BaseBouquet)
 class BaseBouquetAdmin(nested_admin.NestedModelAdmin):
     list_display = list_display_links = (
         'id',
+        'photo_list_tag',
         'title',
         'is_active',
         'color',
         'discount',
     )
 
+    fieldsets = (
+        ('Основная информация', {
+            'fields': (
+                'title',
+                'description',
+                'discount',
+                'height',
+                'width',
+                'photo',
+                'photo_detail_tag',
+            ),
+        }),
+        ('Флаги', {
+            'fields': ('is_active', 'is_new', 'is_hit'),
+        }),
+        ('Фильтры', {'fields': ('color', 'category', 'reason')}),
+    )
+
+    readonly_fields = ('photo_list_tag', 'photo_detail_tag')
     search_fields = ('title',)
     list_filter = ('is_active', 'color')
     inlines = (ProductInline, )
@@ -123,14 +163,36 @@ class BaseBouquetAdmin(nested_admin.NestedModelAdmin):
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
+    empty_value_display = 'Unknown Item field'
     list_display = list_display_links = (
         'id',
+        'photo_list_tag',
         'title',
         'is_active',
         'kind',
         'price',
     )
 
+    fieldsets = (
+        ('Основная информация', {
+            'fields': (
+                'kind',
+                'title',
+                'description',
+                'price',
+                'discount',
+                'photo',
+                'photo_detail_tag',
+            ),
+        }),
+        ('Флаги', {
+            'fields': ('is_active', 'is_new', 'is_hit'),
+        }),
+        ('Дополнительная информация', {
+            'fields': ('base', 'size'),
+        }),
+    )
+    readonly_fields = ('photo_list_tag', 'photo_detail_tag')
     search_fields = ('title',)
     list_filter = ('is_active', 'kind')
     inlines = (FlowerCompactInline, )

@@ -6,4 +6,10 @@ from app.models import BaseBouquet
 class BouquetSerializer(serializers.ModelSerializer):
     class Meta:
         model = BaseBouquet
-        fields = '__all__'
+        fields = (
+            'id',
+            'title',
+            'description',
+            'photo_url',
+            'price',
+        )

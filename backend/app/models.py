@@ -1,4 +1,6 @@
 from django.db import models
+from django.conf import settings
+from django.utils.safestring import mark_safe
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 from mptt.models import MPTTModel, TreeForeignKey, TreeManyToManyField
@@ -148,6 +150,27 @@ class BaseBouquet(models.Model):
     def __str__(self):
         return self.title
 
+    def photo_url(self):
+        if self.photo:
+            return f'{settings.HOST}{self.photo.url}'
+
+    def photo_detail_tag(self):
+        url = self.photo_url()
+        if url:
+            return mark_safe(f'<img src="{self.photo_url()}" width="200"/>')
+        return 'Фото не загружено'
+    photo_detail_tag.short_description = 'Загруженное фото'
+
+    def photo_list_tag(self):
+        url = self.photo_url()
+        if url:
+            return mark_safe(f'<img src="{self.photo_url()}" width="100"/>')
+        return 'Фото не загружено'
+    photo_list_tag.short_description = 'Загруженное фото'
+
+    def price(self):
+        return 100
+
 
 class Product(models.Model):
     title = models.CharField('Название', max_length=200)
@@ -207,6 +230,24 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+
+    def photo_url(self):
+        if self.photo:
+            return f'{settings.HOST}{self.photo.url}'
+
+    def photo_detail_tag(self):
+        url = self.photo_url()
+        if url:
+            return mark_safe(f'<img src="{self.photo_url()}" width="200"/>')
+        return 'Фото не загружено'
+    photo_detail_tag.short_description = 'Загруженное фото'
+
+    def photo_list_tag(self):
+        url = self.photo_url()
+        if url:
+            return mark_safe(f'<img src="{self.photo_url()}" width="100"/>')
+        return 'Фото не загружено'
+    photo_list_tag.short_description = 'Загруженное фото'
 
 
 class BouquetFlower(models.Model):

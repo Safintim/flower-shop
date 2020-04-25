@@ -8,7 +8,6 @@ DEBUG = os.getenv('DEBUG', 'true').lower() in {'yes', '1', 'true'}
 
 ALLOWED_HOSTS = ['*']
 
-ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'jet',
@@ -56,6 +55,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+HOST = os.getenv('HOST', 'http://127.0.0.1:8000/')
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -101,8 +102,35 @@ STATICFILES_DIRS = [
 
 ]
 
+REST_FRAMEWORK = {
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    # 'PAGE_SIZE': int(os.getenv('PAGE_SIZE', 20)),
+
+    'DEFAULT_RENDERER_CLASSES': (
+        'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
+        'djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+
+    'DEFAULT_METADATA_CLASS': 'rest_framework.metadata.SimpleMetadata',
+
+    'DEFAULT_PARSER_CLASSES': (
+        'djangorestframework_camel_case.parser.CamelCaseJSONParser',
+        'djangorestframework_camel_case.parser.CamelCaseFormParser',
+        'djangorestframework_camel_case.parser.CamelCaseMultiPartParser',
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+    ),
+    # 'DEFAULT_FILTER_BACKENDS': (
+    #     'rest_framework_filters.backends.RestFrameworkFilterBackend',
+    # ),
+}
+
+
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
+    'http://localhost:8080',
 )
 
 
