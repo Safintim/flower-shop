@@ -6,4 +6,4 @@ class AppConfig(AppConfig):
     verbose_name = 'Доставка цветов'
 
     def ready(self):
-        import signals
+        import app.signals

@@ -10,6 +10,7 @@ ALLOWED_HOSTS = ['*']
 
 
 INSTALLED_APPS = [
+    # 'jet.dashboard',
     'jet',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -168,3 +169,4 @@ JET_THEMES = [
 ]
 
 JET_SIDE_MENU_COMPACT = True
+X_FRAME_OPTIONS = 'http://127.0.0.1:8000'

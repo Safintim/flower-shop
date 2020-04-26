@@ -22,6 +22,7 @@ from app.router import router
 
 urlpatterns = [
     path('jet/', include('jet.urls', 'jet')),
+    # path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
     path('admin/', admin.site.urls),
     path('_nested_admin/', include('nested_admin.urls')),
     path('api/', include(router.urls)),

@@ -1,4 +1,7 @@
+import decimal
+
 from django.db import models
+from django.db.models import Max, Min, Sum, F
 from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.contrib.auth.models import AbstractUser, BaseUserManager
@@ -168,13 +171,23 @@ class BaseBouquet(models.Model):
         return 'Фото не загружено'
     photo_list_tag.short_description = 'Загруженное фото'
 
-    def price(self):
-        return 100
+    def min_price(self):
+        return min(map(lambda b: b.bouquet_price(), self.bouquets.all()))
+    min_price.short_description = 'Минимальная цена'
+
+    def max_price(self):
+        return max(map(lambda b: b.bouquet_price(), self.bouquets.all()))
+    max_price.short_description = 'Максимальная цена'
 
 
 class Product(models.Model):
     title = models.CharField('Название', max_length=200)
-    price = models.DecimalField('Цена', max_digits=10, decimal_places=2)
+    price = models.DecimalField(
+        'Цена',
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+    )
     description = models.TextField('Описание', blank=True, null=True)
     is_active = models.BooleanField('Активный', default=True)
     is_new = models.BooleanField('Новика', default=False)
@@ -211,10 +224,10 @@ class Product(models.Model):
     base = models.ForeignKey(
         'app.BaseBouquet',
         on_delete=models.CASCADE,
+        related_name='bouquets',
         verbose_name='Базовый букет',
         null=True,
         blank=True,
-
     )
     flowers = models.ManyToManyField(
         'app.Flower',
@@ -248,6 +261,60 @@ class Product(models.Model):
             return mark_safe(f'<img src="{self.photo_url()}" width="100"/>')
         return 'Фото не загружено'
     photo_list_tag.short_description = 'Загруженное фото'
+
+    def bouquet_price(self):
+        if self.kind == 'BOUQUET':
+            price = _calculate_bouquet_price(self, Configuration.current())
+            return price.quantize(decimal.Decimal('1'))
+    bouquet_price.short_description = 'Цена за букет'
+
+    def present_price(self):
+        if self.kind == 'PRESENT':
+            price = _apply_discount(self.price, self.discount)
+            return price.quantize(decimal.Decimal('1'))
+    present_price.short_description = 'Цена за подарок'
+
+
+def _get_discount_fraction(percent):
+    return decimal.Decimal((100 - percent) / 100)
+
+
+def _get_margin_price_fraction(percent):
+    return decimal.Decimal((100 + percent) / 100)
+
+
+def _apply_discount(price, discount):
+    discount = _get_discount_fraction(discount)
+    return price * discount
+
+
+def _calculate_bouquet_price(bouquet, config):
+    price_coefficient = _get_margin_price_fraction(config.price_coefficient)
+    flowers_price = BouquetFlower.objects.filter(
+        bouquet=bouquet,
+    ).aggregate(
+        total=Sum(
+            F('count') * (F('flower__price') * price_coefficient),
+            output_field=models.DecimalField(),
+        ),
+    )['total']
+    return _apply_discount(flowers_price, bouquet.base.discount)
+
+
+class Configuration(models.Model):
+    price_coefficient = models.FloatField('Наценка на цветы', default=0)
+    updated_at = models.DateTimeField('Обновлен', auto_now=True)
+
+    class Meta:
+        verbose_name = 'Настройки'
+        verbose_name_plural = 'Настройки'
+
+    def __str__(self):
+        return 'Настройки'
+
+    @staticmethod
+    def current():
+        return Configuration.objects.first()
 
 
 class BouquetFlower(models.Model):

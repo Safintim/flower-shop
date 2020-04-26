@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django.db import models as django_models
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin, Group
@@ -96,9 +97,24 @@ class FlowerAdmin(admin.ModelAdmin):
     )
 
 
+class RequireOneFormSet(forms.models.BaseInlineFormSet):
+    def clean(self):
+        super().clean()
+        if not self.is_valid():
+            return
+        if not self.forms or not self.forms[0].cleaned_data:
+            raise ValidationError(
+                'Как минимум один {} должен существовать'.format(
+                    self.model._meta.verbose_name,
+                )
+            )
+
+
 class FlowerInline(nested_admin.NestedTabularInline):
     model = models.BouquetFlower
     extra = 0
+    min_num = 1
+    formset = RequireOneFormSet
 
 
 class FlowerCompactInline(CompactInline):
@@ -124,6 +140,8 @@ class ProductInline(nested_admin.NestedStackedInline):
     readonly_fields = ('price', )
     verbose_name = 'Букет'
     verbose_name_plural = 'Букеты'
+    min_num = 1
+    formset = RequireOneFormSet
 
 
 @admin.register(models.BaseBouquet)
@@ -134,6 +152,8 @@ class BaseBouquetAdmin(nested_admin.NestedModelAdmin):
         'title',
         'is_active',
         'color',
+        'min_price',
+        'max_price',
         'discount',
     )
 
@@ -163,14 +183,16 @@ class BaseBouquetAdmin(nested_admin.NestedModelAdmin):
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    empty_value_display = 'Unknown Item field'
+    empty_value_display = '-'
     list_display = list_display_links = (
         'id',
         'photo_list_tag',
         'title',
         'is_active',
         'kind',
-        'price',
+        'present_price',
+        'bouquet_price',
+
     )
 
     fieldsets = (
@@ -181,6 +203,7 @@ class ProductAdmin(admin.ModelAdmin):
                 'description',
                 'price',
                 'discount',
+                'present_price',
                 'photo',
                 'photo_detail_tag',
             ),
@@ -189,10 +212,15 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('is_active', 'is_new', 'is_hit'),
         }),
         ('Дополнительная информация', {
-            'fields': ('base', 'size'),
+            'fields': ('base', 'size', 'bouquet_price'),
         }),
     )
-    readonly_fields = ('photo_list_tag', 'photo_detail_tag')
+    readonly_fields = (
+        'photo_list_tag',
+        'photo_detail_tag',
+        'present_price',
+        'bouquet_price',
+    )
     search_fields = ('title',)
     list_filter = ('is_active', 'kind')
     inlines = (FlowerCompactInline, )
@@ -216,3 +244,11 @@ class OrderAdmin(admin.ModelAdmin):
 
     list_filter = ('is_paid', 'status')
     inlines = (OrderItemInline, )
+
+
+@admin.register(models.Configuration)
+class ConfigurationAdmin(admin.ModelAdmin):
+    list_display = list_display_links = (
+        'price_coefficient',
+        'updated_at',
+    )
