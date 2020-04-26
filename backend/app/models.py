@@ -1,7 +1,7 @@
 import decimal
 
 from django.db import models
-from django.db.models import Max, Min, Sum, F
+from django.db.models import Sum, F
 from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.contrib.auth.models import AbstractUser, BaseUserManager
@@ -265,13 +265,13 @@ class Product(models.Model):
     def bouquet_price(self):
         if self.kind == 'BOUQUET':
             price = _calculate_bouquet_price(self, Configuration.current())
-            return price.quantize(decimal.Decimal('1'))
+            return int(price.quantize(decimal.Decimal('1')))
     bouquet_price.short_description = 'Цена за букет'
 
     def present_price(self):
         if self.kind == 'PRESENT':
             price = _apply_discount(self.price, self.discount)
-            return price.quantize(decimal.Decimal('1'))
+            return int(price.quantize(decimal.Decimal('1')))
     present_price.short_description = 'Цена за подарок'
 
 
