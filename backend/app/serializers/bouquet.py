@@ -29,7 +29,22 @@ class BouquetSerializer(serializers.ModelSerializer):
         )
 
 
-class BaseBouquetSerializer(serializers.ModelSerializer):
+class BaseBouquetListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BaseBouquet
+        fields = (
+            'id',
+            'title',
+            'is_new',
+            'is_hit',
+            'description',
+            'photo_url',
+            'min_price',
+            'max_price',
+        )
+
+
+class BaseBouquetDetailSerializer(serializers.ModelSerializer):
     bouquets = serializers.SerializerMethodField()
 
     def get_bouquets(self, base):
