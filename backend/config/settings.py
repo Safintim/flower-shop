@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'nested_admin',
     'mptt',
     'rest_framework',
+    'rest_framework_filters',
     'corsheaders',
 ]
 
@@ -104,6 +105,9 @@ STATICFILES_DIRS = [
 ]
 
 REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': (
+        'rest_framework_filters.backends.RestFrameworkFilterBackend',
+    ),
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     # 'PAGE_SIZE': int(os.getenv('PAGE_SIZE', 20)),
 
@@ -123,9 +127,6 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.FormParser',
         'rest_framework.parsers.MultiPartParser',
     ),
-    # 'DEFAULT_FILTER_BACKENDS': (
-    #     'rest_framework_filters.backends.RestFrameworkFilterBackend',
-    # ),
 }
 
 

@@ -42,6 +42,7 @@ class BaseBouquetSerializer(serializers.ModelSerializer):
             'title',
             'is_new',
             'is_hit',
+            'color',
             'description',
             'photo_url',
             'min_price',
