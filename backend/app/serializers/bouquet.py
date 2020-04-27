@@ -1,10 +1,22 @@
 from rest_framework import serializers
 
-from app.models import BaseBouquet, Product
+from app.models import BaseBouquet, Product, BouquetFlower
+
+
+class BouquetFlowerSerializer(serializers.ModelSerializer):
+    flower_title = serializers.SerializerMethodField()
+
+    def get_flower_title(self, obj):
+        return obj.flower.title
+
+    class Meta:
+        model = BouquetFlower
+        fields = ('count', 'flower_title',)
 
 
 class BouquetSerializer(serializers.ModelSerializer):
     price = serializers.IntegerField(source='bouquet_price')
+    flowers = BouquetFlowerSerializer(source='bouquetflower_set', many=True)
 
     class Meta:
         model = Product
@@ -13,6 +25,7 @@ class BouquetSerializer(serializers.ModelSerializer):
             'title',
             'description',
             'price',
+            'flowers',
         )
 
 
