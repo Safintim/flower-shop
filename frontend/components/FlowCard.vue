@@ -1,0 +1,140 @@
+<template>
+  <div class="catalog-item text-center">
+    <b-overlay :show="show" rounded="sm">
+      <a href>
+        <img class="catalog-item__image" src="~/assets/images/flower.jpg" />
+      </a>
+      <template v-slot:overlay>
+        <div class="text-center">описание</div>
+      </template>
+    </b-overlay>
+    <div class="catalog-item__info">
+      <div class="catalog-item__info_mark d-flex flex-column align-items-end">
+        <div v-if="true" class="catalog-item__info_mark_hit">Хит</div>
+        <div v-if="true" class="catalog-item__info_mark_new">Новинка</div>
+      </div>
+      <div class="catalog-item__info_title">
+        <a href="https://floristan.ru/catalog/product/259">asdasd</a>
+      </div>
+
+      <div class="catalog-item__info_price">от 10000 Р</div>
+      <div
+        class="catalog-item__info_buttons d-flex flex-wrap align-items-center justify-content-center"
+      >
+        <button class="catalog-item__info_buttons_add_to_cart">в корзину</button>
+
+        <button class="catalog-item__info_buttons_more" @click="show = !show">подробнее</button>
+        <span>
+          <b-link class="catalog-item__info_buttons_buy">купить в один клик</b-link>
+        </span>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+export default {
+  data () {
+    return {
+      show: false
+    }
+  }
+}
+</script>
+<style lang="scss" scoped>
+.catalog-item {
+  position: relative;
+  // max-width: 380px;
+  // height: 566px;
+  margin-bottom: 16px;
+  padding: 16px 0;
+  box-shadow: 0 0 8px 0 $whiteshadow;
+  border: 1px solid $lightgrey;
+  border-radius: 4px;
+  &__image {
+    width: 330px;
+  }
+  &__info {
+    text-align: center;
+    padding: 19px 25px;
+  }
+  &__info_mark {
+    position: absolute;
+    top: 45px;
+    right: -8px;
+    &_hit,
+    &_new {
+      background: $new;
+      border-radius: 100px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 29px;
+      padding: 0 20px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+    &_hit {
+      background: $hit;
+    }
+  }
+  &__info_title {
+    text-align: center;
+    margin: 10px 0;
+    a {
+      text-decoration: none;
+      line-height: 0.8;
+      font-size: 20px;
+      color: $pink;
+      font-weight: bold;
+    }
+    a:hover {
+      color: $pink;
+      text-decoration: none;
+    }
+  }
+  &__info_price {
+    margin: 10px 0;
+    text-align: center;
+    line-height: 0.8;
+    font-size: 20px;
+    color: rgb(68, 68, 68);
+  }
+  &__info_buttons {
+    &_more,
+    &_add_to_cart {
+      vertical-align: top;
+      position: relative;
+      display: inline-block;
+      margin: 20px auto;
+      padding: 12px 32px;
+      background-color: $pink;
+      color: #ffffff;
+      text-align: center;
+      text-decoration: none;
+      font-size: 20px;
+      line-height: 0.8;
+      border: none;
+      border-radius: 5px;
+    }
+
+    &_more {
+      background-color: #ffffff;
+      color: rgb(225, 225, 225);
+      border: 1px solid $lightgrey;
+      border-radius: 5px;
+    }
+    span {
+      display: inline-block;
+      border-bottom: 2px dotted $darkgrey;
+    }
+    &_buy {
+      text-decoration: none;
+      color: $darkgrey;
+    }
+    &_buy:hover {
+      color: $darkgrey;
+    }
+  }
+}
+</style>
