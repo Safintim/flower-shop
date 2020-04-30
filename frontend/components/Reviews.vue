@@ -1,7 +1,7 @@
 <template>
   <b-container>
     <b-row>
-      <b-col xs="12" lg="12" class="title text-center">
+      <b-col cols="12" lg="12" class="title text-center my-4 py-1">
         <h3>Фото счастливых клиентов</h3>
       </b-col>
       <b-row class="justify-content-center">
@@ -22,11 +22,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.title {
-  padding: 30px 0px;
-  h3 {
-    color: $darkgrey;
-    text-transform: uppercase;
-  }
+h3 {
+  color: $darkgrey;
+  text-transform: uppercase;
 }
 </style>

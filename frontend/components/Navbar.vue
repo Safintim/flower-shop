@@ -1,6 +1,6 @@
 <template>
-  <b-container fluid class="container-navbar">
-    <b-navbar toggleable="md">
+  <b-container fluid class="container-navbar py-2">
+    <b-navbar toggleable="sm" class="py-0">
       <b-navbar-toggle target="nav-collapse" />
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
@@ -26,15 +26,11 @@
 </template>
 
 <style lang="scss" scoped>
-  .container-navbar {
-    background-color: $lightgrey;
-    padding: 12px 0;
-    .navbar {
-      padding: 0 1rem;
-    }
-    .nav-link {
-      color: $grey;
-      font-size: 14px;
-    }
+.container-navbar {
+  background-color: $lightgrey;
+  .nav-link {
+    color: $grey;
+    font-size: 14px;
   }
+}
 </style>

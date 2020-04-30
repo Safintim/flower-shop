@@ -2,13 +2,13 @@
   <div class="catalog-item text-center">
     <b-overlay :show="show" rounded="sm">
       <a href="/">
-        <img class="catalog-item__image" :src="bouquet.photoUrl" :alt="bouquet.title">
+        <img class="catalog-item__image img-fluid" :src="bouquet.photoUrl" :alt="bouquet.title">
       </a>
       <template v-slot:overlay>
         <div class="text-center">{{ bouquet.description }}</div>
       </template>
     </b-overlay>
-    <div class="catalog-item__info">
+    <div class="catalog-item__info text-center p-2">
       <div class="catalog-item__info_mark d-flex flex-column align-items-end">
         <div v-if="bouquet.isHit" class="catalog-item__info_mark_hit">Хит</div>
         <div v-if="bouquet.isNew" class="catalog-item__info_mark_new">Новинка</div>
@@ -18,12 +18,10 @@
       </div>
 
       <div class="catalog-item__info_price">от {{ bouquet.minPrice }} Р</div>
-      <div
-        class="catalog-item__info_buttons d-flex flex-wrap align-items-center justify-content-center"
-      >
-        <button class="catalog-item__info_buttons_add_to_cart">в корзину</button>
+      <div class="catalog-item__info_buttons d-flex flex-wrap align-items-center justify-content-center">
+        <button class="catalog-item__info_buttons_add_to_cart py-3 px-4 px-xs-5 mr-2 mb-2">в корзину</button>
 
-        <button class="catalog-item__info_buttons_more" @click="show = !show">подробнее</button>
+        <button class="catalog-item__info_buttons_more py-3 px-4 mb-2" @click="show = !show">подробнее</button>
         <span>
           <b-link class="catalog-item__info_buttons_buy">купить в один клик</b-link>
         </span>
@@ -49,20 +47,11 @@ export default {
 <style lang="scss" scoped>
 .catalog-item {
   position: relative;
-  // max-width: 380px;
-  // height: 566px;
   margin-bottom: 16px;
   padding: 16px 0;
   box-shadow: 0 0 8px 0 $whiteshadow;
   border: 1px solid $lightgrey;
   border-radius: 4px;
-  &__image {
-    max-width: 330px;
-  }
-  &__info {
-    text-align: center;
-    padding: 19px 25px;
-  }
   &__info_mark {
     position: absolute;
     top: 45px;
@@ -112,8 +101,6 @@ export default {
       vertical-align: top;
       position: relative;
       display: inline-block;
-      margin: 20px auto;
-      padding: 12px 32px;
       background-color: $pink;
       color: #ffffff;
       text-align: center;
