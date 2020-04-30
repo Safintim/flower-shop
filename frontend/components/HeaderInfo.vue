@@ -3,7 +3,7 @@
     <div>
       <b-row class="align-items-center">
         <b-col class="logo text-center" md="3" lg="2">
-          <b-img-lazy src="~/assets/images/logo.png" alt="logo.png"></b-img-lazy>
+          <b-img-lazy src="~/assets/images/logo.png" alt="logo.png" />
         </b-col>
         <b-col class="city text-center" md="3" lg="2">
           <div class="city__title">Город доставки</div>
@@ -11,7 +11,7 @@
         </b-col>
         <b-col class="search justify-content-center" md="4" lg="4">
           <b-form>
-            <b-form-input size="sm" type="search" placeholder="Поиск цветов и букетов"></b-form-input>
+            <b-form-input size="sm" type="search" placeholder="Поиск цветов и букетов" />
           </b-form>
         </b-col>
         <b-col class="cart text-center" md="2" lg="2">

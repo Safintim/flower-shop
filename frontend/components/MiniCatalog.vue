@@ -2,10 +2,10 @@
   <section class="catalog">
     <b-row class="justify-content-center">
       <b-col xs="12" lg="12" class="title text-center">
-        <h1>Доставка цветов</h1>
+        <h3>Доставка цветов</h3>
       </b-col>
-      <b-col v-for="item of 5" :key="item" lg="4">
-        <FlowCard />
+      <b-col v-for="bouquet of bouquets" :key="bouquet.id" lg="4">
+        <FlowCard :bouquet="bouquet" />
       </b-col>
       <b-col md="12" class="text-center">
         <b-button class="catalog__go text-decoration-none" no-prefetch to="/catalog">Перейти в каталог</b-button>
@@ -20,6 +20,12 @@ import FlowCard from '~/components/FlowCard'
 export default {
   components: {
     FlowCard
+  },
+  props: {
+    bouquets: {
+      type: Array,
+      default () {}
+    }
   }
 }
 </script>
@@ -27,8 +33,7 @@ export default {
 <style lang="scss">
   .title {
     padding: 30px 0px;
-    h1 {
-      font-size: 32px;
+    h3 {
       color: $darkgrey;
       text-transform: uppercase;
     }

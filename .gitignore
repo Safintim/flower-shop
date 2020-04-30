@@ -17,6 +17,7 @@ __pycache__/
 .vscode
 static/
 templates/
+frontend-vue
 db.sqlite3
 *.yml
 *.yaml

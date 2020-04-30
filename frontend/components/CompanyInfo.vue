@@ -1,7 +1,7 @@
 <template>
   <b-row class="no-gutters">
     <b-col xs="12" lg="12" class="title text-center">
-      <h1>Познакомимся ближе</h1>
+      <h3>Познакомимся ближе</h3>
     </b-col>
     <b-col lg="6" sm="12">
       <div class="about__text">
@@ -55,8 +55,7 @@
 <style lang="scss">
 .title {
     padding: 30px 0px;
-    h1 {
-      font-size: 28px;
+    h3 {
       color: $darkgrey;
       text-transform: uppercase;
     }

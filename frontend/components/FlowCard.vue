@@ -1,23 +1,23 @@
 <template>
   <div class="catalog-item text-center">
     <b-overlay :show="show" rounded="sm">
-      <a href>
-        <img class="catalog-item__image" src="~/assets/images/flower.jpg" />
+      <a href="/">
+        <img class="catalog-item__image" :src="bouquet.photoUrl" :alt="bouquet.title">
       </a>
       <template v-slot:overlay>
-        <div class="text-center">описание</div>
+        <div class="text-center">{{ bouquet.description }}</div>
       </template>
     </b-overlay>
     <div class="catalog-item__info">
       <div class="catalog-item__info_mark d-flex flex-column align-items-end">
-        <div v-if="true" class="catalog-item__info_mark_hit">Хит</div>
-        <div v-if="true" class="catalog-item__info_mark_new">Новинка</div>
+        <div v-if="bouquet.isHit" class="catalog-item__info_mark_hit">Хит</div>
+        <div v-if="bouquet.isNew" class="catalog-item__info_mark_new">Новинка</div>
       </div>
       <div class="catalog-item__info_title">
-        <a href="https://floristan.ru/catalog/product/259">asdasd</a>
+        <a href="https://floristan.ru/catalog/product/259">{{ bouquet.title }}</a>
       </div>
 
-      <div class="catalog-item__info_price">от 10000 Р</div>
+      <div class="catalog-item__info_price">от {{ bouquet.minPrice }} Р</div>
       <div
         class="catalog-item__info_buttons d-flex flex-wrap align-items-center justify-content-center"
       >
@@ -33,6 +33,12 @@
 </template>
 <script>
 export default {
+  props: {
+    bouquet: {
+      type: Object,
+      default () {}
+    }
+  },
   data () {
     return {
       show: false
@@ -51,7 +57,7 @@ export default {
   border: 1px solid $lightgrey;
   border-radius: 4px;
   &__image {
-    width: 330px;
+    max-width: 330px;
   }
   &__info {
     text-align: center;
