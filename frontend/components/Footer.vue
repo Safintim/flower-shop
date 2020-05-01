@@ -10,15 +10,15 @@
           />
           <div class="copyright">© Служба доставки цветов Flow-service, 2019</div>
         </b-col>
-        <b-col class="menu text-left" cols="12" sm="12" md="1" offset-md="2">
+        <b-col class="menu text-left text-sm-center mt-sm-2" cols="12" sm="12" md="1" offset-md="2">
           <div v-for="item of 5" :key="item">Цветы</div>
         </b-col>
-        <b-col class="nav-footer text-left" cols="12" sm="12" md="3">
+        <b-col class="nav-footer text-left text-sm-center mt-sm-2" cols="12" sm="12" md="3">
           <div>О магазине</div>
           <div>Доставка</div>
           <div>Контакты</div>
         </b-col>
-        <b-col class="info text-right" cols="12" sm="12" md="3">
+        <b-col class="info text-right text-sm-center mt-sm-2" cols="12" sm="12" md="3">
           <div class="contacts__title">
             Бесплатный звонок 24/7
             Главный офис
@@ -38,9 +38,6 @@ footer {
 .copyright {
   font-size: 11px;
   color: $lightpink;
-}
-.menu {
-  border-right: 1px solid white;
 }
 .contacts__title {
   font-size: 14px;

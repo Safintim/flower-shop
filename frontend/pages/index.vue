@@ -15,7 +15,7 @@ import CompanyInfo from '~/components/CompanyInfo'
 import Reviews from '~/components/Reviews'
 import Subscription from '~/components/Subscription'
 
-const url = 'http://127.0.0.1:8000/api/bouquets'
+const bouquetsUrl = 'http://127.0.0.1:8000/api/bouquets'
 
 export default {
   components: {
@@ -26,7 +26,7 @@ export default {
     Subscription
   },
   async asyncData ({ $axios }) {
-    const response = await $axios.get(url)
+    const response = await $axios.get(bouquetsUrl)
     const bouquets = response.data
     return { bouquets }
   }

@@ -1,13 +1,33 @@
 <template>
-  <header class="d-none d-md-block py-4 px-0">
+  <header class="d-sm-block d-md-block py-4 px-0">
     <b-container fluid>
       <b-row class="align-items-center">
         <b-col class="logo text-center" md="3" lg="2">
           <b-img-lazy src="~/assets/images/logo.png" alt="logo.png" class="img-fluid" />
         </b-col>
         <b-col class="city text-center" md="3" lg="2">
-          <div class="city__title">Город доставки</div>
-          <div class="city__current">Астана</div>
+          <div class="city__title mb-1">Город доставки</div>
+          <b-modal id="modal-1" size="md" title="Выберите город">
+            <b-container>
+              <b-row class="justify-content-left align-items-center">
+                <b-col
+                  v-for="city of cities"
+                  :key="city.id"
+                  cols="6"
+                  sm="6"
+                  md="6"
+                  lg="4"
+                  @click="selectCity(city)"
+                  class="city-modal p-1 text-sm-center text-md-center text-xs-center"
+                >
+                  <span class="p-2">{{ city.title }}</span>
+                </b-col>
+              </b-row>
+            </b-container>
+          </b-modal>
+          <div v-b-modal.modal-1 class="city__current" :key="currentCity.title">
+            <span>{{ currentCity.title }}</span>
+          </div>
         </b-col>
         <b-col class="search justify-content-center" md="4" lg="4">
           <b-form>
@@ -33,7 +53,24 @@
     </b-container>
   </header>
 </template>
-
+<script>
+export default {
+  computed: {
+    cities () {
+      return this.$store.getters['cities/cities']
+    },
+    currentCity () {
+      return this.$store.getters['cities/currentCity']
+    }
+  },
+  methods: {
+    selectCity (city) {
+      this.$bvModal.hide('modal-1')
+      this.$store.commit('cities/setCurrentCity', city)
+    }
+  }
+}
+</script>
 <style lang="scss" scoped>
 header {
   border: 1px solid $lightgrey;
@@ -48,6 +85,19 @@ header {
 .city__current {
   color: $darkgrey;
   font-size: 16px;
+  cursor: pointer;
+  span {
+    border-bottom: 1px dotted $darkgrey;
+  }
+}
+.city-modal {
+  color: $darkgrey;
+  font-size: 16px;
+  span:hover {
+    background-color: $lightgrey;
+    border-radius: 5px;
+    cursor: pointer;
+  }
 }
 .search {
   input {
