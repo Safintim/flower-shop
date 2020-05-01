@@ -1,7 +1,10 @@
 <template>
   <section>
     <h1>Контакты</h1>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur quisquam ad voluptatibus eum aliquid dignissimos molestias dolorem eveniet laborum fugit?</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque, doloremque?</p>
+    <p></p>
+    <p>
+      г. Нур-Султан (Астана), ул. Такая-то, д.40
+      8-800-555-35-35
+    </p>
   </section>
 </template>

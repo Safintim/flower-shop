@@ -39,6 +39,9 @@ footer {
   font-size: 11px;
   color: $lightpink;
 }
+.menu {
+  border-right: 1px solid white;
+}
 .contacts__title {
   font-size: 14px;
   color: $lightpink;
