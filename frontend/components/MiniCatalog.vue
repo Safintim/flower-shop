@@ -3,16 +3,17 @@
     <b-container>
       <b-row class="justify-content-center">
         <b-col cols="12" lg="12" class="title text-center my-4 py-1">
-          <h3>Доставка цветов</h3>
+          <h3>{{ title }}</h3>
         </b-col>
         <b-col v-for="bouquet of bouquets" :key="bouquet.id" sm="6" md="6" lg="4">
           <FlowCard :bouquet="bouquet" />
         </b-col>
         <b-col md="12" class="text-center">
           <b-button
+            v-if="isShowLinkToCatalog"
             class="catalog__go text-decoration-none my-4 py-2 px-4"
             no-prefetch
-            to="/catalog"
+            to="/bouquets"
           >Перейти в каталог</b-button>
         </b-col>
       </b-row>
@@ -31,6 +32,18 @@ export default {
     bouquets: {
       type: Array,
       default () {}
+    },
+    title: {
+      type: String,
+      default () {
+        return 'Каталог'
+      }
+    },
+    isShowLinkToCatalog: {
+      type: Boolean,
+      default () {
+        return false
+      }
     }
   }
 }
@@ -48,14 +61,5 @@ h3 {
   border-radius: 5px;
   border: none;
   background-color: $pink;
-}
-.btn-secondary:hover,
-.btn-secondary:focus,
-.btn-secondary:active,
-.btn-secondary.active,
-.open > .dropdown-toggle.btn-secondary {
-  color: #fff;
-  background-color: $pink;
-  border: none;
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
-  <section>
+  <MiniCatalog :bouquets="bouquets" />
+  <!-- <section>
     <h1>Букеты</h1>
     <ul>
       <li
@@ -9,15 +10,27 @@
         <a href="#" @click.prevent="openBouquet(bouquet)">Букет {{ bouquet }}</a>
       </li>
     </ul>
-  </section>
+  </section> -->
 </template>
 
 <script>
+
+import MiniCatalog from '~/components/MiniCatalog'
+
+const bouquetsUrl = 'http://127.0.0.1:8000/api/bouquets/'
+
 export default {
-  methods: {
-    openBouquet (bouquet) {
-      this.$router.push('/bouquets/' + bouquet)
-    }
+  components: {
+    MiniCatalog
+  },
+  async asyncData ({ $axios }) {
+    const bouquets = await $axios.$get(bouquetsUrl)
+    return { bouquets }
   }
+  // methods: {
+  //   openBouquet (bouquet) {
+  //     this.$router.push('/bouquets/' + bouquet)
+  //   }
+  // }
 }
 </script>

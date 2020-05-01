@@ -1,7 +1,7 @@
 <template>
   <section>
     <Menu />
-    <MiniCatalog :bouquets="bouquets" />
+    <MiniCatalog :bouquets="bouquets" :title="title" :isShowLinkToCatalog="isShowLinkToCatalog" />
     <CompanyInfo />
     <Reviews />
     <Subscription />
@@ -26,9 +26,14 @@ export default {
     Subscription
   },
   async asyncData ({ $axios }) {
-    const response = await $axios.get(bouquetsUrl)
-    const bouquets = response.data
+    const bouquets = await $axios.$get(bouquetsUrl)
     return { bouquets }
+  },
+  data () {
+    return {
+      title: 'Доставка цветов',
+      isShowLinkToCatalog: true
+    }
   }
 }
 </script>
