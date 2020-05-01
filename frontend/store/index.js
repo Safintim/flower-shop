@@ -1,7 +1,7 @@
 export const actions = {
-  nuxtServerInit ({ dispatch }, context) {
-    return Promise.all([
-      dispatch('cities/nuxtServerInit', context)
-    ])
+  async nuxtServerInit ({ dispatch }, context) {
+    // return Promise.all([
+    await dispatch('cities/fetch')
+    // ])
   }
 }

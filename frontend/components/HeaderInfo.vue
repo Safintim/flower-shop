@@ -7,7 +7,7 @@
         </b-col>
         <b-col class="city text-center" md="3" lg="2">
           <div class="city__title mb-1">Город доставки</div>
-          <b-modal id="modal-1" size="md" title="Выберите город">
+          <b-modal id="modal-1" size="md" title="Выберите город" :hide-footer="true">
             <b-container>
               <b-row class="justify-content-left align-items-center">
                 <b-col
@@ -17,15 +17,15 @@
                   sm="6"
                   md="6"
                   lg="4"
-                  @click="selectCity(city)"
                   class="city-modal p-1 text-sm-center text-md-center text-xs-center"
+                  @click="selectCity(city)"
                 >
                   <span class="p-2">{{ city.title }}</span>
                 </b-col>
               </b-row>
             </b-container>
           </b-modal>
-          <div v-b-modal.modal-1 class="city__current" :key="currentCity.title">
+          <div :key="currentCity.title" v-b-modal.modal-1 class="city__current">
             <span>{{ currentCity.title }}</span>
           </div>
         </b-col>
