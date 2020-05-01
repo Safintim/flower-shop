@@ -1,7 +1,7 @@
 <template>
-  <footer class="px-5 pt-5 pb-4">
+  <footer class="px-5 py-4">
     <b-container>
-      <b-row class="justify-content-center">
+      <b-row class="justify-content-center align-items-center">
         <b-col class="logo text-center" cols="12" sm="12" md="3">
           <b-img-lazy
             src="~/assets/images/logo_footer.png"
@@ -10,15 +10,15 @@
           />
           <div class="copyright">© Служба доставки цветов Flow-service, 2019</div>
         </b-col>
-        <b-col class="menu text-left text-sm-center mt-sm-2" cols="12" sm="12" md="1" offset-md="2">
-          <div v-for="item of 5" :key="item">Цветы</div>
+        <b-col class="menu text-left text-sm-center mt-sm-2" cols="12" sm="12" md="2" offset-md="1">
+          <div v-for="category of categories" :key="category.id">{{ category.title }}</div>
         </b-col>
         <b-col class="nav-footer text-left text-sm-center mt-sm-2" cols="12" sm="12" md="3">
           <div>О магазине</div>
           <div>Доставка</div>
           <div>Контакты</div>
         </b-col>
-        <b-col class="info text-right text-sm-center mt-sm-2" cols="12" sm="12" md="3">
+        <b-col class="info text-lg-right text-sm-center mt-sm-2" cols="12" sm="12" md="3">
           <div class="contacts__title">
             Бесплатный звонок 24/7
             Главный офис
@@ -29,7 +29,15 @@
     </b-container>
   </footer>
 </template>
-
+<script>
+export default {
+  computed: {
+    categories () {
+      return this.$store.getters['categories/categories']
+    }
+  }
+}
+</script>
 <style lang="scss" scoped>
 footer {
   background-color: $pink;

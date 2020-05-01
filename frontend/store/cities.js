@@ -12,7 +12,7 @@ export const mutations = {
   }
 }
 
-const citiesUrl = 'http://127.0.0.1:8000/api/cities'
+const citiesUrl = 'http://127.0.0.1:8000/api/cities/'
 
 export const actions = {
   async fetch ({ commit }) {
