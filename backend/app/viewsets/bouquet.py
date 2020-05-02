@@ -22,3 +22,10 @@ class BouquetViewSet(viewsets.ModelViewSet):
             return self.serializer_action_class[self.action]
         except (KeyError, AttributeError):
             return super().get_serializer_class()
+
+    def get_queryset(self):
+        return super().get_queryset().distinct()
+
+    def list(self, request, *args, **kwargs):
+        print(request.query_params)
+        return super().list(request, *args, **kwargs)
