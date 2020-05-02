@@ -5,6 +5,7 @@
         <b-col cols="12" lg="12" class="title text-center my-4 py-1">
           <h3>{{ title }}</h3>
         </b-col>
+        <b-col cols="12" sm="12" md="12" lg="12" class="mb-4"><FilterBouquet /></b-col>
         <b-col v-for="bouquet of bouquets" :key="bouquet.id" sm="6" md="6" lg="4">
           <FlowCard :bouquet="bouquet" />
         </b-col>
@@ -23,10 +24,12 @@
 <script>
 
 import FlowCard from '~/components/FlowCard'
+import FilterBouquet from '~/components/FilterBouquet'
 
 export default {
   components: {
-    FlowCard
+    FlowCard,
+    FilterBouquet
   },
   props: {
     bouquets: {
