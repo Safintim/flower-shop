@@ -5,10 +5,10 @@
         <b-nav-item-dropdown size="md" id="dropdown-form" text="Цена" ref="dropdown" class="m-2">
           <b-dropdown-form>
             <b-form-group class="text-capitalize">
-              <b-form-radio name="price" class="mb-3">до 2000</b-form-radio>
-              <b-form-radio name="price" class="mb-3">2000 - 3500</b-form-radio>
-              <b-form-radio name="price" class="mb-3">3500 - 5000</b-form-radio>
-              <b-form-radio name="price">от 5000</b-form-radio>
+              <b-form-radio name="price" value="0,2000" class="mb-3" @change="changePrice">до 2000</b-form-radio>
+              <b-form-radio name="price" value="2000,3500" class="mb-3" @change="changePrice">2000 - 3500</b-form-radio>
+              <b-form-radio name="price" value="3500,5000" class="mb-3" @change="changePrice">3500 - 5000</b-form-radio>
+              <b-form-radio name="price" value="5000,1000000" @change="changePrice">от 5000</b-form-radio>
             </b-form-group>
           </b-dropdown-form>
         </b-nav-item-dropdown>
@@ -29,8 +29,8 @@
         <b-nav-item-dropdown size="md" id="dropdown-form" text="Цвет" ref="dropdown" class="m-2">
           <b-dropdown-form class="text-capitalize">
             <b-form-group>
-              <b-form-checkbox name="color" class="mb-3">до 2000</b-form-checkbox>
-              <b-form-checkbox name="color" class="mb-3">2000 - 3500</b-form-checkbox>
+              <b-form-checkbox name="color" class="mb-3" value="SOFT" @change="changeColor">Нежный</b-form-checkbox>
+              <b-form-checkbox name="color" class="mb-3" value="BRIGHT" @change="changeColor">Яркий</b-form-checkbox>
             </b-form-group>
           </b-dropdown-form>
         </b-nav-item-dropdown>
@@ -50,7 +50,19 @@
     </b-row>
   </b-container>
 </template>
-
+<script>
+export default {
+  methods: {
+    changePrice (target) {
+      this.$store.dispatch('bouquets/filterByPrice', target)
+    },
+    changeColor (target) {
+      this.$store.dispatch('bouquets/filterByColor', target)
+      console.log(target)
+    }
+  }
+}
+</script>
 <style lang="scss" scoped>
 .row {
   background-color: $lightgrey;

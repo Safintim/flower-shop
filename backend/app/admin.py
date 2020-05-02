@@ -170,7 +170,7 @@ class BaseBouquetAdmin(nested_admin.NestedModelAdmin):
             ),
         }),
         ('Флаги', {
-            'fields': ('is_active', 'is_new', 'is_hit'),
+            'fields': ('is_active', 'is_new', 'is_hit', 'is_show_on_main_page'),
         }),
         ('Фильтры', {'fields': ('color', 'category', 'reason')}),
     )

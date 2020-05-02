@@ -111,6 +111,10 @@ class BaseBouquet(models.Model):
     is_active = models.BooleanField('Активный', default=False)
     is_new = models.BooleanField('Новика', default=False)
     is_hit = models.BooleanField('Хит', default=False)
+    is_show_on_main_page = models.BooleanField(
+        'Показать на главной странице',
+        default=False,
+    )
     discount = models.FloatField('Скидка', default=0)
     height = models.PositiveIntegerField('Высота', default=0)
     width = models.PositiveIntegerField('Ширина', default=0)

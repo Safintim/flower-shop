@@ -1,8 +1,14 @@
 import rest_framework_filters as filters
+from django.db.models import Q
+
 from app.models import BaseBouquet, Category, Reason, Flower, Product
 
 
 class NumberRangeFilter(filters.BaseRangeFilter, filters.NumberFilter):
+    pass
+
+
+class ChoicesInFilter(filters.BaseInFilter, filters.CharFilter):
     pass
 
 
@@ -33,8 +39,14 @@ class CategoryFilter(filters.FilterSet):
 
 
 class BouquetFilter(filters.FilterSet):
-    color = filters.CharFilter(
-        field_name='color', lookup_expr='iexact', label='Цвет',
+    color = ChoicesInFilter(
+        field_name='color',
+        lookup_expr='in',
+        label='Цвет',
+    )
+    is_show_on_main_page = filters.BooleanFilter(
+        field_name='is_show_on_main_page',
+        label='Показать на главной странице',
     )
     category = filters.RelatedFilter(
         CategoryFilter,
@@ -49,6 +61,11 @@ class BouquetFilter(filters.FilterSet):
     )
     reason = filters.ModelMultipleChoiceFilter(queryset=Reason.objects.all())
     price = NumberRangeFilter(method='filter_by_price', label='Цена')
+    search = filters.CharFilter(
+        method='filter_by_title',
+        field_name='title',
+        label='Поиск',
+    )
 
     def filter_by_price(self, qs, name, value):
         min, max = value
@@ -60,6 +77,13 @@ class BouquetFilter(filters.FilterSet):
                     break
         return BaseBouquet.objects.filter(id__in=base_ids)
 
+    def filter_by_title(self, qs, name, value):
+        qs = qs.filter(
+            Q(title__icontains=value)
+            | Q(bouquets__flowers__title__icontains=value),
+        )
+        return qs
+
     class Meta:
         models = BaseBouquet
-        exclude = ('id', )
+        exclude = ('id',)

@@ -5,8 +5,10 @@
         <b-col cols="12" lg="12" class="title text-center my-4 py-1">
           <h3>{{ title }}</h3>
         </b-col>
-        <b-col cols="12" sm="12" md="12" lg="12" class="mb-4"><FilterBouquet /></b-col>
-        <b-col v-for="bouquet of bouquets" :key="bouquet.id" sm="6" md="6" lg="4">
+        <b-col cols="12" sm="12" md="12" lg="12" class="mb-4">
+          <FilterBouquet />
+        </b-col>
+        <b-col v-for="bouquet of bouquets_" :key="bouquet.id" sm="6" md="6" lg="4">
           <FlowCard :bouquet="bouquet" />
         </b-col>
         <b-col md="12" class="text-center">
@@ -47,6 +49,17 @@ export default {
       default () {
         return false
       }
+    },
+    isMainPage: {
+      type: Boolean,
+      default () {
+        return false
+      }
+    }
+  },
+  computed: {
+    bouquets_ () {
+      return this.isMainPage ? this.bouquets : this.$store.getters['bouquets/bouquets']
     }
   }
 }

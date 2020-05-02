@@ -18,5 +18,5 @@ export const actions = {
 }
 
 export const getters = {
-  categories: s => s.categories
+  categories: state => state.categories
 }

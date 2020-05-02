@@ -1,5 +1,5 @@
 <template>
-  <MiniCatalog :bouquets="bouquets" />
+  <MiniCatalog />
   <!-- <section>
     <h1>Букеты</h1>
     <ul>
@@ -17,15 +17,12 @@
 
 import MiniCatalog from '~/components/MiniCatalog'
 
-const bouquetsUrl = 'http://127.0.0.1:8000/api/bouquets/'
-
 export default {
+  async fetch ({ store }) {
+    await store.dispatch('bouquets/fetch')
+  },
   components: {
     MiniCatalog
-  },
-  async asyncData ({ $axios }) {
-    const bouquets = await $axios.$get(bouquetsUrl)
-    return { bouquets }
   }
   // methods: {
   //   openBouquet (bouquet) {
