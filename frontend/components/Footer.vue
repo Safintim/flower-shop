@@ -20,7 +20,7 @@
         </b-col>
         <b-col class="info text-lg-right text-sm-center mt-sm-2" cols="12" sm="12" md="3">
           <div class="contacts__title">
-            Бесплатный звонок 24/7
+            Бесплатный звонок 24/7 <br>
             Главный офис
           </div>
           <div class="contacts__phone">8-800-555-35-35</div>
