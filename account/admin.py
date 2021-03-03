@@ -9,15 +9,14 @@ class UserAdmin(admin.ModelAdmin):
     ordering = ('id', 'login',)
     fieldsets = (
         (None, {'fields': ('login', 'password')}),
-        ('Персональная информация', {'fields': ('first_name', 'middle_name', 'last_name')}),
         ('Права', {
-            'fields': ('can_create_operator', 'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
         }),
         ('Важные даты', {'fields': ('last_login', 'date_joined')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('login', 'first_name', 'middle_name', 'last_name'),
+            'fields': ('login',),
         }),
     )
