@@ -7,7 +7,9 @@
 (function($) {
 
     function check_type() {
-        if ($('#id_type').val() === 'BOUQUET') {
+        var element = '{{ object.type }}'
+        element = element || $('#id_type').val()
+        if (element === 'BOUQUET') {
             $('#id_price').prop('readonly', true)
             $('#id_price').css('background', 'lightgrey')
             $('.field-get_small_bouquet_price').show()

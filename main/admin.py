@@ -60,6 +60,10 @@ class ProductAdmin(admin.ModelAdmin):
             return self.readonly_fields + ('type', )
         return self.readonly_fields
 
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        extra_context = {'object': self.get_object(request, object_id)}
+        return super().change_view(request, object_id, form_url, extra_context)
+
 
 class CartProductInline(admin.TabularInline):
     model = models.CartProduct

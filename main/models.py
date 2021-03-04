@@ -48,7 +48,7 @@ class Product(models.Model):
     title = models.CharField('Название', max_length=200)
     slug = models.SlugField('Слаг', unique=True)
     price = models.DecimalField('Цена', max_digits=9, decimal_places=2, default=0, blank=True)
-    image = models.ImageField('Изображение', blank=True)
+    image = models.ImageField('Изображение', upload_to=settings.IMAGE_UPLOAD_PATH, blank=True)
     is_active = models.BooleanField('Активный', default=False)
     discount = models.FloatField('Скидка', default=0, blank=True)
     categories = models.ManyToManyField(Category, verbose_name='Категории')
