@@ -1,0 +1,32 @@
+{% extends 'admin/change_form.html' %}
+{% load static %}
+
+{% block admin_change_form_document_ready %}
+{{ block.super }}
+<script>
+(function($) {
+
+    function check_type() {
+        if ($('#id_type').val() === 'BOUQUET') {
+            $('#id_price').prop('readonly', true)
+            $('#id_price').css('background', 'lightgrey')
+            $('.field-get_small_bouquet_price').show()
+            $('.field-get_middle_bouquet_price').show()
+            $('.field-get_big_bouquet_price').show()
+            $('.field-bouquets').show()
+        } else {
+            $('#id_price').prop('readonly', false)
+            $('#id_price').css('background', 'white')
+            $('.field-get_small_bouquet_price').hide()
+            $('.field-get_middle_bouquet_price').hide()
+            $('.field-get_big_bouquet_price').hide()
+            $('.field-bouquets').hide()
+        }
+    }
+    check_type()
+    $('#id_type').on('change', function () {
+        check_type()
+    })
+})(django.jQuery);
+</script>
+{% endblock %}

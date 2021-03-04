@@ -1,3 +1,5 @@
+import decimal
+
 from django.db import models
 from django.db.models import Sum, F
 
@@ -62,6 +64,36 @@ class Product(models.Model):
     def __str__(self):
         return self.title
 
+    def is_bouquet(self):
+        return self.type == self.TYPE_BOUQUET
+
+    def is_present(self):
+        return self.type == self.TYPE_PRESENT
+
+    def get_small_bouquet(self):
+        return self.bouquets.filter(size=Bouquet.SIZE_SM).first()
+
+    def get_small_bouquet_price(self):
+        bouquet = self.get_small_bouquet()
+        return bouquet.price if bouquet else '-'
+    get_small_bouquet_price.short_description = 'Цена маленького букета'
+
+    def get_middle_bouquet(self):
+        return self.bouquets.filter(size=Bouquet.SIZE_MD).first()
+
+    def get_middle_bouquet_price(self):
+        bouquet = self.get_middle_bouquet()
+        return bouquet.price if bouquet else '-'
+    get_middle_bouquet_price.short_description = 'Цена среднего букета'
+
+    def get_big_bouquet(self):
+        return self.bouquets.filter(size=Bouquet.SIZE_BG).first()
+
+    def get_big_bouquet_price(self):
+        bouquet = self.get_big_bouquet()
+        return bouquet.price if bouquet else '-'
+    get_big_bouquet_price.short_description = 'Цена большого букета'
+
 
 class Flower(models.Model):
     title = models.CharField('Название', max_length=100)
@@ -106,10 +138,13 @@ class Bouquet(models.Model):
 
     @staticmethod
     def calculate_bouquet_price(bouquet):
+        coefficient = Configuration.load().bouquet_price_coefficient
         bouquet_price = BouquetFlower.objects.filter(
             bouquet=bouquet,
-        ).aggregate(
-            total=Sum(F('count') * F('flower__price'), output_field=models.DecimalField()))['total']
+        ).aggregate(total=Sum(
+            F('count') * F('flower__price') * coefficient,
+            output_field=models.DecimalField())
+        )['total']
         return bouquet_price
 
 
@@ -124,3 +159,26 @@ class BouquetFlower(models.Model):
 
     def __str__(self):
         return f'{self.flower} - {self.bouquet}'
+
+
+class Configuration(models.Model):
+    singleton_instance_id = 1
+    bouquet_price_coefficient = models.FloatField('Наценка на цветы', default=1)
+
+    def save(self, *args, **kwargs):
+        self.pk = self.singleton_instance_id
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def load(cls):
+        try:
+            return cls.objects.get()
+        except cls.DoesNotExist:
+            return cls()
+
+    class Meta:
+        verbose_name = 'Настройки'
+        verbose_name_plural = 'Настройки'
+
+    def __str__(self):
+        return 'Настройки'
