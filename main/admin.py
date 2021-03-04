@@ -50,6 +50,16 @@ class ProductAdmin(admin.ModelAdmin):
         return self.readonly_fields
 
 
+class CartProductInline(admin.TabularInline):
+    model = models.CartProduct
+    extra = 0
+
+
+class CartAdmin(admin.ModelAdmin):
+    fields = ('user', )
+    inlines = (CartProductInline,)
+
+
 admin.site.register(models.Reason)
 admin.site.register(models.Category)
 admin.site.register(models.Color)
@@ -57,3 +67,4 @@ admin.site.register(models.Product, ProductAdmin)
 admin.site.register(models.Flower)
 admin.site.register(models.Configuration)
 admin.site.register(models.Bouquet, BouquetAdmin)
+admin.site.register(models.Cart, CartAdmin)

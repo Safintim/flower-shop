@@ -1,5 +1,4 @@
-import decimal
-
+from django.conf import settings
 from django.db import models
 from django.db.models import Sum, F
 
@@ -182,3 +181,27 @@ class Configuration(models.Model):
 
     def __str__(self):
         return 'Настройки'
+
+
+class CartProduct(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Продукт')
+    cart = models.ForeignKey('main.Cart', related_name='related_products', on_delete=models.CASCADE, verbose_name='Корзина')
+
+    class Meta:
+        verbose_name = 'Продукт корзины'
+        verbose_name_plural = 'Продукты корзин'
+
+    def __str__(self):
+        return f'{self.cart.user.login} - {self.product.title}'
+
+
+class Cart(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Пользователь')
+    products = models.ManyToManyField(CartProduct, related_name='related_cart', verbose_name='Продукты', blank=True)
+
+    class Meta:
+        verbose_name = 'Корзина'
+        verbose_name_plural = 'Корзины'
+
+    def __str__(self):
+        return f'{self.id} - {self.cart.user.login}'
