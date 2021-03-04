@@ -185,7 +185,7 @@ class Configuration(models.Model):
 
 class CartProduct(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Продукт')
-    cart = models.ForeignKey('main.Cart', related_name='related_products', on_delete=models.CASCADE, verbose_name='Корзина')
+    cart = models.ForeignKey('main.Cart', on_delete=models.CASCADE, verbose_name='Корзина')
 
     class Meta:
         verbose_name = 'Продукт корзины'
@@ -197,7 +197,6 @@ class CartProduct(models.Model):
 
 class Cart(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Пользователь')
-    products = models.ManyToManyField(CartProduct, related_name='related_cart', verbose_name='Продукты', blank=True)
 
     class Meta:
         verbose_name = 'Корзина'
@@ -205,3 +204,60 @@ class Cart(models.Model):
 
     def __str__(self):
         return f'{self.id} - {self.cart.user.login}'
+
+
+class Review(models.Model):
+    phone = models.CharField('Номер телефона', max_length=200, blank=True, null=True)
+    name = models.CharField('Имя', max_length=200, blank=True, null=True)
+    city = models.CharField('Город', max_length=200, blank=True, null=True)
+    social_link = models.CharField('Ссылка на соц сеть', max_length=200, blank=True, null=True)
+    text = models.TextField('Отзыв', blank=True, null=True)
+    rating = models.PositiveSmallIntegerField('Оценка', default=1)
+    created_at = models.DateTimeField('Дата создания', auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
+
+    def __str__(self):
+        return f'{self.name}'
+
+
+class OrderProduct(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Продукт')
+    price = models.DecimalField('Цена', max_digits=9, decimal_places=2, default=0, blank=True)
+    order = models.ForeignKey('main.Order', on_delete=models.CASCADE, verbose_name='Заказ')
+
+    class Meta:
+        verbose_name = 'Продукт заказа'
+        verbose_name_plural = 'Продукты заказов'
+
+    def __str__(self):
+        return f'{self.order.user.login} - {self.product.title}'
+
+
+class Order(models.Model):
+    STATUS_NEW = 'NEW'
+    STATUS_CANCEL = 'CANCEL'
+    STATUS_END = 'END'
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Пользователь')
+    recipient_name = models.CharField('Имя получателя', max_length=200, blank=True, null=True)
+    recipient_phone = models.CharField('Номер телефона получателя', max_length=20, blank=True, null=True)
+    recipient_address = models.CharField('Адрес получателя', max_length=250)
+    STATUS_CHOICE = (
+        (STATUS_NEW, 'Новый'),
+        (STATUS_CANCEL, 'Отмена'),
+        (STATUS_END, 'Завершен'),
+    )
+    status = models.CharField('Статус', choices=STATUS_CHOICE, max_length=200, default='NEW')
+    comment = models.TextField('Комментарий к заказу', null=True, blank=True)
+    created_at = models.DateTimeField('Дата создания', auto_now_add=True)
+    updated_at = models.DateTimeField('Дата обновления', auto_now=True)
+
+    class Meta:
+        verbose_name = 'Заказ'
+        verbose_name_plural = 'Заказы'
+        ordering = ('-created_at', )
+
+    def __str__(self):
+        return f'Заказ {self.id}'
