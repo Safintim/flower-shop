@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum, F
 
 
 class Category(models.Model):
@@ -36,6 +37,13 @@ class Color(models.Model):
 
 
 class Product(models.Model):
+    TYPE_PRESENT = 'PRESENT'
+    TYPE_BOUQUET = 'BOUQUET'
+    TYPE_CHOICE = (
+        (TYPE_PRESENT, 'Подарок'),
+        (TYPE_BOUQUET, 'Букет'),
+    )
+    type = models.CharField('Тип', choices=TYPE_CHOICE, max_length=12)
     title = models.CharField('Название', max_length=200)
     slug = models.SlugField('Слаг', unique=True)
     price = models.DecimalField('Цена', max_digits=9, decimal_places=2, default=0, blank=True)
@@ -45,6 +53,7 @@ class Product(models.Model):
     categories = models.ManyToManyField(Category, verbose_name='Категории')
     color = models.ForeignKey(Color, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Цвет')
     reasons = models.ManyToManyField(Reason, blank=True, verbose_name='Поводы')
+    bouquets = models.ManyToManyField('main.Bouquet', verbose_name='Букеты', blank=True)
 
     class Meta:
         verbose_name = 'Товар'
@@ -68,25 +77,21 @@ class Flower(models.Model):
         return self.title
 
 
-class Bouquet(Product):
-    small_size = models.ManyToManyField(
-        Flower,
-        related_name='sm_size',
-        through='main.BouquetFlowerSmall',
-        verbose_name='Цветы',
-        blank=False
+class Bouquet(models.Model):
+    SIZE_SM = 'SMALL'
+    SIZE_MD = 'MIDDLE'
+    SIZE_BG = 'BIG'
+    SIZE_CHOICE = (
+        (SIZE_SM, 'Маленький'),
+        (SIZE_MD, 'Средний (как на фото)'),
+        (SIZE_BG, 'Большой'),
     )
-    middle_size = models.ManyToManyField(
+    size = models.CharField('Размер', choices=SIZE_CHOICE, max_length=7)
+    title = models.CharField('Название', max_length=100)
+    price = models.DecimalField('Цена', max_digits=9, decimal_places=2, default=0, blank=True)
+    flowers = models.ManyToManyField(
         Flower,
-        related_name='md_size',
-        through='main.BouquetFlowerMiddle',
-        verbose_name='Цветы',
-        blank=False
-    )
-    big_size = models.ManyToManyField(
-        Flower,
-        related_name='bg_size',
-        through='main.BouquetFlowerBig',
+        through='main.BouquetFlower',
         verbose_name='Цветы',
         blank=True
     )
@@ -99,11 +104,19 @@ class Bouquet(Product):
     def __str__(self):
         return self.title
 
+    @staticmethod
+    def calculate_bouquet_price(bouquet):
+        bouquet_price = BouquetFlower.objects.filter(
+            bouquet=bouquet,
+        ).aggregate(
+            total=Sum(F('count') * F('flower__price'), output_field=models.DecimalField()))['total']
+        return bouquet_price
 
-class BouquetFlowerMiddle(models.Model):
+
+class BouquetFlower(models.Model):
     count = models.PositiveIntegerField('Количество', default=0)
-    flower = models.ForeignKey(Flower, on_delete=models.CASCADE, verbose_name='Цветок', )
-    bouquet = models.ForeignKey(Bouquet, on_delete=models.CASCADE, verbose_name='Букет', )
+    flower = models.ForeignKey(Flower, on_delete=models.CASCADE, verbose_name='Цветок')
+    bouquet = models.ForeignKey(Bouquet, on_delete=models.CASCADE, verbose_name='Букет')
 
     class Meta:
         verbose_name = 'Цветок'
@@ -111,17 +124,3 @@ class BouquetFlowerMiddle(models.Model):
 
     def __str__(self):
         return f'{self.flower} - {self.bouquet}'
-
-
-class BouquetFlowerSmall(BouquetFlowerMiddle):
-    class Meta:
-        proxy = True
-        verbose_name = 'Цветок'
-        verbose_name_plural = 'Цветы в маленьких букетах'
-
-
-class BouquetFlowerBig(BouquetFlowerMiddle):
-    class Meta:
-        proxy = True
-        verbose_name = 'Цветок'
-        verbose_name_plural = 'Цветы в больших букетах'

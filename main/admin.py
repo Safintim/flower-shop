@@ -3,23 +3,18 @@ from django.contrib import admin
 from main import models
 
 
-class BouquetFlowerMiddleInline(admin.TabularInline):
-    model = models.BouquetFlowerMiddle
-    extra = 0
-
-
-class BouquetFlowerSmallInline(admin.TabularInline):
-    model = models.BouquetFlowerSmall
-    extra = 0
-
-
-class BouquetFlowerBigInline(admin.TabularInline):
-    model = models.BouquetFlowerBig
+class BouquetFlowerInline(admin.TabularInline):
+    model = models.BouquetFlower
     extra = 0
 
 
 class BouquetAdmin(admin.ModelAdmin):
-    inlines = (BouquetFlowerMiddleInline, BouquetFlowerSmallInline, BouquetFlowerBigInline)
+    inlines = (BouquetFlowerInline, )
+
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+        form.instance.price = models.Bouquet.calculate_bouquet_price(form.instance)
+        form.save()
 
 
 admin.site.register(models.Reason)
@@ -28,4 +23,3 @@ admin.site.register(models.Color)
 admin.site.register(models.Product)
 admin.site.register(models.Flower)
 admin.site.register(models.Bouquet, BouquetAdmin)
-# admin.site.register(models.BouquetFlower)
