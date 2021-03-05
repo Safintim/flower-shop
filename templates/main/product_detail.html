@@ -3,10 +3,18 @@
 {% block content %}
     <div class="row">
         <div class="col-7">
-            <img class="card-img-top" src="{% if object.image %}{{ object.image.url }} {% else %} https://via.placeholder.com/372 {% endif %}" alt="">
+            <img class="card-img-top" src="
+                    {% if object.image %}{{ object.image.url }} {% else %} https://via.placeholder.com/372 {% endif %}"
+                 alt="">
         </div>
         <div class="col-5">
-            <h1>{{ object.title }}</h1>
+            {% if object.is_present %}
+                {% include 'main/present_detail.html' %}
+            {% else %}
+                {% include 'main/bouquet_detail.html' %}
+            {% endif %}
+            {% include 'accordion.html' %}
+
         </div>
     </div>
 {% endblock %}

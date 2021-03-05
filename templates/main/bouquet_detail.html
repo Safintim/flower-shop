@@ -1,0 +1,28 @@
+<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+    {% for bouquet in bouquets %}
+        <li class="nav-item">
+            <span class="nav-link {% if forloop.first %} active {% endif %}"
+                  id="pills-{{ bouquet.size }}-tab"
+                  data-toggle="pill" href="#pills-{{ bouquet.size }}"
+                  role="tab" aria-controls="pills-{{ bouquet.size }}" aria-selected="true">
+                {{ bouquet.get_size_display }}
+            </span>
+        </li>
+    {% endfor %}
+</ul>
+<div class="tab-content" id="pills-tabContent">
+    {% for bouquet in bouquets %}
+        <div class="tab-pane fade {% if forloop.first %} show active {% endif %}"
+             id="pills-{{ bouquet.size }}" role="tabpanel"
+             aria-labelledby="pills-{{ bouquet.size }}-tab">
+            <h1>{{ bouquet.title|upper }}</h1>
+            <h2><strong>{{ bouquet.price|floatformat:0 }} ₽</strong></h2>
+            <h3>Состав</h3>
+            <ul>
+                {% for bouquet_f in bouquet.bouquetflower_set.all %}
+                    <li>{{ bouquet_f.count }} {{ bouquet_f.flower.title }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+</div>
