@@ -36,6 +36,7 @@ class BouquetAdmin(admin.ModelAdmin):
 
 class ProductAdmin(admin.ModelAdmin):
     change_form_template = 'admin.html'
+    save_on_top = True
     fields = (
         'type',
         'title',

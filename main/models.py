@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.db import models
-from django.db.models import Sum, F
+from django.db.models import Sum, F, Min
 
 
 class Category(models.Model):
@@ -68,6 +68,14 @@ class Product(models.Model):
 
     def is_present(self):
         return self.type == self.TYPE_PRESENT
+
+    @property
+    def min_price(self):
+        if self.type == self.TYPE_PRESENT:
+            price = self.price
+        else:
+            price = self.bouquets.aggregate(Min('price'))['price__min']
+        return price.quantize(1)
 
     def get_small_bouquet(self):
         return self.bouquets.filter(size=Bouquet.SIZE_SM).first()
