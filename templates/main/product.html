@@ -1,6 +1,6 @@
 <div class="card h-100">
     <a href="{% url 'product-detail' object.slug %}">
-        <img class="card-img-top" src="{% if object.image %}{{ object.image.url }} {% else %} https://via.placeholder.com/372 {% endif %}" alt="">
+        <img class="card-img-top" src="{% if object.small_image %}{{ object.small_image.url }} {% else %} https://via.placeholder.com/372 {% endif %}" alt="">
     </a>
     <div class="card-body">
         <h4 class="card-title">
