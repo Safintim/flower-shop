@@ -1,47 +1,53 @@
 {% load static %}
 
-<div class="container-fluid bg-light py-4">
+<div class="container-fluid footer py-5">
     <div class="container">
         <div class="row">
-            <div class="col-1">
-                <img src="{% static 'images/logo.png' %}" alt="logo">
+            <div class="col-1 align-self-center mr-5">
+                <img class="logo" src="{% static 'images/logo.png' %}" alt="logo">
             </div>
-            <div class="col-8">
-                <div class="row">
+            <div class="col-6 d-flex flex-column align-self-center">
+                <div class="row mb-2">
                     <div class="col">
                         <ul class="nav">
-                            <li class="nav-item">
-                                <a class="nav-link active" href="#">Главная</a>
+                            <li class="nav-item mr-3">
+                                <a class="nav-link active p-0" href="#">Главная</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Каталог</a>
+                            <li class="nav-item mr-3">
+                                <a class="nav-link p-0" href="#">Каталог</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Доставка и оплата</a>
+                            <li class="nav-item mr-3">
+                                <a class="nav-link p-0" href="#">Доставка и оплата</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Отзывы</a>
+                            <li class="nav-item mr-3">
+                                <a class="nav-link p-0" href="#">Отзывы</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">О нас</a>
+                            <li class="nav-item mr-3">
+                                <a class="nav-link p-0" href="#">О нас</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Контакты</a>
+                            <li class="nav-item mr-3">
+                                <a class="nav-link p-0" href="#">Контакты</a>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <div class="row justify-content-center">
                     <div class="col">
-                        ИП Каримов Р.М. | ОГРН: 313167517700020 | ИНН: 162612049374
+                        ИП TAКОЙТО Р.М. | ОГРН: 3123123123123122 | ИНН: 1231231231231
                     </div>
                 </div>
             </div>
-            <div class="col-1">
-                social
+            <div class="col-2 align-self-center">
+                <div class="icons d-flex justify-content-center">
+                    <a href="" class="vkontakte"></a>
+                    <a href="" class="instagram"></a>
+                    <a href="" class="whatsapp"></a>
+                    <a href="" class="telegram"></a>
+                </div>
             </div>
-            <div class="col-2">
-                +7 (843) 233-43-91
+            <div class="col-2 d-flex flex-column align-self-center justify-content-center">
+                <div class="contact mb-1">+7 (843) 233-48-40</div>
+                <a class="btn" href="#" role="button">Перезвоните мне</a>
             </div>
         </div>
     </div>

@@ -100,3 +100,67 @@
     position: relative;
     border-bottom: 1px solid #eee;
 }
+
+.footer {
+    background: #ffe7ea
+}
+
+.footer .logo {
+    display: block;
+    height: auto;
+    width: 100px;
+}
+
+.footer .nav-item a {
+    color: #222;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.footer .nav-item a {
+    color: #222;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.footer .nav-item a:hover {
+    color: #e25a76;
+}
+
+.footer .icons a {
+    width: 30px;
+    height: 30px;
+    float: left;
+    background: url('/static/images/icons.png') no-repeat scroll -60px 0;
+    margin-right: 7px;
+}
+
+.footer .icons a.instagram {
+    background-position: -120px 0;
+}
+
+.footer .icons a.whatsapp {
+    background-position: -150px 0;
+}
+
+.footer .icons a.telegram {
+    background-position: -180px 0;
+}
+
+.footer .contact {
+    font-size: 18px;
+}
+.footer .btn {
+    font-size: 14px;
+    color: #f23a70;
+    line-height: 38px;
+    padding: 0 17px;
+    border: 2px solid #f23a70;
+    border-radius: 100px;
+    text-decoration: none;
+}
+
+.footer .btn:hover {
+    background: #f23a70;
+    color: #fff;
+}
