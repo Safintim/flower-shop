@@ -65,3 +65,26 @@
     margin-top: -16px;
     background: url('/static/images/icons.png') -480px -210px;
 }
+
+.navbar {
+    background: #ed5175;
+    border-top: 1px solid #ed5175;
+    border-bottom: 1px solid #ed5175;
+    padding: 0;
+}
+
+.navbar .nav-item {
+    border-right: 1px solid #f18d9e;
+}
+
+.navbar .nav-item a {
+    display: block;
+    text-transform: uppercase;
+    color: #fff;
+    text-decoration: none;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 0 10px;
+    line-height: 55px;
+}
