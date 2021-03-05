@@ -1,14 +1,14 @@
 {% load static %}
 
-<div class="container my-2">
+<div class="container my-3 header">
     <div class="row">
         <div class="col-2">
             <img src="{% static 'images/logo.png' %}" alt="logo">
         </div>
-        <div class="col-10">
-            <div class="row">
-                <div class="col">
-                    <ul class="nav">
+        <div class="col-10 d-flex flex-column align-self-center">
+            <div class="row mb-2">
+                <div class="col d-flex justify-content-center">
+                    <ul class="nav nav-header">
                         <li class="nav-item">
                             <a class="nav-link active" href="#">О НАС</a>
                         </li>
@@ -30,30 +30,40 @@
                     </ul>
                 </div>
             </div>
-            <hr>
             <div class="row">
-                <div class="col">
-                    <ul class="nav">
+                <div class="col d-flex justify-content-center">
+                    <ul class="nav header-contacts">
                         <li class="nav-item">
-                        <span class="nav-link">
-                            Свяжитесь с нами
-                            +7 (843) 233-48-40
-                        </span>
+                            <div class="nav-link">
+                                <div class="label">Свяжитесь с нами</div>
+                                <div class="contact">+7 (843) 233-48-40</div>
+                            </div>
                         </li>
                         <li class="nav-item">
-                        <span class="nav-link">
-                            Напишите нам
-                        </span>
+                            <div class="nav-link">
+                                <div class="label">Напишите нам</div>
+                                <div class="icons d-flex justify-content-center">
+                                    <a href="" class="telegram"></a>
+                                    <a href="" class="whatsapp"></a>
+                                    <a href="" class="viber"></a>
+                                    <a href="" class="instagram"></a>
+                                </div>
+                            </div>
                         </li>
                         <li class="nav-item">
-                        <span class="nav-link">
-                            Город доставки
-                        </span>
+                            <div class="nav-link">
+                                <div class="label">
+                                    Город доставки
+                                </div>
+                                <div class="contact">Казань</div>
+                            </div>
                         </li>
                         <li class="nav-item">
-                        <span class="nav-link">
-                            Корзина
-                        </span>
+                            <div class="nav-link">
+                                <a class="cart " href="">
+                                    <span class="">0 ₽</span>
+                                </a>
+                            </div>
                         </li>
                     </ul>
                 </div>

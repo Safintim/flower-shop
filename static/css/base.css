@@ -1,0 +1,67 @@
+.nav-header {
+    font-size: 12px;
+}
+
+.nav-header .nav-item a {
+    color: #222;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+.nav-header .nav-item a:hover {
+    outline: 0!important;
+    text-decoration: underline;
+    color: #f23a70;
+}
+
+.header-contacts .label {
+    font-size: 12px;
+    color: #9f9f9f;
+    font-style: italic;
+    margin-bottom: 5px;
+}
+
+.header-contacts .contact {
+    font-size: 21px;
+}
+
+.header-contacts .icons a {
+    width: 30px;
+    height: 30px;
+    background: url('/static/images/icons.png') -450px -240px;
+    text-indent: -9999px;
+    display: block;
+    margin-right: 10px;
+}
+
+.header-contacts .icons .whatsapp {
+    background-position: -450px -210px;
+}
+
+.header-contacts .icons .viber {
+    background-position: -450px -270px;
+}
+
+.header-contacts .icons .instagram {
+    background-position: -510px -240px;
+}
+
+.header-contacts .cart {
+    font-size: 21px;
+    text-decoration: none;
+    color: #ed5175;
+    position: relative;
+    padding-left: 36px;
+    top: 18px;
+    height: 27px;
+}
+
+.header-contacts .cart:after {
+    width: 30px;
+    height: 30px;
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    margin-top: -16px;
+    background: url('/static/images/icons.png') -480px -210px;
+}
