@@ -1,5 +1,6 @@
-<div class="card h-100">
+<div class="card h-100 card-product">
     <a href="{% url 'product-detail' object.slug %}">
+        <span class="notify-badge">NEW</span>
         <img class="card-img-top" src="{% if object.small_image %}{{ object.small_image.url }} {% else %} https://via.placeholder.com/372 {% endif %}" alt="">
     </a>
     <div class="card-body">
