@@ -246,3 +246,35 @@ html {
     background: #1abee9;
 }
 
+.page-item:first-child .page-link {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.page-item:last-child .page-link {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.pagination a {
+    display: block;
+    min-width: 18px;
+    line-height: 18px;
+    border: 1px solid #de516b;
+    border-radius: 100px!important;
+    padding: 0 3px;
+    color: #de516b;
+    font-size: 14px;
+    margin-right: 5px;
+}
+
+.pagination .page-item.active .page-link {
+    background: #de516b;
+    color: #fff;
+    border-color: #de516b;
+}
+
+.pagination .page-item:hover a{
+    background: white;
+    border-color: inherit;
+    color: #de516b;
+}

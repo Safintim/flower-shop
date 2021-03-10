@@ -5,6 +5,7 @@ from main import models
 
 class ProductList(generic.ListView):
     model = models.Product
+    paginate_by = 60
 
 
 class ProductDetail(generic.DetailView):
