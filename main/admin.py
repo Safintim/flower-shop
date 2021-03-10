@@ -4,6 +4,7 @@ from django.contrib.flatpages.models import FlatPage
 from django.db import models as django_models
 
 from ckeditor.widgets import CKEditorWidget
+from django.db.models import Min
 
 from main import models
 
@@ -65,6 +66,13 @@ class ProductAdmin(admin.ModelAdmin):
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = {'object': self.get_object(request, object_id)}
         return super().change_view(request, object_id, form_url, extra_context)
+
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+        if form.instance.type == models.Product.TYPE_BOUQUET:
+            min_price = form.instance.bouquets.aggregate(Min('price'))['price__min']
+            form.instance.price = min_price
+            form.save()
 
 
 class CartProductInline(admin.TabularInline):

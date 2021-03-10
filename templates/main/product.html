@@ -7,6 +7,6 @@
         <h4 class="card-title">
             <a href="{% url 'product-detail' object.slug %}">{{ object.title }}</a>
         </h4>
-        <h5>от {{ object.min_price }} ₽</h5>
+        <h5>от {{ object.price|floatformat:0 }} ₽</h5>
     </div>
 </div>
