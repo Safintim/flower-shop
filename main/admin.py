@@ -1,18 +1,7 @@
 from django.contrib import admin
-from django.contrib.flatpages.admin import FlatPageAdmin as FlatpageFormOld
-from django.contrib.flatpages.models import FlatPage
-from django.db import models as django_models
-
-from ckeditor.widgets import CKEditorWidget
 from django.db.models import Min
 
 from main import models
-
-
-class FlatPageAdmin(FlatpageFormOld):
-    formfield_overrides = {
-        django_models.TextField: {'widget': CKEditorWidget}
-    }
 
 
 class BouquetFlowerInline(admin.TabularInline):
@@ -87,8 +76,6 @@ class CartAdmin(admin.ModelAdmin):
     inlines = (CartProductInline,)
 
 
-admin.site.unregister(FlatPage)
-admin.site.register(FlatPage, FlatPageAdmin)
 admin.site.register(models.Reason)
 admin.site.register(models.Category)
 admin.site.register(models.Color)
