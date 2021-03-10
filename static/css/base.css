@@ -1,3 +1,6 @@
+html {
+    color: #222;
+}
 .nav-header {
     font-size: 12px;
 }
@@ -168,12 +171,57 @@
 .card-product {
     position: relative;
     display: inline-block;
+    border-radius: 8px;
+    background: #fff;
+    border: 1px solid #ffcdcf;
+}
+
+
+.card-product:hover {
+    box-shadow: 0 0 24px 1px rgba(65,56,58,.35);
 }
 
 .card-product .badges {
     position: absolute;
     right: -20px;
     top: 10px;
+}
+
+.card-product .card-title {
+    font-size: 17px;
+}
+
+.card-product .product-price {
+    font-weight: bold;
+}
+
+.card-product a{
+    color: black;
+}
+
+.card-product .btn-add-cart {
+    vertical-align: top;
+    position: relative;
+    display: block;
+    text-decoration: none;
+    padding: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin: 8px 0;
+    color: #111;
+    background: #e9478f;
+    cursor: pointer;
+}
+
+.card-product .btn-add-cart span {
+    display: block;
+    line-height: 46px;
+    text-align: center;
+    background: #fff;
+}
+
+.card-product .btn-add-cart span:hover {
+    color: #e9478f;
 }
 
 .card-product .notify-badge {
