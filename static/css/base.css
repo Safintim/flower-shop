@@ -278,7 +278,56 @@ html {
     border-color: inherit;
     color: #de516b;
 }
+
 img {
     max-width: 100%;
     height: auto;
+}
+.contact-card {
+    box-shadow: 0 0 24px 1px rgba(65,56,58,.35);
+}
+.contact-card .contact-item {
+    padding-left: 32px;
+    margin: 17px 0;
+    position: relative;
+}
+
+.contact-card .contact-item:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    background: url('/static/images/icons.png') no-repeat scroll -300px 0;
+    width: 30px;
+    height: 30px;
+    margin-top: -16px;
+}
+
+.contact-card .contact-item.phone:after {
+    background-position: -330px 0;
+    left: -3px;
+}
+
+.contact-card .contact-item.email:after {
+    background-position: -360px 0;
+    left: -3px;
+}
+
+.contacts-page .icons a {
+    width: 30px;
+    height: 30px;
+    background: url('/static/images/icons.png') no-repeat scroll -60px 0;
+    margin-right: 7px;
+}
+
+.contacts-page .icons a.instagram {
+    background-position: -120px 0;
+}
+
+.contacts-page.icons a.whatsapp {
+    background-position: -150px 0;
+}
+
+.contacts-page .icons a.telegram {
+    background-position: -180px 0;
 }
