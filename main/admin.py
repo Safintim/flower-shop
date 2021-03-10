@@ -49,6 +49,8 @@ class ProductAdmin(admin.ModelAdmin):
         'small_image',
         'big_image',
         'is_active',
+        'is_hit',
+        'is_new',
         'discount',
         'categories',
         'color',

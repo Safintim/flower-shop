@@ -53,7 +53,7 @@ class Product(models.Model):
     is_active = models.BooleanField('Активный', default=False)
     is_hit = models.BooleanField('Хит', default=False)
     is_new = models.BooleanField('Новинка', default=False)
-    discount = models.FloatField('Скидка', default=0, blank=True)
+    discount = models.PositiveIntegerField('Скидка', default=0, blank=True)
     categories = models.ManyToManyField(Category, verbose_name='Категории')
     color = models.ForeignKey(Color, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Цвет')
     reasons = models.ManyToManyField(Reason, blank=True, verbose_name='Поводы')

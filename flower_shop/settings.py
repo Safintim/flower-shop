@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
     'account.apps.AccountConfig',
     'main.apps.MainConfig',
+    'core.apps.CoreConfig',
     'ckeditor',
     'ckeditor_uploader',
 ]

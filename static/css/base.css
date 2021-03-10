@@ -170,14 +170,31 @@
     display: inline-block;
 }
 
-.card-product .notify-badge {
+.card-product .badges {
     position: absolute;
     right: -20px;
     top: 10px;
-    background: red;
+}
+
+.card-product .notify-badge {
     text-align: center;
     border-radius: 30px 30px 30px 30px;
     color: white;
-    padding: 5px 5px;
-    font-size: 16px;
+    padding: 0 20px;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 29px;
 }
+
+.card-product .badges .badge-discount {
+    background: #cb2159;
+}
+
+.card-product .badges .badge-is-hit {
+    background: #7dcb21;
+}
+
+.card-product .badges .badge-is-new {
+    background: #1abee9;
+}
+

@@ -1,6 +1,18 @@
+{% load custom_tags %}
+
 <div class="card h-100 card-product">
     <a href="{% url 'product-detail' object.slug %}">
-        <span class="notify-badge">NEW</span>
+        <div class="badges d-flex flex-column">
+            {% if object.is_hit %}
+                <div class="notify-badge badge-is-hit mb-1">{{ object|get_field_name:'is_hit'|upper }}</div>
+            {% endif %}
+            {% if object.is_new %}
+                <div class="notify-badge badge-is-new mb-1">{{ object|get_field_name:'is_new'|upper }}</div>
+            {% endif %}
+            {% if object.discount %}
+                <div class="notify-badge badge-discount mb-1">-{{ object.discount }}%</div>
+            {% endif %}
+        </div>
         <img class="card-img-top" src="{% if object.small_image %}{{ object.small_image.url }} {% else %} https://via.placeholder.com/372 {% endif %}" alt="">
     </a>
     <div class="card-body">
