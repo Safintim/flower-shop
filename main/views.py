@@ -17,3 +17,15 @@ class ProductDetail(generic.DetailView):
         if obj.is_bouquet():
             context['bouquets'] = obj.bouquets.order_by('-size')
         return context
+
+
+class AboutView(generic.TemplateView):
+    template_name = 'about.html'
+
+
+class ShippingAndPaymentView(generic.TemplateView):
+    template_name = 'shipping_and_payment.html'
+
+
+class Contacts(generic.TemplateView):
+    template_name = 'contacts.html'

@@ -278,3 +278,7 @@ html {
     border-color: inherit;
     color: #de516b;
 }
+img {
+    max-width: 100%;
+    height: auto;
+}

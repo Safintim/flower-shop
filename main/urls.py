@@ -9,6 +9,9 @@ def index(request):
 
 
 urlpatterns = [
+    path('about/', views.AboutView.as_view(), name='about'),
+    path('shipping/', views.ShippingAndPaymentView.as_view(), name='shipping'),
+    path('contacts/', views.Contacts.as_view(), name='contacts'),
     path('catalog/product/<str:slug>/', views.ProductDetail.as_view(), name='product-detail'),
     path('catalog/all/', views.ProductList.as_view(), name='product-list'),
     path('', index, name='index'),
