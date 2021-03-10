@@ -1,11 +1,36 @@
 from django.conf import settings
 from django.db import models
-from django.db.models import Sum, F, Min
+from django.db.models import Sum, F
+
+
+class ActiveQuerySet(models.QuerySet):
+    def active(self):
+        return self.filter(is_active=True)
+
+
+class CategoryQuerySet(ActiveQuerySet):
+
+    def parent_null(self):
+        return self.filter(parent__isnull=True)
+
+
+class CategoryManager(models.Manager):
+    def get_queryset(self):
+        return CategoryQuerySet(self.model, using=self._db)
+
+    def active(self):
+        return self.get_queryset().active()
+
+    def parent_null(self):
+        return self.get_queryset().parent_null()
 
 
 class Category(models.Model):
     title = models.CharField('Название', max_length=100)
     slug = models.SlugField('Слаг', unique=True)
+    parent = models.ForeignKey('main.Category', on_delete=models.SET_NULL, related_name='children', null=True, blank=True)
+    is_active = models.BooleanField('Активна', default=True)
+    objects = CategoryManager()
 
     class Meta:
         verbose_name = 'Категория'

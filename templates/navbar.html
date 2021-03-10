@@ -7,54 +7,29 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <div class="container justify-content-center">
             <ul class="navbar-nav navbar-expand">
-                <li class="nav-item p-2 active">
-                    <a class="nav-link" href="#">8 марта <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item p-2">
-                    <a class="nav-link" href="#">Розы</a>
-                </li>
-                <li class="nav-item p-2">
-                    <a class="nav-link" href="#">Акции</a>
-                </li>
                 <li class="nav-item p-2">
                     <a class="nav-link" href="#">Все букеты</a>
                 </li>
-                <li class="nav-item p-2 dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false">
-                        Цветы
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Лилии</a>
-                        <a class="dropdown-item" href="#">Пионы</a>
-                    </div>
-                </li>
-                <li class="nav-item p-2 dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false">
-                        Композиции
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Шляпные коробки</a>
-                        <a class="dropdown-item" href="#">Цветы в коробках</a>
-                    </div>
-                </li>
-                <li class="nav-item p-2">
-                    <a class="nav-link" href="#">INSTASHOP</a>
-                </li>
-                <li class="nav-item p-2 dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false">
-                        Подарки
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Конфеты</a>
-                        <a class="dropdown-item" href="#">Мягкие игрушки</a>
-                    </div>
-                </li>
+                {% for category in categories %}
+                    {% if category.children.all.exists %}
+                        <li class="nav-item p-2 dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                               data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false">
+                                {{ category.title }}
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                {% for ch in category.children.all %}
+                                    <a class="dropdown-item" href="#">{{ ch.title }}</a>
+                                {% endfor %}
+                            </div>
+                        </li>
+                    {% else %}
+                        <li class="nav-item p-2">
+                            <a class="nav-link" href="#">{{ category.title }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
             </ul>
         </div>
     </div>
