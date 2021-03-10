@@ -8,7 +8,7 @@
         <div class="container justify-content-center">
             <ul class="navbar-nav navbar-expand">
                 <li class="nav-item p-2">
-                    <a class="nav-link" href="#">Все букеты</a>
+                    <a class="nav-link" href="{% url 'product-list' %}">Все букеты</a>
                 </li>
                 {% for category in categories %}
                     {% if category.children.all.exists %}
@@ -20,13 +20,13 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 {% for ch in category.children.all %}
-                                    <a class="dropdown-item" href="#">{{ ch.title }}</a>
+                                    <a class="dropdown-item" href="{% url 'product-by-category' ch.slug %}">{{ ch.title }}</a>
                                 {% endfor %}
                             </div>
                         </li>
                     {% else %}
                         <li class="nav-item p-2">
-                            <a class="nav-link" href="#">{{ category.title }}</a>
+                            <a class="nav-link" href="{% url 'product-by-category' category.slug %}">{{ category.title }}</a>
                         </li>
                     {% endif %}
                 {% endfor %}

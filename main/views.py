@@ -3,9 +3,19 @@ from django.views import generic
 from main import models
 
 
-class ProductList(generic.ListView):
+class BaseProductListMixin:
     model = models.Product
     paginate_by = 60
+
+
+class ProductByCategory(BaseProductListMixin, generic.ListView):
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(categories__slug=self.kwargs['slug'])
+
+
+class ProductList(BaseProductListMixin, generic.ListView):
+   pass
 
 
 class ProductDetail(generic.DetailView):
