@@ -1,6 +1,18 @@
 html {
     color: #222;
 }
+
+a {
+    outline: 0!important;
+    text-decoration: underline;
+    color: #f23a70;
+}
+
+.btn:hover {
+    background: #f23a70;
+    color: #fff;
+}
+
 .nav-header {
     font-size: 12px;
 }
@@ -265,6 +277,7 @@ html {
     color: #de516b;
     font-size: 14px;
     margin-right: 5px;
+    text-decoration: none;
 }
 
 .pagination .page-item.active .page-link {
@@ -330,4 +343,51 @@ img {
 
 .contacts-page .icons a.telegram {
     background-position: -180px 0;
+}
+
+.review {
+    padding: 40px 45px;
+    background: #f8f6f6;
+    border-radius: 10px;
+    font-style: italic;
+}
+
+.review .date {
+    color: #9f9f9f;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+
+.review .stars .star {
+    width: 19px;
+    height: 19px;
+    background: url('/static/images/icons.png') -300px -330px;
+    text-indent: -9999px;
+    cursor: pointer;
+    margin-right: 4px;
+}
+
+.review .review-body {
+    margin: 18px 0;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.create-review {
+    background: #f99a00;
+    border-radius: 100px;
+    color: #fff;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 42px;
+    padding: 0 17px;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-family: Roboto,Arial,sans-serif;
+    border: none;
+    cursor: pointer;
+    outline: 0!important;
 }

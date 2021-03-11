@@ -1,3 +1,7 @@
 from django.db import models
 
-# Create your models here.
+
+class ActiveQuerySet(models.QuerySet):
+    def active(self):
+        return self.filter(is_active=True)
+

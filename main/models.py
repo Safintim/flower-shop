@@ -2,10 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models import Sum, F
 
-
-class ActiveQuerySet(models.QuerySet):
-    def active(self):
-        return self.filter(is_active=True)
+from core.models import ActiveQuerySet
 
 
 class CategoryQuerySet(ActiveQuerySet):
@@ -232,23 +229,6 @@ class Cart(models.Model):
 
     def __str__(self):
         return f'{self.id} - {self.cart.user.login}'
-
-
-class Review(models.Model):
-    phone = models.CharField('Номер телефона', max_length=200, blank=True, null=True)
-    name = models.CharField('Имя', max_length=200, blank=True, null=True)
-    city = models.CharField('Город', max_length=200, blank=True, null=True)
-    social_link = models.CharField('Ссылка на соц сеть', max_length=200, blank=True, null=True)
-    text = models.TextField('Отзыв', blank=True, null=True)
-    rating = models.PositiveSmallIntegerField('Оценка', default=1)
-    created_at = models.DateTimeField('Дата создания', auto_now_add=True)
-
-    class Meta:
-        verbose_name = 'Отзыв'
-        verbose_name_plural = 'Отзывы'
-
-    def __str__(self):
-        return f'{self.name}'
 
 
 class OrderProduct(models.Model):
