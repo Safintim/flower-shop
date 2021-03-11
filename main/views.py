@@ -15,6 +15,12 @@ class BaseProductListMixin:
         self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
         return self.filterset.qs.distinct()
 
+    def get_context_data(self):
+        context = super().get_context_data(object_list=self.get_queryset())
+        context['reasons'] = models.Reason.objects.all()
+        context['filter'] = ProductFilter()
+        return context
+
 
 class ProductByCategory(BaseProductListMixin, generic.ListView):
     def get_queryset(self):
@@ -28,7 +34,7 @@ class ProductList(BaseProductListMixin, generic.ListView):
 
 class ProductFilterView(BaseProductListMixin, generic.ListView):
     def get(self, request, *args, **kwargs):
-        context = super().get_context_data(object_list=self.get_queryset())
+        context = super().get_context_data()
         return render(request, 'main/list.html', context)
 
 

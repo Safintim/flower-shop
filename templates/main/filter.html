@@ -5,10 +5,12 @@
                 aria-haspopup="true" aria-expanded="false">
             Цена
         </button>
-        <div class="dropdown-menu p-5 w-100 text-center">
+        <div class="dropdown-menu keep-open p-5 w-100 text-center">
             <div class="row justify-content-center mb-3">
-                <div class="col-5"><input type="text" class="form-control" id="price_min" name="price__gte" value="1000"></div>
-                <div class="col-5"><input type="text" class="form-control" id="price_max" name="price__lte" value="9000"></div>
+                <div class="col-5"><input type="text" class="form-control" id="price_min" name="price__gte"
+                                          value="1000"></div>
+                <div class="col-5"><input type="text" class="form-control" id="price_max" name="price__lte"
+                                          value="9000"></div>
             </div>
             <div id="slider"></div>
             <button type="button" id="btn_price" class="btn btn-primary mt-3">Применить</button>
@@ -19,8 +21,14 @@
                 aria-haspopup="true" aria-expanded="false">
             Повод
         </button>
-        <div class="dropdown-menu">
-            ...
+        <div class="dropdown-menu p-3">
+            {% for reason in reasons %}
+                <div class="form-group">
+                    <input type="checkbox" class="form-check-input" id="reason-filter-{{ reason.pk }}" name="reason"
+                           value="{{ reason.pk }}">
+                    <label for="reason-filter-{{ reason.pk }}" class="form-check-label">{{ reason.title }}</label>
+                </div>
+            {% endfor %}
         </div>
     </div>
     <div class="btn-group">

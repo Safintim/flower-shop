@@ -362,7 +362,7 @@ img {
 .review .stars .star {
     width: 19px;
     height: 19px;
-    background: url('/static/images/icons.png') -300px -330px;
+    background:  -300px -330px;
     text-indent: -9999px;
     cursor: pointer;
     margin-right: 4px;
@@ -398,4 +398,33 @@ img {
 }
 .filter .dropdown-menu {
     min-width: 300px !important;
+}
+
+.filter input[type=checkbox] {
+    display: none;
+}
+.filter input[type=checkbox]+label {
+    font-size: 14px;
+    color: #856969;
+    position: relative;
+    padding-left: 27px;
+    cursor: pointer;
+    display: block;
+}
+
+.filter input[type=checkbox]+label:after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: url('/static/images/icons.png') no-repeat scroll -270px -30px;
+    left: 0;
+    top: 1px;
+}
+
+.filter input[type=checkbox]:checked+label:after {
+    background-position: -270px -60px;
+}
+.filter input[type=checkbox]+label:after {
+    top: -1px;
 }
