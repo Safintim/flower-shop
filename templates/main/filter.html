@@ -1,0 +1,44 @@
+<form action="{% url 'product-list-filter' %}" class="filter">
+    <input type="hidden" name="category__slug" value="{{ category_slug }}">
+    <div class="btn-group">
+        <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+            Цена
+        </button>
+        <div class="dropdown-menu p-5 w-100 text-center">
+            <div class="row justify-content-center mb-3">
+                <div class="col-5"><input type="text" class="form-control" id="price_min" name="price__gte" value="1000"></div>
+                <div class="col-5"><input type="text" class="form-control" id="price_max" name="price__lte" value="9000"></div>
+            </div>
+            <div id="slider"></div>
+            <button type="button" id="btn_price" class="btn btn-primary mt-3">Применить</button>
+        </div>
+    </div>
+    <div class="btn-group">
+        <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+            Повод
+        </button>
+        <div class="dropdown-menu">
+            ...
+        </div>
+    </div>
+    <div class="btn-group">
+        <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+            Цвет
+        </button>
+        <div class="dropdown-menu">
+            ...
+        </div>
+    </div>
+    <div class="btn-group">
+        <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+            Букет с
+        </button>
+        <div class="dropdown-menu">
+            ...
+        </div>
+    </div>
+</form>

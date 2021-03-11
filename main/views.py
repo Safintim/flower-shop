@@ -1,11 +1,19 @@
+from django.shortcuts import render
 from django.views import generic
 
 from main import models
+from main.filter import ProductFilter
 
 
 class BaseProductListMixin:
     model = models.Product
-    paginate_by = 60
+    paginate_by = 1
+    filterset_class = ProductFilter
+
+    def get_queryset(self):
+        queryset = self.model.objects.all()
+        self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
+        return self.filterset.qs.distinct()
 
 
 class ProductByCategory(BaseProductListMixin, generic.ListView):
@@ -15,7 +23,13 @@ class ProductByCategory(BaseProductListMixin, generic.ListView):
 
 
 class ProductList(BaseProductListMixin, generic.ListView):
-   pass
+    pass
+
+
+class ProductFilterView(BaseProductListMixin, generic.ListView):
+    def get(self, request, *args, **kwargs):
+        context = super().get_context_data(object_list=self.get_queryset())
+        return render(request, 'main/list.html', context)
 
 
 class ProductDetail(generic.DetailView):

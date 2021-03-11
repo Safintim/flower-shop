@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'widget_tweaks',
+    'django_filters',
 
     'account.apps.AccountConfig',
     'main.apps.MainConfig',
