@@ -391,3 +391,8 @@ img {
     cursor: pointer;
     outline: 0!important;
 }
+
+.modal .form-control {
+    border-radius: 10px!important;
+    border: 1px solid #f1b0bb!important;
+}

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'ckeditor',
     'ckeditor_uploader',
+    'widget_tweaks',
 
     'account.apps.AccountConfig',
     'main.apps.MainConfig',
@@ -135,6 +136,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 AUTH_USER_MODEL = 'account.User'
 
 IMAGE_UPLOAD_PATH = 'static/uploads/images/'
+IMAGE_REVIEW_UPLOAD_PATH = 'static/uploads/reviews/'
 
 CKEDITOR_BASEPATH = '/staticfiles/ckeditor/ckeditor/'
 CKEDITOR_UPLOAD_PATH = IMAGE_UPLOAD_PATH
