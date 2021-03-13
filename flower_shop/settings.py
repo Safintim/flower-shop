@@ -25,7 +25,7 @@ SECRET_KEY = '(t2w63ugzv*xph#ghcqvu2-&7+22$ga7%s0x!ewzxusuo75zcl'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -129,10 +129,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-    BASE_DIR / 'static',
-)
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+
+# for local
+# STATICFILES_DIRS = (
+#     BASE_DIR / 'static',
+# )
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# for pythonanywhere
+STATIC_ROOT = BASE_DIR / 'static'
+
+
 
 AUTH_USER_MODEL = 'account.User'
 

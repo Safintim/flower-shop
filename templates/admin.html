@@ -16,7 +16,11 @@
             $('.field-get_middle_bouquet_price').show()
             $('.field-get_big_bouquet_price').show()
             $('.field-bouquets').show()
+            $('.field-bouquets label').addClass('required')
+            $('.field-bouquets select').prop('required', true);
         } else {
+            $('.field-bouquets label').removeClass('required')
+            $('.field-bouquets select').prop('required', false)
             $('#id_price').prop('readonly', false)
             $('#id_price').css('background', 'white')
             $('.field-get_small_bouquet_price').hide()

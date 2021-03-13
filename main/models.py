@@ -25,7 +25,14 @@ class CategoryManager(models.Manager):
 class Category(models.Model):
     title = models.CharField('Название', max_length=100)
     slug = models.SlugField('Слаг', unique=True)
-    parent = models.ForeignKey('main.Category', on_delete=models.SET_NULL, related_name='children', null=True, blank=True)
+    parent = models.ForeignKey(
+        'main.Category',
+        on_delete=models.SET_NULL,
+        related_name='children',
+        null=True,
+        blank=True,
+        verbose_name='Родительская'
+    )
     is_active = models.BooleanField('Активна', default=True)
     objects = CategoryManager()
 

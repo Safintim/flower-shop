@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.db.models import Min
+from django.utils.safestring import mark_safe
 
+from core.admin import BaseModelAdmin
 from main import models
 
 
@@ -9,8 +11,11 @@ class BouquetFlowerInline(admin.TabularInline):
     extra = 0
 
 
-class BouquetAdmin(admin.ModelAdmin):
+class BouquetAdmin(BaseModelAdmin):
     fields = ('size', 'title', 'price', 'bouquet_price_coefficient')
+    list_display = ('id', 'title', 'size', 'price')
+    list_display_links = ('id', 'title')
+    list_filter = ('size',)
     readonly_fields = ('price', 'bouquet_price_coefficient')
     inlines = (BouquetFlowerInline, )
 
@@ -24,7 +29,7 @@ class BouquetAdmin(admin.ModelAdmin):
         form.save()
 
 
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(BaseModelAdmin):
     change_form_template = 'admin.html'
     save_on_top = True
     fields = (
@@ -46,7 +51,11 @@ class ProductAdmin(admin.ModelAdmin):
         'reasons',
         'bouquets',
     )
-
+    list_display = ('id', 'small_image_list','title', 'price', 'is_active', 'is_hit', 'is_new', 'color')
+    list_display_links = ('id', 'small_image_list', 'title')
+    list_filter = ('price', 'type', 'is_active', 'is_hit', 'is_new', 'color')
+    list_editable = ('is_active', 'is_hit', 'is_new', 'color')
+    search_fields = ('title',)
     readonly_fields = ('get_small_bouquet_price', 'get_middle_bouquet_price', 'get_big_bouquet_price')
 
     def get_readonly_fields(self, request, obj=None):
@@ -60,10 +69,17 @@ class ProductAdmin(admin.ModelAdmin):
 
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)
+        for formset in formsets:
+            print(formset.model)
         if form.instance.type == models.Product.TYPE_BOUQUET:
             min_price = form.instance.bouquets.aggregate(Min('price'))['price__min']
             form.instance.price = min_price
             form.save()
+
+    def small_image_list(self, obj):
+        url = obj.small_image.url if obj.small_image else 'https://via.placeholder.com/100'
+        return mark_safe(f'<img src="{url}" width=100 height="100" />')
+    small_image_list.short_description = 'Изображение'
 
 
 class CartProductInline(admin.TabularInline):
@@ -71,16 +87,36 @@ class CartProductInline(admin.TabularInline):
     extra = 0
 
 
-class CartAdmin(admin.ModelAdmin):
+class CartAdmin(BaseModelAdmin):
     fields = ('user', )
     inlines = (CartProductInline,)
 
 
+class FlowerAdmin(BaseModelAdmin):
+    list_display = ('id', 'title', 'price', 'is_add_filter')
+    list_display_links = ('id', 'title')
+    list_filter = ('is_add_filter',)
+    list_editable = ('price', 'is_add_filter')
+    search_fields = ('title',)
+
+
+class ConfigurationAdmin(BaseModelAdmin):
+    list_display = ('__str__', 'bouquet_price_coefficient',)
+    list_editable = ('bouquet_price_coefficient',)
+
+
+class CategoryAdmin(BaseModelAdmin):
+    list_display = ('id', 'title', 'parent', 'is_active')
+    list_display_links = ('id', 'title')
+    list_editable = ('parent', 'is_active')
+    list_filter = ('is_active', 'parent')
+
+
 admin.site.register(models.Reason)
-admin.site.register(models.Category)
+admin.site.register(models.Category, CategoryAdmin)
 admin.site.register(models.Color)
 admin.site.register(models.Product, ProductAdmin)
-admin.site.register(models.Flower)
-admin.site.register(models.Configuration)
+admin.site.register(models.Flower, FlowerAdmin)
+admin.site.register(models.Configuration, ConfigurationAdmin)
 admin.site.register(models.Bouquet, BouquetAdmin)
 admin.site.register(models.Cart, CartAdmin)
