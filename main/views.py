@@ -3,6 +3,7 @@ from django.views import generic
 
 from main import models
 from main.filter import ProductFilter
+from reviews.models import Review
 
 
 class BaseProductListMixin:
@@ -50,6 +51,16 @@ class ProductDetail(generic.DetailView):
             context['bouquets'] = obj.bouquets.order_by('-size')
         return context
 
+
+class IndexView(generic.TemplateView):
+    template_name = 'index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['hit_products'] = models.Product.objects.filter(is_hit=True, is_new=False)[:6]
+        context['new_products'] = models.Product.objects.filter(is_new=True, is_hit=False)[:6]
+        context['reviews'] = Review.objects.filter(is_active=True)[:6]
+        return context
 
 class AboutView(generic.TemplateView):
     template_name = 'about.html'

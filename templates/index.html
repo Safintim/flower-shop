@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+  {% include 'main/list.html' with object_list=hit_products %}
+  <hr/>
+  {% include 'main/list.html' with object_list=new_products %}
+  <hr/>
+  
+
+
+{% endblock %}
+
+
