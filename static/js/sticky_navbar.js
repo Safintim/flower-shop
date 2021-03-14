@@ -1,6 +1,6 @@
 if ($(window).width() > 992) {
     $(window).scroll(function () {
-        if ($(this).scrollTop() > 150) {
+        if ($(this).scrollTop() > 100) {
             $('#navbar_top').addClass("fixed-top");
             // add padding top to show content behind navbar
             $('body').css('padding-top', $('.navbar').outerHeight() + 'px');

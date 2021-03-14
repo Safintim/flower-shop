@@ -35,6 +35,7 @@ class User(AbstractUser):
     username = None
     password = models.CharField('Пароль', max_length=128, blank=True, null=True)
     login = models.CharField('Логин', max_length=100, unique=True)
+    phone = models.CharField('Номер телефона', max_length=11, unique=True, blank=True, null=True)
 
     USERNAME_FIELD = 'login'
     REQUIRED_FIELDS = []

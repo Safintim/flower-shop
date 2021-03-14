@@ -77,16 +77,16 @@ class Product(models.Model):
     title = models.CharField('Название', max_length=200)
     slug = models.SlugField('Слаг', unique=True)
     price = models.DecimalField('Цена', max_digits=9, decimal_places=2, default=0, blank=True)
-    small_image = models.ImageField('Изображение(маленькое)', upload_to=settings.IMAGE_UPLOAD_PATH, blank=True)
-    big_image = models.ImageField('Изображение(большое)', upload_to=settings.IMAGE_UPLOAD_PATH, blank=True)
-    is_active = models.BooleanField('Активный', default=False)
-    is_hit = models.BooleanField('Хит', default=False)
-    is_new = models.BooleanField('Новинка', default=False)
+    small_image = models.ImageField('Изображение(маленькое)', upload_to=settings.IMAGE_UPLOAD_PATH, help_text='Размер 372х372')
+    big_image = models.ImageField('Изображение(большое)', upload_to=settings.IMAGE_UPLOAD_PATH, help_text='Размер 640x640')
+    is_active = models.BooleanField('Активный', default=False, db_index=True)
+    is_hit = models.BooleanField('Хит', default=False, db_index=True)
+    is_new = models.BooleanField('Новинка', default=False, db_index=True)
     discount = models.PositiveIntegerField('Скидка', default=0, blank=True)
-    categories = models.ManyToManyField(Category, verbose_name='Категории')
-    color = models.ForeignKey(Color, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Цвет')
-    reasons = models.ManyToManyField(Reason, blank=True, verbose_name='Поводы')
-    bouquets = models.ManyToManyField('main.Bouquet', verbose_name='Букеты', blank=True)
+    categories = models.ManyToManyField(Category, verbose_name='Категории', db_index=True)
+    color = models.ForeignKey(Color, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Цвет', db_index=True)
+    reasons = models.ManyToManyField(Reason, blank=True, verbose_name='Поводы', db_index=True)
+    bouquets = models.ManyToManyField('main.Bouquet', verbose_name='Букеты', blank=True, db_index=True)
 
     class Meta:
         verbose_name = 'Товар'
@@ -149,8 +149,8 @@ class Bouquet(models.Model):
         (SIZE_MD, 'Средний (как на фото)'),
         (SIZE_BG, 'Большой'),
     )
-    size = models.CharField('Размер', choices=SIZE_CHOICE, max_length=7)
-    title = models.CharField('Название', max_length=100)
+    size = models.CharField('Размер', choices=SIZE_CHOICE, max_length=7, db_index=True)
+    title = models.CharField('Название', max_length=100, db_index=True)
     price = models.DecimalField('Цена', max_digits=9, decimal_places=2, default=0, blank=True)
     flowers = models.ManyToManyField(
         Flower,
