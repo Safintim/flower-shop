@@ -36,8 +36,13 @@
                 aria-haspopup="true" aria-expanded="false">
             Цвет
         </button>
-        <div class="dropdown-menu">
-            ...
+        <div class="dropdown-menu p-3">
+          {% for color in colors %}
+            <div class="form-group">
+              <input type="checkbox" class="form-check-input" id="color-filter-{{ color.pk }}" name="color" value="{{ color.pk }}">
+              <label for="color-filter-{{ color.pk  }}" class="form-check-label">{{ color.title  }}</label>
+            </div>
+            {% endfor %}
         </div>
     </div>
     <div class="btn-group">
@@ -45,8 +50,13 @@
                 aria-haspopup="true" aria-expanded="false">
             Букет с
         </button>
-        <div class="dropdown-menu">
-            ...
+        <div class="dropdown-menu p-3">
+          {% for flower in flowers %}
+            <div class="form-group">
+              <input type="checkbox" class="form-check-input" id="flower-filter-{{ flower.pk }}" name="flower" value="{{ flower.pk }}">
+              <label for="flower-filter-{{ flower.pk }}" class="form-check-label">{{ flower.title }}</label>
+            </div>
+          {% endfor %}
         </div>
     </div>
 </form>
