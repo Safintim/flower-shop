@@ -1,62 +1,73 @@
-<form action="{% url 'product-list-filter' %}" class="filter">
-    <input type="hidden" name="category__slug" value="{{ category_slug }}">
-    <div class="btn-group">
-        <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-            Цена
-        </button>
-        <div class="dropdown-menu keep-open p-5 w-100 text-center">
-            <div class="row justify-content-center mb-3">
-                <div class="col-5"><input type="text" class="form-control" id="price_min" name="price__gte"
-                                          value="1000"></div>
-                <div class="col-5"><input type="text" class="form-control" id="price_max" name="price__lte"
-                                          value="9000"></div>
-            </div>
-            <div id="slider"></div>
-            <button type="button" id="btn_price" class="btn btn-primary mt-3">Применить</button>
-        </div>
-    </div>
-    <div class="btn-group">
-        <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-            Повод
-        </button>
-        <div class="dropdown-menu p-3">
-            {% for reason in reasons %}
-                <div class="form-group">
-                    <input type="checkbox" class="form-check-input" id="reason-filter-{{ reason.pk }}" name="reason"
-                           value="{{ reason.pk }}">
-                    <label for="reason-filter-{{ reason.pk }}" class="form-check-label">{{ reason.title }}</label>
+<nav class="navbar navbar-expand-lg filter justify-content-center">
+    <form action="{% url 'product-list-filter' %}">
+        <input type="hidden" name="category__slug" value="{{ category_slug }}">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown px-5 py-1">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Цена
+                </a>
+                <div class="dropdown-menu keep-open p-5 w-100 text-center" aria-labelledby="navbarDropdown">
+                    <div class="row justify-content-center mb-3">
+                        <div class="col-5"><input type="text" class="form-control" id="price_min" name="price__gte"
+                                                  value="1000"></div>
+                        <div class="col-5"><input type="text" class="form-control" id="price_max" name="price__lte"
+                                                  value="9000"></div>
+                    </div>
+                    <div id="slider"></div>
+                    <button type="button" id="btn_price" class="btn btn-primary mt-3">Применить</button>
                 </div>
-            {% endfor %}
-        </div>
-    </div>
-    <div class="btn-group">
-        <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-            Цвет
-        </button>
-        <div class="dropdown-menu p-3">
-          {% for color in colors %}
-            <div class="form-group">
-              <input type="checkbox" class="form-check-input" id="color-filter-{{ color.pk }}" name="color" value="{{ color.pk }}">
-              <label for="color-filter-{{ color.pk  }}" class="form-check-label">{{ color.title  }}</label>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-    <div class="btn-group">
-        <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-            Букет с
-        </button>
-        <div class="dropdown-menu p-3">
-          {% for flower in flowers %}
-            <div class="form-group">
-              <input type="checkbox" class="form-check-input" id="flower-filter-{{ flower.pk }}" name="flower" value="{{ flower.pk }}">
-              <label for="flower-filter-{{ flower.pk }}" class="form-check-label">{{ flower.title }}</label>
-            </div>
-          {% endfor %}
-        </div>
-    </div>
-</form>
+            </li>
+            <li class="nav-item dropdown px-5 py-1">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Повод
+                </a>
+                <div class="dropdown-menu p-3">
+                    {% for reason in reasons %}
+                        <div class="form-group">
+                            <input type="checkbox" class="form-check-input" id="reason-filter-{{ reason.pk }}"
+                                   name="reason"
+                                   value="{{ reason.pk }}">
+                            <label for="reason-filter-{{ reason.pk }}"
+                                   class="form-check-label">{{ reason.title }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </li>
+            <li class="nav-item dropdown px-5 py-1">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Цвет
+                </a>
+                <div class="dropdown-menu p-3">
+                    {% for color in colors %}
+                        <div class="form-group">
+                            <input type="checkbox" class="form-check-input" id="color-filter-{{ color.pk }}"
+                                   name="color"
+                                   value="{{ color.pk }}">
+                            <label for="color-filter-{{ color.pk }}" class="form-check-label">{{ color.title }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </li>
+            <li class="nav-item dropdown px-5 py-1">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Букет с
+                </a>
+                <div class="dropdown-menu p-3">
+                    {% for flower in flowers %}
+                        <div class="form-group">
+                            <input type="checkbox" class="form-check-input" id="flower-filter-{{ flower.pk }}"
+                                   name="flower"
+                                   value="{{ flower.pk }}">
+                            <label for="flower-filter-{{ flower.pk }}"
+                                   class="form-check-label">{{ flower.title }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </li>
+        </ul>
+    </form>
+</nav>
