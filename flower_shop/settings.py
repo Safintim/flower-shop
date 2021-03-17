@@ -132,15 +132,13 @@ STATIC_URL = '/static/'
 
 
 # for local
-# STATICFILES_DIRS = (
-#     BASE_DIR / 'static',
-# )
-# STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = (
+    BASE_DIR / 'static',
+)
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # for pythonanywhere
-STATIC_ROOT = BASE_DIR / 'static'
-
-
+# STATIC_ROOT = BASE_DIR / 'static'
 
 AUTH_USER_MODEL = 'account.User'
 

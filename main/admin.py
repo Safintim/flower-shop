@@ -1,9 +1,12 @@
 from django.contrib import admin
 from django.db.models import Min
+from django import forms
 from django.utils.safestring import mark_safe
 
 from core.admin import BaseModelAdmin
 from main import models
+
+from PIL import Image
 
 
 class BouquetFlowerInline(admin.TabularInline):
@@ -29,10 +32,6 @@ class BouquetAdmin(BaseModelAdmin):
         form.save()
 
 
-from django import forms
-from PIL import Image
-import logging
-
 class ProductAdminForm(forms.ModelForm):
     SMALL_RESOLUTION = (372, 372)
     BIG_RESOLUTION = (640, 640)
@@ -41,36 +40,28 @@ class ProductAdminForm(forms.ModelForm):
         model = models.Product
         fields = '__all__'
 
-
-    def clean(self):
+    def clean_small_image(self):
         small_image = self.cleaned_data.get('small_image')
         sm_img = Image.open(small_image)
         width, height = self.SMALL_RESOLUTION
         if sm_img.width != width or sm_img.height != height:
             self.add_error('small_image', f'Размер должен быть {width}x{height}')
+        return small_image
 
+    def clean_big_image(self):
         big_image = self.cleaned_data.get('big_image')
         bg_img = Image.open(big_image)
         width, height = self.BIG_RESOLUTION
-        if bg_img.width != width or big_img.height != height:
+        if bg_img.width != width or bg_img.height != height:
             self.add_error('big_image', f'Размер должен быть {width}x{height}')
+        return big_image
 
-        # Validation work not correct
-        type_product = self.cleaned_data.get('type')
-        if type_product != models.Product.TYPE_BOUQUET:
-            return self.cleaned_data
-
+    def clean_bouquets(self):
         bouquets = self.cleaned_data.get('bouquets')
-        exists_bouquets_count = 0
-        if self.instance.id:
-            exists_bouquets_count = self.instance.bouquets.count()
-        logging.info(exists_bouquets_count)
-        bouquets_count = bouquets.count() + exists_bouquets_count
-        logging.info(bouquets_count)
-        logging.info(bouquets.count())
+        bouquets_count = bouquets.count()
         if bouquets_count > 3 or bouquets_count == 0:
             self.add_error('bouquets', 'Создайте хотя бы 1 букет (не больше 3)')
-        return self.cleaned_data
+        return bouquets
 
 
 class ProductAdmin(BaseModelAdmin):
@@ -96,7 +87,7 @@ class ProductAdmin(BaseModelAdmin):
             'fields': (('is_active', 'is_hit', 'is_new', 'color'), 'categories', 'reasons')
         })
     )
-    list_display = ('id', 'small_image_list','title', 'price', 'is_active', 'is_hit', 'is_new', 'color')
+    list_display = ('id', 'small_image_list', 'title', 'price', 'is_active', 'is_hit', 'is_new', 'color')
     list_display_links = ('id', 'small_image_list', 'title')
     list_filter = ('price', 'type', 'is_active', 'is_hit', 'is_new', 'color')
     list_editable = ('is_active', 'is_hit', 'is_new', 'color')
