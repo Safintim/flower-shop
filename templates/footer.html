@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
             <div class="col-1 align-self-center mr-5">
-                <a class="nav-link active p-0" href="#">
+                <a class="nav-link active p-0" href="{% url 'index' %}">
                     <img class="logo" src="{% static 'images/logo.png' %}" alt="logo">
                 </a>
             </div>
@@ -13,10 +13,10 @@
                     <div class="col">
                         <ul class="nav">
                             <li class="nav-item mr-3">
-                                <a class="nav-link active p-0" href="#">Главная</a>
+                                <a class="nav-link active p-0" href="{% url 'index' %}">Главная</a>
                             </li>
                             <li class="nav-item mr-3">
-                                <a class="nav-link p-0" href="#">Каталог</a>
+                                <a class="nav-link p-0" href="{% url 'product-list' %}">Каталог</a>
                             </li>
                             <li class="nav-item mr-3">
                                 <a class="nav-link p-0" href="{% url 'shipping' %}">Доставка и оплата</a>

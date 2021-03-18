@@ -10,7 +10,7 @@
         </li>
     {% endfor %}
 </ul>
-<div class="tab-content" id="pills-tabContent">
+<div class="tab-content mb-3" id="pills-tabContent">
     {% for bouquet in bouquets %}
         <div class="tab-pane fade {% if forloop.first %} show active {% endif %}"
              id="pills-{{ bouquet.size }}" role="tabpanel"
@@ -18,11 +18,9 @@
             <h1>{{ bouquet.title|upper }}</h1>
             <h2><strong>{{ bouquet.price|floatformat:0 }} ₽</strong></h2>
             <h3>Состав</h3>
-            <ul>
-                {% for bouquet_f in bouquet.bouquetflower_set.all %}
-                    <li>{{ bouquet_f.count }} {{ bouquet_f.flower.title }}</li>
-                {% endfor %}
-            </ul>
+            {% for bouquet_f in bouquet.bouquetflower_set.all %}
+                <div>{{ bouquet_f.count }} {{ bouquet_f.flower.title }}</div>
+            {% endfor %}
         </div>
     {% endfor %}
 </div>

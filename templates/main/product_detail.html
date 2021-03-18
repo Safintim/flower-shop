@@ -3,7 +3,7 @@
 {% block content %}
     <div class="row">
         <div class="col-7">
-            <img class="card-img-top" src="
+            <img class="card-img-top card-product" src="
                     {% if object.big_image %}{{ object.big_image.url }} {% else %} https://via.placeholder.com/640 {% endif %}"
                  alt="">
         </div>
@@ -14,7 +14,32 @@
                 {% include 'main/bouquet_detail.html' %}
             {% endif %}
             {% include 'accordion.html' %}
-
         </div>
+    </div>
+    <div class="row text-center mb-5">
+        <div class="col">
+            <h3 class="font-weight-bold">ОТЗЫВЫ О САЛОНЕ</h3>
+        </div>
+    </div>
+
+    {% include 'reviews/carousel.html' %}
+
+    <div class="row my-5 text-center">
+        <div class="col">
+            <a href="{% url 'review-list' %}">Показать все отзывы</a>
+        </div>
+    </div>
+    <div class="row text-center my-5">
+        <div class="col">
+            <h3 class="font-weight-bold">ПОХОЖИЕ ТОВАРЫ</h3>
+        </div>
+    </div>
+    <div class="row my-3">
+        {% for product in similar_products %}
+            <div class="col-3">
+                {% include 'main/product.html' with object=product %}
+            </div>
+        {% endfor %}
+
     </div>
 {% endblock %}

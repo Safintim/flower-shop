@@ -50,6 +50,9 @@ class ProductDetail(generic.DetailView):
         obj = context['object']
         if obj.is_bouquet():
             context['bouquets'] = obj.bouquets.order_by('-size')
+        context['reviews'] = Review.objects.active().random(6)
+        context['similar_products'] = models.Product.objects.active().filter(
+            categories__in=obj.categories.all()).random(4).exclude(pk=obj.pk)
         return context
 
 

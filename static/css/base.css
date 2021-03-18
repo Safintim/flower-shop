@@ -514,5 +514,29 @@ img {
     background: url('/static/images/icons.png') -420px -300px;
 }
 .owl-theme .owl-nav [class*=owl-]:hover {
+}
 
+.guarantee .title {
+    text-transform: uppercase;
+    font-size: 18px;
+    color: #ed5175;
+    margin-bottom: 12px;
+    position: relative;
+    display: inline-block;
+    padding-left: 58px;
+}
+
+.guarantee .title:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 60px;
+    height: 60px;
+    background: url('/static/images/icons.png') -330px -330px;
+    margin-top: -34px;
+}
+
+.guarantee .text {
+    font-size: 14px;
 }

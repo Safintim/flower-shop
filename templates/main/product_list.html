@@ -1,6 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <div class="row text-center">
+        <div class="col">
+            <h3 class="font-weight-bold">ДОСТАВИМ БУКЕТ ЦВЕТОВ ОТ 1 ЧАСА И СО СКИДКОЙ ДО 20%!</h3>
+        </div>
+    </div>
+    <div class="row text-center my-3">
+        <div class="col">
+            <div class="h6">
+                Цветы простоят 5 дней* или заменим букет! <br>
+                Открытка и средство для продления жизни цветов до 2х недель в подарок! <br>
+                * В акции не участвуют букеты из роз
+            </div>
+        </div>
+    </div>
     {% include 'main/filter.html' %}
     <div id="product-list">
         {% include 'main/list.html' %}
