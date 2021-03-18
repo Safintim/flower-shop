@@ -3,7 +3,9 @@
 <div class="container my-3 header">
     <div class="row">
         <div class="col-2">
-            <img src="{% static 'images/logo.png' %}" alt="logo">
+            <a href="{% url 'index' %}">
+                <img src="{% static 'images/logo.png' %}" alt="logo">
+            </a>
         </div>
         <div class="col-10 d-flex flex-column align-self-center">
             <div class="row mb-2">

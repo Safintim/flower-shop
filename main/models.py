@@ -2,6 +2,8 @@ from django.conf import settings
 from django.db import models
 from django.db.models import Sum, F
 
+from django_random_queryset.queryset import RandomQuerySet
+
 from core.models import ActiveQuerySet
 
 
@@ -9,17 +11,6 @@ class CategoryQuerySet(ActiveQuerySet):
 
     def parent_null(self):
         return self.filter(parent__isnull=True)
-
-
-class CategoryManager(models.Manager):
-    def get_queryset(self):
-        return CategoryQuerySet(self.model, using=self._db)
-
-    def active(self):
-        return self.get_queryset().active()
-
-    def parent_null(self):
-        return self.get_queryset().parent_null()
 
 
 class Category(models.Model):
@@ -34,7 +25,7 @@ class Category(models.Model):
         verbose_name='Родительская'
     )
     is_active = models.BooleanField('Активна', default=True)
-    objects = CategoryManager()
+    objects = CategoryQuerySet.as_manager()
 
     class Meta:
         verbose_name = 'Категория'
@@ -66,6 +57,20 @@ class Color(models.Model):
         return self.title
 
 
+class ProductQuerySet(ActiveQuerySet, RandomQuerySet):
+    def presents(self):
+        return self.filter(type=Product.TYPE_PRESENT)
+
+    def bouquets(self):
+        return self.filter(type=Product.TYPE_BOUQUET)
+
+    def hits(self):
+        return self.filter(is_hit=True)
+
+    def new(self):
+        return self.filter(is_new=True)
+
+
 class Product(models.Model):
     TYPE_PRESENT = 'PRESENT'
     TYPE_BOUQUET = 'BOUQUET'
@@ -87,6 +92,7 @@ class Product(models.Model):
     color = models.ForeignKey(Color, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Цвет', db_index=True)
     reasons = models.ManyToManyField(Reason, blank=True, verbose_name='Поводы', db_index=True)
     bouquets = models.ManyToManyField('main.Bouquet', verbose_name='Букеты', blank=True, db_index=True)
+    objects = ProductQuerySet.as_manager()
 
     class Meta:
         verbose_name = 'Товар'

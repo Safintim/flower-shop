@@ -12,7 +12,7 @@ class BaseProductListMixin:
     filterset_class = ProductFilter
 
     def get_queryset(self):
-        queryset = self.model.objects.all()
+        queryset = self.model.objects.active()
         self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
         return self.filterset.qs.distinct()
 
@@ -32,7 +32,8 @@ class ProductByCategory(BaseProductListMixin, generic.ListView):
 
 
 class ProductList(BaseProductListMixin, generic.ListView):
-    pass
+    def get_queryset(self):
+        return super().get_queryset().bouquets()
 
 
 class ProductFilterView(BaseProductListMixin, generic.ListView):
@@ -57,10 +58,11 @@ class IndexView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['hit_products'] = models.Product.objects.filter(is_hit=True, is_new=False)[:6]
-        context['new_products'] = models.Product.objects.filter(is_new=True, is_hit=False)[:6]
-        context['reviews'] = Review.objects.filter(is_active=True)[:6]
+        context['hit_products'] = models.Product.objects.active().bouquets().hits().random(6)
+        context['new_products'] = models.Product.objects.active().bouquets().new().random(6)
+        context['reviews'] = Review.objects.active().random(6)
         return context
+
 
 class AboutView(generic.TemplateView):
     template_name = 'about.html'

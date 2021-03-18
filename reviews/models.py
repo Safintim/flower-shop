@@ -3,13 +3,11 @@ from django.db import models
 
 from core.models import ActiveQuerySet
 
+from django_random_queryset.queryset import RandomQuerySet
 
-class ReviewManager(models.Manager):
-    def get_queryset(self):
-        return ActiveQuerySet(self.model, using=self._db)
 
-    def active(self):
-        return self.get_queryset().active()
+class ReviewQuerySet(ActiveQuerySet, RandomQuerySet):
+    pass
 
 
 class Review(models.Model):
@@ -22,7 +20,7 @@ class Review(models.Model):
     is_active = models.BooleanField('Активно', default=False)
     created_at = models.DateTimeField('Дата создания', auto_now_add=True)
 
-    objects = ReviewManager()
+    objects = ReviewQuerySet.as_manager()
 
     class Meta:
         verbose_name = 'Отзыв'

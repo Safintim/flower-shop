@@ -1,15 +1,93 @@
 {% extends 'base.html' %}
 
+{% load static %}
 
 {% block content %}
 
-  {% include 'main/list.html' with object_list=hit_products %}
-  <hr/>
-  {% include 'main/list.html' with object_list=new_products %}
-  <hr/>
-  
+    <div class="row text-center">
+        <div class="col">
+            <h3 class="font-weight-bold">ДОСТАВИМ БУКЕТ ЦВЕТОВ ОТ 1 ЧАСА И СО СКИДКОЙ ДО 20%!</h3>
+        </div>
+    </div>
+    <div class="row text-center mt-3">
+        <div class="col">
+            <div class="h6">
+                Цветы простоят 5 дней* или заменим букет! <br>
+                Открытка и средство для продления жизни цветов до 2х недель в подарок! <br>
+                * В акции не участвуют букеты из роз
+            </div>
+        </div>
+    </div>
+    <div class="row my-5">
+        <div class="container">
+            <div class="advantages d-flex justify-content-between">
+                <div class="advantage advantage-1">Бесплатная доставка</div>
+                <div class="advantage advantage-2">Открытка в подарок</div>
+                <div class="advantage advantage-3">Баллы<br>с каждой покупки</div>
+                <div class="advantage advantage-4">Гарантия качества</div>
+                <div class="advantage advantage-5">Фото букета<br>перед отправкой</div>
+            </div>
+        </div>
+    </div>
+    <div class="row text-center">
+        <div class="col">
+            <h3 class="font-weight-bold">ХИТЫ ПРОДАЖ</h3>
+        </div>
+    </div>
 
+    {% include 'main/list.html' with object_list=hit_products %}
+
+    <div class="row text-center mt-5 mb-3">
+        <div class="col">
+            <h3 class="font-weight-bold">Больше букетов в нашем каталоге</h3>
+            <a href="{% url 'product-list' %}" class="btn orange-btn my-4">ПЕРЕЙТИ В КАТАЛОГ</a>
+        </div>
+    </div>
+    <div class="row text-center mb-5">
+        <div class="col">
+            <h3 class="font-weight-bold">НОВИНКИ</h3>
+        </div>
+    </div>
+
+    {% include 'main/list.html' with object_list=new_products %}
+
+    <div class="row text-center mt-5 mb-3">
+        <div class="col">
+            <h3 class="font-weight-bold">Больше букетов в нашем каталоге</h3>
+            <a href="{% url 'product-list' %}" class="btn orange-btn my-4">ПЕРЕЙТИ В КАТАЛОГ</a>
+        </div>
+    </div>
+    <div class="row text-center mb-5">
+        <div class="col">
+            <h3 class="font-weight-bold">ОТЗЫВЫ О НАС</h3>
+        </div>
+    </div>
+    {% include 'reviews/carousel.html' %}
+
+    <div class="row text-center my-5">
+        <div class="col">
+            <h3 class="font-weight-bold">ДОСТАВКА ЦВЕТОВ В КАЗАНИ</h3>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-5 mr-5">
+            <h4>Доставка букетов</h4>
+            <p class="text-justify">
+                Если вас интересует доставка цветов на дом с предварительным звонком или без (во втором случае получится
+                настоящий сюрприз для одариваемого), загляните на сайт салона FLORISTAN. Широкий ассортимент,
+                возможность выполнения индивидуальных решений любой сложности, адекватные цены – букет цветов с
+                доставкой будет именно таким, как вам нужно, и не опоздает ни на минуту.
+            </p>
+            <p>Салон работает ежедневно. Заказы принимаются круглосуточно, доставка вне рабочие часы салона принимаются
+                заранее.</p>
+            <h4>Бесплатная доставка</h4>
+            <p>Внимание! Бесплатная доставка цветов осуществляется в том случае, если адресат проживает в черте города,
+                а заказ был оформлен через сайт. Букет роз в отдаленные районы курьер доставит, но это обойдется вам
+                несколько дороже – стоимость в отдаленные районы уточняйте по телефону.</p>
+        </div>
+        <div class="col-5">
+            <img src="{% static 'images/about-1.jpg' %}" alt="FLORISTAN">
+        </div>
+    </div>
 
 {% endblock %}
-
-

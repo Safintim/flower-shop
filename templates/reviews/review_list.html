@@ -11,37 +11,11 @@
         {% include 'messages.html' %}
     </div>
     <div class="row">
-        <a href="#" class="btn create-review my-4" data-toggle="modal" data-target="#exampleModal">Оставить отзыв</a>
+        <a href="#" class="btn orange-btn my-4" data-toggle="modal" data-target="#exampleModal">Оставить отзыв</a>
         {% for object in object_list %}
             <div class="row mb-5 w-100">
                 <div class="container-fluid">
-                    <div class="review">
-                        <div class="review-header d-flex flex-wrap justify-content-between">
-                            <div class="date">{{ object.created_at|timesince }} назад</div>
-                            <div class="rating">
-                                <div class="stars d-flex justify-content-start">
-                                    <span class="star yes" data-value="1">1</span>
-                                    <span class="star yes" data-value="2">2</span>
-                                    <span class="star yes" data-value="3">3</span>
-                                    <span class="star yes" data-value="4">4</span>
-                                    <span class="star yes" data-value="5">5</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="review-body my-3">
-                            <p>{{ object.text }}</p>
-                        </div>
-                        <div class="review-footer">
-                            <div class="name">
-                                {{ object.name }}
-                            </div>
-                            {% if object.social_link %}
-                                <div class="social">
-                                    <a href="{{ object.social_link }}">{{ object.social_link }}</a>
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
+                    {% include 'reviews/review.html' %}
                 </div>
             </div>
         {% endfor %}

@@ -1,0 +1,10 @@
+<div class="row">
+    <div class="col">
+        <div id="owl-example" class="owl-carousel owl-theme">
+            {% for review in reviews %}
+                {% include 'reviews/review.html' with object=review %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+

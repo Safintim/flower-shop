@@ -58,6 +58,10 @@ class ProductAdminForm(forms.ModelForm):
 
     def clean_bouquets(self):
         bouquets = self.cleaned_data.get('bouquets')
+        product_type = self.cleaned_data.get('type', self.instance.type)
+        if product_type != models.Product.TYPE_BOUQUET:
+            return bouquets
+
         bouquets_count = bouquets.count()
         if bouquets_count > 3 or bouquets_count == 0:
             self.add_error('bouquets', 'Создайте хотя бы 1 букет (не больше 3)')

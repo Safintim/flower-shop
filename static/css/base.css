@@ -359,14 +359,17 @@ img {
     font-weight: 600;
 }
 
-
 .review .stars .star {
     width: 19px;
     height: 19px;
-    background:  -300px -330px;
+    background: url('/static/images/icons.png') -270px -330px;
     text-indent: -9999px;
     cursor: pointer;
     margin-right: 4px;
+}
+
+.review .star.yes {
+    background-position: -300px -330px;
 }
 
 .review .review-body {
@@ -376,7 +379,7 @@ img {
     line-height: 1.5;
 }
 
-.create-review {
+.orange-btn {
     background: #f99a00;
     border-radius: 100px;
     color: #fff;
@@ -440,9 +443,76 @@ img {
     top: 1px;
 }
 
-.filter input[type=checkbox]:checked+label:after {
+.filter input[type=checkbox]:checked + label:after {
     background-position: -270px -60px;
 }
-.filter input[type=checkbox]+label:after {
+
+.filter input[type=checkbox] + label:after {
     top: -1px;
+}
+
+.advantages .advantage {
+    position: relative;
+    font-size: 20px;
+    font-weight: 500;
+    width: 220px;
+    text-align: center;
+    padding-top: 102px;
+    line-height: 1.2;
+}
+
+.advantages .advantage:after {
+    content: '';
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    background: url('/static/images/icons.png') no-repeat scroll 0 -90px;
+    margin: 0 0 0 -60px;
+    top: -9px;
+    left: 50%;
+}
+
+.advantages .advantage-2:after {
+    background-position: -120px -90px;
+}
+
+.advantages .advantage-3:after {
+    background-position: -240px -90px;
+}
+
+.advantages .advantage-4:after {
+    background-position: -360px -90px;
+}
+
+.advantages .advantage-5:after {
+    background-position: -480px -90px;
+}
+
+.owl-item {
+    width : 340px !important;
+    margin-right: 30px !important;
+}
+.owl-nav { display: block !important; }
+
+.owl-carousel .owl-nav button.owl-prev {
+    position: absolute;
+    left: -38px;
+    top: 130px;
+    margin-top: -15px;
+    width: 30px;
+    height: 30px;
+    background: url('/static/images/icons.png') -390px -300px;
+}
+
+.owl-carousel .owl-nav button.owl-next {
+    position: absolute;
+    right: -38px;
+    top: 130px;
+    margin-top: -15px;
+    width: 30px;
+    height: 30px;
+    background: url('/static/images/icons.png') -420px -300px;
+}
+.owl-theme .owl-nav [class*=owl-]:hover {
+
 }
