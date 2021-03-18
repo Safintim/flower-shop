@@ -8,14 +8,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <h5 class="modal-title text-center" id="exampleModalLabel">Оставить отзыв</h5>
-
-                <form action="{% url 'review-create' %}" method="post">
-                    {% csrf_token %}
-                    {{ form|crispy }}
-                    <div class="text-center">
-                        <button type="submit" class="btn orange-btn">Оставить отзыв</button>
-                    </div>
-                </form>
+                {% include 'form.html' with view_name='review-create' btn_text='Оставить отзыв' %}
             </div>
         </div>
     </div>

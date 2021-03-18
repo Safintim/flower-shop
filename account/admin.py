@@ -1,14 +1,17 @@
 from django.contrib import admin
 from account.models import User
 
+from django.contrib.auth.admin import UserAdmin
+
 
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-    list_display = list_display_links = ('id', 'login',)
-    search_fields = ('login',)
-    ordering = ('id', 'login',)
+class UserAdmin(UserAdmin):
+    list_display = list_display_links = ('id', 'phone', 'first_name', 'last_name')
+    search_fields = ('first_name', 'last_name', )
+    ordering = ('id', 'phone', 'first_name', 'last_name',)
     fieldsets = (
-        (None, {'fields': ('login', 'password')}),
+        (None, {'fields': ('phone', 'password')}),
+        ('Личная информация', {'fields': ('first_name', 'last_name', 'email')}),
         ('Права', {
             'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
         }),
@@ -17,6 +20,6 @@ class UserAdmin(admin.ModelAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('login',),
+            'fields': ('phone', 'password1', 'password2', ),
         }),
     )

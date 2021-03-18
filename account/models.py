@@ -1,24 +1,27 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
+from django.urls import reverse
+
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
-    def _create_user(self, login, password, **extra_fields):
-        if not login:
+    def _create_user(self, phone, password, **extra_fields):
+        if not phone:
             raise ValueError('The given login must be set')
-        user = self.model(login=login, **extra_fields)
+        user = self.model(phone=phone, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_user(self, login=None, password=None, **extra_fields):
+    def create_user(self, phone=None, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
-        return self._create_user(login, password, **extra_fields)
+        return self._create_user(phone, password, **extra_fields)
 
-    def create_superuser(self, login, password, **extra_fields):
+    def create_superuser(self, phone, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
@@ -27,15 +30,14 @@ class UserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
 
-        return self._create_user(login, password, **extra_fields)
+        return self._create_user(phone, password, **extra_fields)
 
 
 class User(AbstractUser):
     username = None
-    login = models.CharField('Логин', max_length=100, unique=True)
-    phone = models.CharField('Номер телефона', max_length=11, unique=True, blank=True, null=True)
+    phone = PhoneNumberField('Номер телефона', unique=True)
 
-    USERNAME_FIELD = 'login'
+    USERNAME_FIELD = 'phone'
     REQUIRED_FIELDS = []
 
     objects = UserManager()
@@ -46,5 +48,7 @@ class User(AbstractUser):
         ordering = ('id',)
 
     def __str__(self):
-        return self.login
+        return self.phone.raw_input
 
+    def get_absolute_url(self):
+        return reverse('user-detail')

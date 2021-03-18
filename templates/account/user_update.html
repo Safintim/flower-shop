@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="row text-center">
+        <div class="col">
+            <h1>Личные данные</h1>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-6">
+            {% include 'form.html' with view_name='user-update' btn_text='Сохранить' %}
+        </div>
+    </div>
+
+{% endblock %}
