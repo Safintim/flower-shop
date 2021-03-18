@@ -16,5 +16,6 @@ urlpatterns = [
     path('catalog/all/', views.ProductList.as_view(), name='product-list'),
     path('catalog/filter/', views.ProductFilterView.as_view(), name='product-list-filter'),
     path('catalog/<str:slug>/', views.ProductByCategory.as_view(), name='product-by-category'),
+    path('callback/create/', views.CallbackView.as_view(), name='callback-create'),
     path('', views.IndexView.as_view(), name='index'),
 ]

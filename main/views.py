@@ -1,3 +1,6 @@
+import phonenumbers
+from django.conf import settings
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import generic
 
@@ -54,6 +57,19 @@ class ProductDetail(generic.DetailView):
         context['similar_products'] = models.Product.objects.active().filter(
             categories__in=obj.categories.all()).random(4).exclude(pk=obj.pk)
         return context
+
+
+class CallbackView(generic.View):
+    def post(self, request, *args, **kwargs):
+        phone = request.POST.get('phone')
+        try:
+            phone_parse = phonenumbers.parse(phone, settings.PHONENUMBER_DEFAULT_REGION)
+            if phonenumbers.is_valid_number(phone_parse):
+                models.Callback.objects.create(phone=phone)
+                return JsonResponse({'status': 'ok'})
+        except phonenumbers.phonenumberutil.NumberParseException:
+            pass
+        return JsonResponse({'status': 'error'})
 
 
 class IndexView(generic.TemplateView):

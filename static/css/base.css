@@ -379,23 +379,6 @@ img {
     line-height: 1.5;
 }
 
-.orange-btn {
-    background: #f99a00;
-    border-radius: 100px;
-    color: #fff;
-    display: inline-block;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 42px;
-    padding: 0 17px;
-    text-decoration: none;
-    text-transform: uppercase;
-    font-family: Roboto,Arial,sans-serif;
-    border: none;
-    cursor: pointer;
-    outline: 0!important;
-}
-
 .modal .form-control {
     border-radius: 10px!important;
     border: 1px solid #f1b0bb!important;
@@ -539,4 +522,21 @@ img {
 
 .guarantee .text {
     font-size: 14px;
+}
+
+.orange-btn {
+    background: #f99a00;
+    border-radius: 100px;
+    color: #fff !important;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 42px;
+    padding: 0 17px;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-family: Roboto,Arial,sans-serif;
+    border: none !important;
+    cursor: pointer;
+    outline: 0!important;
 }

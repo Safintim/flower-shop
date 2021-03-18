@@ -28,8 +28,6 @@ $(function () {
         let reasonIds = $(".filter input[type=checkbox]:checked").map(function () {
             return $(this).val();
         }).get();
-
-
         let query = reasonIds.map(function (el) {
             return `reasons=${el}`
         }).join('&')

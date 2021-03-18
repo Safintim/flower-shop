@@ -1,0 +1,22 @@
+<div class="modal fade" id="callbackModal" tabindex="-1" aria-labelledby="callbackModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content px-2 py-1">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3 class="modal-title text-center" id="callbackModalLabel">Мы перезвоним Вам в течение 15 минут</h3>
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="text" placeholder="Ваш номер телефона" name="phone" id="callback-input"
+                           class="textInput form-control phone-callback">
+                </div>
+                <div class="text-center">
+                    <a type="submit" data-dismiss="modal" id="callback-btn" class="btn orange-btn"
+                       data-toggle="modal" data-target="#callbackOkModal">ПЕРЕЗВОНИТЕ МНЕ</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
