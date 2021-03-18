@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
-from django.urls import reverse
 
 
 class UserManager(BaseUserManager):
@@ -33,7 +32,6 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser):
     username = None
-    password = models.CharField('Пароль', max_length=128, blank=True, null=True)
     login = models.CharField('Логин', max_length=100, unique=True)
     phone = models.CharField('Номер телефона', max_length=11, unique=True, blank=True, null=True)
 

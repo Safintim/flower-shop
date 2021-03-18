@@ -6,15 +6,12 @@ from reviews.forms import ReviewForm
 from reviews.models import Review
 
 
-class BaseReview:
+class ReviewListView(generic.ListView):
     model = Review
+    paginate_by = 5
 
     def get_queryset(self):
         return Review.objects.active()
-
-
-class ReviewListView(BaseReview, generic.ListView):
-    paginate_by = 5
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(object_list=object_list, **kwargs)

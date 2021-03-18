@@ -5,8 +5,6 @@ from core.admin import BaseModelAdmin
 from reviews.models import Review
 
 
-
-
 class ReviewAdmin(BaseModelAdmin):
     list_display = ('id', 'name', 'is_active', 'created_at')
     list_display_links = ('id', 'name')
@@ -23,4 +21,3 @@ class ReviewAdmin(BaseModelAdmin):
 
 
 admin.site.register(Review, ReviewAdmin)
-
