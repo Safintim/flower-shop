@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'widget_tweaks',
     'django_filters',
+    'crispy_forms',
     'django_extensions',  # for shell_plus
 
     'account.apps.AccountConfig',
@@ -203,3 +204,5 @@ CKEDITOR_CONFIGS = {
         ]),
     }
 }
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
