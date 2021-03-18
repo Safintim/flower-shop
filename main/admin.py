@@ -157,6 +157,13 @@ class CategoryAdmin(BaseModelAdmin):
     list_filter = ('is_active', 'parent')
 
 
+class CallbackAdmin(BaseModelAdmin):
+    list_display = ('id', 'is_new', 'phone', 'created_at', 'updated_at')
+    list_display_links = ('id', 'phone')
+    list_editable = ('is_new',)
+    list_filter = ('is_new',)
+
+
 admin.site.register(models.Reason)
 admin.site.register(models.Category, CategoryAdmin)
 admin.site.register(models.Color)
@@ -165,3 +172,4 @@ admin.site.register(models.Flower, FlowerAdmin)
 admin.site.register(models.Configuration, ConfigurationAdmin)
 admin.site.register(models.Bouquet, BouquetAdmin)
 admin.site.register(models.Cart, CartAdmin)
+admin.site.register(models.Callback, CallbackAdmin)

@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models import Sum, F
 
 from django_random_queryset.queryset import RandomQuerySet
+from phonenumber_field.modelfields import PhoneNumberField
 
 from core.models import ActiveQuerySet
 
@@ -282,3 +283,18 @@ class Order(models.Model):
 
     def __str__(self):
         return f'Заказ {self.id}'
+
+
+class Callback(models.Model):
+    phone = PhoneNumberField(verbose_name='Номер телефона')
+    is_new = models.BooleanField('Новая заявка', default=True)
+    created_at = models.DateTimeField('Дата поступления', auto_now_add=True)
+    updated_at = models.DateTimeField('Дата обновления', auto_now=True)
+
+    class Meta:
+        verbose_name = 'Заявка'
+        verbose_name_plural = 'Перезвоните мне'
+        ordering = ('-created_at', )
+
+    def __str__(self):
+        return self.phone.raw_input

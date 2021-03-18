@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'django_filters',
     'crispy_forms',
+    'phonenumber_field',
     'django_extensions',  # for shell_plus
 
     'account.apps.AccountConfig',
@@ -206,3 +207,7 @@ CKEDITOR_CONFIGS = {
 }
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+
+PHONENUMBER_DB_FORMAT = 'NATIONAL'
+PHONENUMBER_DEFAULT_REGION = 'RU'
