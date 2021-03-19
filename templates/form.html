@@ -2,7 +2,12 @@
 
 <form action="{% url view_name %}" method="post">
     {% csrf_token %}
-    {{ form|crispy }}
+    {% if form %}
+        {{ form|crispy }}
+    {% else %}
+        {{ formset|crispy }}
+    {% endif %}
+
     <div class="text-center">
         <button type="submit" class="btn orange-btn">{{ btn_text }}</button>
     </div>

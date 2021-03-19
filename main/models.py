@@ -222,29 +222,6 @@ class Configuration(models.Model):
         return 'Настройки'
 
 
-class CartProduct(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Продукт')
-    cart = models.ForeignKey('main.Cart', on_delete=models.CASCADE, verbose_name='Корзина')
-
-    class Meta:
-        verbose_name = 'Продукт корзины'
-        verbose_name_plural = 'Продукты корзин'
-
-    def __str__(self):
-        return f'{self.cart.user.login} - {self.product.title}'
-
-
-class Cart(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Пользователь')
-
-    class Meta:
-        verbose_name = 'Корзина'
-        verbose_name_plural = 'Корзины'
-
-    def __str__(self):
-        return f'{self.id} - {self.cart.user.login}'
-
-
 class OrderProduct(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Продукт')
     price = models.DecimalField('Цена', max_digits=9, decimal_places=2, default=0, blank=True)
@@ -255,7 +232,7 @@ class OrderProduct(models.Model):
         verbose_name_plural = 'Продукты заказов'
 
     def __str__(self):
-        return f'{self.order.user.login} - {self.product.title}'
+        return f'{self.order.user.phone} - {self.product.title}'
 
 
 class Order(models.Model):

@@ -127,16 +127,6 @@ class ProductAdmin(BaseModelAdmin):
     small_image_detail.short_description = 'Изображение'
 
 
-class CartProductInline(admin.TabularInline):
-    model = models.CartProduct
-    extra = 0
-
-
-class CartAdmin(BaseModelAdmin):
-    fields = ('user', )
-    inlines = (CartProductInline,)
-
-
 class FlowerAdmin(BaseModelAdmin):
     list_display = ('id', 'title', 'price', 'is_add_filter')
     list_display_links = ('id', 'title')
@@ -171,5 +161,4 @@ admin.site.register(models.Product, ProductAdmin)
 admin.site.register(models.Flower, FlowerAdmin)
 admin.site.register(models.Configuration, ConfigurationAdmin)
 admin.site.register(models.Bouquet, BouquetAdmin)
-admin.site.register(models.Cart, CartAdmin)
 admin.site.register(models.Callback, CallbackAdmin)
