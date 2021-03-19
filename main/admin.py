@@ -109,8 +109,6 @@ class ProductAdmin(BaseModelAdmin):
 
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)
-        for formset in formsets:
-            print(formset.model)
         if form.instance.type == models.Product.TYPE_BOUQUET:
             min_price = form.instance.bouquets.aggregate(Min('price'))['price__min']
             form.instance.price = min_price

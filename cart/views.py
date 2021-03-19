@@ -1,11 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.forms import modelformset_factory
-from django.shortcuts import redirect
+from django import forms
+from django.shortcuts import redirect, get_object_or_404
 from django.views import generic
 
 from cart.models import CartProduct, Cart
+from main.models import Product
 
-CartProductFormset = modelformset_factory(CartProduct, fields=('qty', ), extra=0, can_delete=True)
+CartProductFormset = forms.modelformset_factory(CartProduct, fields=('qty', ), extra=0, can_delete=True)
 
 
 class CartProductListView(LoginRequiredMixin, generic.FormView):
@@ -27,3 +28,13 @@ class CartProductListView(LoginRequiredMixin, generic.FormView):
     def form_valid(self, form):
         form.save()
         return redirect('cart-product-update')
+
+
+class AddProductToCartView(LoginRequiredMixin, generic.View):
+    def get(self, request, product_pk, *args, **kwargs):
+        product = get_object_or_404(Product, pk=product_pk)
+        cart, _ = Cart.objects.get_or_create(user=self.request.user)
+        bouquet_size = request.GET.get('size')
+        cart.add_product(product, bouquet_size)
+        return redirect('cart-product-update')
+

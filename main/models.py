@@ -113,21 +113,24 @@ class Product(models.Model):
     def get_small_bouquet(self):
         return self.bouquets.filter(size=Bouquet.SIZE_SM).first()
 
+    def get_middle_bouquet(self):
+        return self.bouquets.filter(size=Bouquet.SIZE_MD).first()
+
+    def get_big_bouquet(self):
+        return self.bouquets.filter(size=Bouquet.SIZE_BG).first()
+
+    def get_bouquet_by_size(self, size):
+        return self.bouquets.filter(size=size).first()
+
     def get_small_bouquet_price(self):
         bouquet = self.get_small_bouquet()
         return bouquet.price if bouquet else '-'
     get_small_bouquet_price.short_description = 'Цена маленького букета'
 
-    def get_middle_bouquet(self):
-        return self.bouquets.filter(size=Bouquet.SIZE_MD).first()
-
     def get_middle_bouquet_price(self):
         bouquet = self.get_middle_bouquet()
         return bouquet.price if bouquet else '-'
     get_middle_bouquet_price.short_description = 'Цена среднего букета'
-
-    def get_big_bouquet(self):
-        return self.bouquets.filter(size=Bouquet.SIZE_BG).first()
 
     def get_big_bouquet_price(self):
         bouquet = self.get_big_bouquet()

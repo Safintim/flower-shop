@@ -145,6 +145,10 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # STATIC_ROOT = BASE_DIR / 'static'
 
 AUTH_USER_MODEL = 'account.User'
+LOGIN_URL = 'user-login'
+LOGIN_REDIRECT_URL = 'product-list'
+LOGIN_REDIRECT_URL = 'product-list'
+
 
 IMAGE_UPLOAD_PATH = 'static/uploads/images/'
 IMAGE_REVIEW_UPLOAD_PATH = 'static/uploads/reviews/'

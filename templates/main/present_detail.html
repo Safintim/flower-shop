@@ -1,2 +1,3 @@
 <h1>{{ object.title|upper }}</h1>
 <h2><strong>{{ object.price|floatformat:0 }} ₽</strong></h2>
+<a href="{% url 'cart-product-create' object.pk %}"> Добавить в корзину</a>

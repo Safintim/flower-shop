@@ -51,7 +51,7 @@ class ProductDetail(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         obj = context['object']
-        if obj.is_bouquet():
+        if obj.is_bouquet:
             context['bouquets'] = obj.bouquets.order_by('-size')
         context['reviews'] = Review.objects.active().random(6)
         context['similar_products'] = models.Product.objects.active().filter(
