@@ -12,10 +12,10 @@
     </div>
     <form action="{% url 'cart-product-update' %}" method="post">
         {% csrf_token %}
-        {{ form.management_form }}
+        {{ formset.management_form }}
 
-        {% for f in form %}
-            {% with f.instance.product as product %}
+        {% for form in formset %}
+            {% with product=form.instance.product cart_product=form.instance %}
                 <div class="row my-5">
                     <div class="col-3 card-product">
                         <a href="{% url 'product-detail' product.slug %}">
@@ -36,6 +36,7 @@
 
 
 
+
                                     {% if product.small_image %}{{ product.small_image.url }} {% else %} https://via.placeholder.com/372 {% endif %}"
                                  alt="">
                         </a>
@@ -43,10 +44,16 @@
                     <div class="col-9 text-right align-self-center">
                         <div>
                             <h4 class="card-title">
-                                <a href="{% url 'product-detail' product.slug %}">{{ product.title }}</a>
+                                <a href="{% url 'product-detail' product.slug %}">
+                                    {% if product.is_bouquet %}
+                                        {{ product.title }} <br> {{ cart_product.bouquet.get_size_display }}
+                                    {% else %}
+                                        {{ product.title }}
+                                    {% endif %}
+                                </a>
                             </h4>
-                            <h5 class="product-price">{{ product.price|floatformat:0 }} ₽</h5>
-                            <h5> {{ f|crispy }}</h5>
+                            <h5 class="product-price">{{ cart_product.price|floatformat:0 }} ₽</h5>
+                            <h5> {{ form|crispy }}</h5>
                         </div>
                     </div>
                 </div>
@@ -56,4 +63,12 @@
             <button type="submit" class="btn orange-btn">Сохранить</button>
         </div>
     </form>
+    <hr>
+    <div class="row text-right">
+        <div class="col">
+            <h4>Количество товаров: {{ cart.product_total }}</h4>
+            <h4>Общая сумма: {{ cart.price_total }}</h4>
+
+        </div>
+    </div>
 {% endblock %}

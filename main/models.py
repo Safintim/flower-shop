@@ -102,9 +102,11 @@ class Product(models.Model):
     def __str__(self):
         return self.title
 
+    @property
     def is_bouquet(self):
         return self.type == self.TYPE_BOUQUET
 
+    @property
     def is_present(self):
         return self.type == self.TYPE_PRESENT
 

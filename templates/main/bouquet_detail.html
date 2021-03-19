@@ -15,7 +15,6 @@
         <div class="tab-pane fade {% if forloop.first %} show active {% endif %}"
              id="pills-{{ bouquet.size }}" role="tabpanel"
              aria-labelledby="pills-{{ bouquet.size }}-tab">
-            <h1>{{ bouquet.title|upper }}</h1>
             <h2><strong>{{ bouquet.price|floatformat:0 }} ₽</strong></h2>
             <h3>Состав</h3>
             {% for bouquet_f in bouquet.bouquetflower_set.all %}
