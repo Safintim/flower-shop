@@ -3,7 +3,7 @@ html {
 }
 
 a {
-    outline: 0!important;
+    outline: 0 !important;
     text-decoration: underline;
     color: #f23a70;
 }
@@ -24,7 +24,7 @@ a {
 }
 
 .nav-header .nav-item a:hover {
-    outline: 0!important;
+    outline: 0 !important;
     text-decoration: underline;
     color: #f23a70;
 }
@@ -104,9 +104,11 @@ a {
     padding: 0 20px;
     line-height: 55px;
 }
+
 .navbar .dropdown-menu {
     padding: 0;
 }
+
 .navbar .nav-item .dropdown-item {
     color: #222;
     text-transform: unset;
@@ -166,6 +168,7 @@ a {
 .footer .contact {
     font-size: 18px;
 }
+
 .footer .btn {
     font-size: 14px;
     color: #f23a70;
@@ -191,7 +194,7 @@ a {
 
 
 .card-product:hover {
-    box-shadow: 0 0 24px 1px rgba(65,56,58,.35);
+    box-shadow: 0 0 24px 1px rgba(65, 56, 58, .35);
 }
 
 .card-product .badges {
@@ -208,7 +211,7 @@ a {
     font-weight: bold;
 }
 
-.card-product a{
+.card-product a {
     color: black;
 }
 
@@ -259,10 +262,34 @@ a {
     background: #1abee9;
 }
 
+.add-cart-detail {
+    padding: 10px;
+    font-size: 19px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none !important;
+    color: #df5672;
+    border: 2px solid #df5672;
+    border-radius: 5px;
+    background: #fff;
+}
+
+.btn-link {
+    font-weight: 400;
+    color: inherit !important;
+    text-decoration: none;
+}
+
+.btn:hover {
+    background: #f23a70;
+    color: #fff !important;
+}
+
 .page-item:first-child .page-link {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
+
 .page-item:last-child .page-link {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
@@ -273,7 +300,7 @@ a {
     min-width: 18px;
     line-height: 18px;
     border: 1px solid #de516b;
-    border-radius: 100px!important;
+    border-radius: 100px !important;
     padding: 0 3px;
     color: #de516b;
     font-size: 14px;
@@ -287,7 +314,7 @@ a {
     border-color: #de516b;
 }
 
-.pagination .page-item:hover a{
+.pagination .page-item:hover a {
     background: white;
     border-color: inherit;
     color: #de516b;
@@ -297,9 +324,11 @@ img {
     max-width: 100%;
     height: auto;
 }
+
 .contact-card {
-    box-shadow: 0 0 24px 1px rgba(65,56,58,.35);
+    box-shadow: 0 0 24px 1px rgba(65, 56, 58, .35);
 }
+
 .contact-card .contact-item {
     padding-left: 32px;
     margin: 17px 0;
@@ -380,8 +409,8 @@ img {
 }
 
 .form-control {
-    border-radius: 10px!important;
-    border: 1px solid #f1b0bb!important;
+    border-radius: 10px !important;
+    border: 1px solid #f1b0bb !important;
 }
 
 .filter {
@@ -407,7 +436,8 @@ img {
 .filter input[type=checkbox] {
     display: none;
 }
-.filter input[type=checkbox]+label {
+
+.filter input[type=checkbox] + label {
     font-size: 14px;
     color: #856969;
     position: relative;
@@ -416,7 +446,7 @@ img {
     display: block;
 }
 
-.filter input[type=checkbox]+label:after {
+.filter input[type=checkbox] + label:after {
     content: '';
     position: absolute;
     width: 20px;
@@ -472,10 +502,13 @@ img {
 }
 
 .owl-item {
-    width : 340px !important;
+    width: 340px !important;
     margin-right: 30px !important;
 }
-.owl-nav { display: block !important; }
+
+.owl-nav {
+    display: block !important;
+}
 
 .owl-carousel .owl-nav button.owl-prev {
     position: absolute;
@@ -496,6 +529,7 @@ img {
     height: 30px;
     background: url('/static/images/icons.png') -420px -300px;
 }
+
 .owl-theme .owl-nav [class*=owl-]:hover {
 }
 
@@ -535,8 +569,8 @@ img {
     padding: 0 17px;
     text-decoration: none;
     text-transform: uppercase;
-    font-family: Roboto,Arial,sans-serif;
+    font-family: Roboto, Arial, sans-serif;
     border: none !important;
     cursor: pointer;
-    outline: 0!important;
+    outline: 0 !important;
 }
