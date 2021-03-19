@@ -20,6 +20,6 @@
             <a href="{% url 'product-detail' object.slug %}">{{ object.title }}</a>
         </h4>
         <h5 class="product-price">от {{ object.price|floatformat:0 }} ₽</h5>
-        <a class="btn-add-cart"><span>Добавить в корзину</span></a>
+        <a href="{% url 'cart-product-create' object.pk %}?size={{ object.get_middle_bouquet.size }}"  class="btn-add-cart"><span>Добавить в корзину</span></a>
     </div>
 </div>
