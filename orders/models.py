@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 
+from cart.models import Cart, CartProduct
 from main.models import Product
 
 
@@ -73,3 +74,17 @@ class Order(models.Model):
 
     def __str__(self):
         return f'Заказ {self.id}'
+
+    def create_order_products(self):
+        cart_products = CartProduct.objects.filter(user=self.user)
+        order_products = [
+            OrderProduct.objects.create(
+                product=cart_product.product,
+                qty=cart_product.qty,
+                price=cart_product.price,
+                order=self
+            )
+            for cart_product in cart_products]
+
+        OrderProduct.objects.bulk_create(*order_products)
+        cart_products.delete()

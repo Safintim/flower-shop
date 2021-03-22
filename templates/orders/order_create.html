@@ -35,7 +35,7 @@
                 <div class="title">
                     В корзине
                 </div>
-                {% for cart_product in cart_products %}
+                {% for cart_product in cart.products.all %}
                     <div class="order-product d-flex justify-content-center my-3" id="cart-product-{{ cart_product.pk }}">
                         <div class="img">
                             <a href="{% url 'product-detail' cart_product.product.slug %}">
@@ -57,6 +57,8 @@
                             <a pk="{{ cart_product.pk }}" class="cart-product-delete" url="{% url 'cart-product-delete' cart_product.pk %}">Удалить</a>
                         </div>
                     </div>
+                {% empty %}
+                    Пусто
                 {% endfor %}
             </div>
         </div>
@@ -64,6 +66,10 @@
     <div class="row">
         <div class="col">
             {% crispy form form.helper %}
+            <div class="order-total">
+                <div class="title">Сумма заказа:</div>
+                <div class="value"><span>{{ cart.price_total }}</span> ₽</div>
+            </div>
         </div>
     </div>
 

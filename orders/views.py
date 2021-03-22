@@ -1,3 +1,4 @@
+from django.shortcuts import redirect
 from django.views import generic
 
 from cart.models import Cart
@@ -12,12 +13,14 @@ class OrderCreateView(generic.CreateView):
 
     def get_context_data(self, **kwargs):
         cart = Cart.objects.filter(user=self.request.user).first()
-        kwargs['cart_products'] = cart.products.all()
+        kwargs['cart'] = cart
         return super().get_context_data(**kwargs)
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-        return super().form_valid(form)
+        order = form.save()
+        order.create_order_products()
+        return redirect('order-list')
 
 
 class OrderListView(generic.ListView):

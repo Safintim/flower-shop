@@ -751,3 +751,14 @@ input[type=radio] {
     margin-bottom: 15px;
 }
 
+.order-total {
+    font-size: 22px;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #ffcdcf;
+    padding-top: 20px;
+    margin: 25px 0 15px;
+    max-width: 612px;
+}
+
