@@ -1,8 +1,9 @@
 $(document).ready(function () {
     $('#callback-btn').click(function () {
         const errorText = 'Неправильный формат телефона. Попробуйте снова'
+
         $.ajax({
-            url: '{% url "callback-create" %}',
+            url: $('#callbackModalForm').attr('action'),
             type: 'POST',
             data: {
                 phone: $('#callback-input').val(),
