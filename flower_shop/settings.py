@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'reviews.apps.ReviewsConfig',
     'cart.apps.CartConfig',
+    'orders.apps.OrdersConfig',
 ]
 
 MIDDLEWARE = [
@@ -146,7 +147,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 AUTH_USER_MODEL = 'account.User'
 LOGIN_URL = 'user-login'
-LOGIN_REDIRECT_URL = 'product-list'
+LOGOUT_REDIRECT_URL = 'product-list'
 LOGIN_REDIRECT_URL = 'product-list'
 
 
