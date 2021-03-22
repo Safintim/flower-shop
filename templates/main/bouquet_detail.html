@@ -20,7 +20,8 @@
             {% for bouquet_f in bouquet.bouquetflower_set.all %}
                 <div>{{ bouquet_f.count }} {{ bouquet_f.flower.title }}</div>
             {% endfor %}
-        <a class="btn add-cart-detail my-3" href="{% url 'cart-product-create' object.pk %}?size={{ bouquet.size }}">Добавить в корзину</a>
+        {% csrf_token %}
+        <a class="btn add-cart-detail my-3" url="{% url 'cart-product-create' object.pk %}?size={{ bouquet.size }}">Добавить в корзину</a>
         </div>
     {% endfor %}
 </div>

@@ -1,3 +1,4 @@
 <h1>{{ object.title|upper }}</h1>
 <h2><strong>{{ object.price|floatformat:0 }} ₽</strong></h2>
-<a class="btn add-cart-detail my-3" href="{% url 'cart-product-create' object.pk %}"> Добавить в корзину</a>
+{% csrf_token %}
+<a class="btn add-cart-detail my-3" url="{% url 'cart-product-create' object.pk %}?size={{ object.get_middle_bouquet.size }}"> Добавить в корзину</a>

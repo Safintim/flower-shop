@@ -32,12 +32,12 @@ class CartProductListView(LoginRequiredMixin, generic.FormView):
 
 
 class AddProductToCartView(LoginRequiredMixin, generic.View):
-    def get(self, request, product_pk, *args, **kwargs):
+    def post(self, request, product_pk, *args, **kwargs):
         product = get_object_or_404(Product, pk=product_pk)
         cart, _ = Cart.objects.get_or_create(user=self.request.user)
         bouquet_size = request.GET.get('size')
         cart.add_product(product, bouquet_size)
-        return redirect('cart-product-update')
+        return JsonResponse({'cart_total': cart.price_total})
 
 
 class DeleteProductFromCartView(LoginRequiredMixin, generic.View):
