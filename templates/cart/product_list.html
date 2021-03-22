@@ -31,12 +31,6 @@
                                 {% endif %}
                             </div>
                             <img class="card-img-top" src="
-
-
-
-
-
-
                                     {% if product.small_image %}{{ product.small_image.url }} {% else %} https://via.placeholder.com/372 {% endif %}"
                                  alt="">
                         </a>
@@ -68,7 +62,6 @@
         <div class="col">
             <h4>Количество товаров: {{ cart.product_total }}</h4>
             <h4>Общая сумма: {{ cart.price_total }}</h4>
-
         </div>
     </div>
 {% endblock %}

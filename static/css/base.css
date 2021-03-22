@@ -574,3 +574,32 @@ img {
     cursor: pointer;
     outline: 0 !important;
 }
+
+
+.order-form .label{
+    font-size: 18px;
+    font-weight: 700;
+}
+.asteriskField {
+    display: none;
+}
+input[type=radio]+label:after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: url('/static/images/icons.png') no-repeat scroll -360px -30px;
+    top: 1px;
+}
+input[type=radio]:checked+label:after {
+    background-position: -360px -60px;
+}
+.custom-control-label::before {
+    display: none;
+}
+input[type=radio] {
+    display: none;
+}
+.custom-radio .custom-control-input:checked~.custom-control-label::after {
+    background: url('/static/images/icons.png') no-repeat scroll -360px -60px;
+}

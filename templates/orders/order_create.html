@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col">
+            <h1>ОФОРМЛЕНИЕ ЗАКАЗА</h1>
+        </div>
+    </div>
+    <div class="row">
+    <div class="col">
+        {% crispy form form.helper %}
+    </div>
+    </div>
+
+{% endblock %}
