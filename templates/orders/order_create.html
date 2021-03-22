@@ -39,7 +39,7 @@
                     <div class="order-product d-flex justify-content-center my-3" id="cart-product-{{ cart_product.pk }}">
                         <div class="img">
                             <a href="{% url 'product-detail' cart_product.product.slug %}">
-                                <img src="{{ cart_product.product.small_image.url }}"
+                                <img src="{% if product.small_image %}{{ product.small_image.url }} {% else %} https://via.placeholder.com/372 {% endif %}"
                                      alt="{{ cart_product.product.title }}">
                             </a>
                         </div>

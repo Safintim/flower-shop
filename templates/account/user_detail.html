@@ -3,5 +3,36 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <h1>Hi {{ request.user }}</h1>
+    <div class="row my-4">
+        <div class="col">
+            <h1>Личный кабинет</h1>
+        </div>
+    </div>
+    <div class="row my-4">
+        <div class="col">
+            <a href="{% url 'user-update' %}" class="btn orange-btn">Изменить информацию о себе</a>
+            <a href="{% url 'cart-product-update' %}" class="btn orange-btn">Корзина</a>
+        </div>
+    </div>
+    <div class="row my-4">
+        <div class="col">
+            <h3>Последние заказы</h3>
+        </div>
+    </div>
+    {% for order in request.user.orders.all %}
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    {% for cart_product in order.products.all %}
+                        <div class="col">
+                            <img width="72" src="{% if cart_product.product.small_image %}{{ cart_product.product.small_image.url }} {% else %} https://via.placeholder.com/372 {% endif %}" alt="">
+                        </div>
+
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+    {% endfor %}
+
 {% endblock %}

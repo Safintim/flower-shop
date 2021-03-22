@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.validators import MinValueValidator
 from django.db import models
 
 from cart.models import Cart, CartProduct
@@ -8,6 +9,7 @@ from main.models import Product
 class OrderProduct(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Продукт')
     price = models.DecimalField('Цена', max_digits=9, decimal_places=2, default=0, blank=True)
+    qty = models.PositiveIntegerField('Количество', default=1, blank=True, validators=[MinValueValidator(1)])
     order = models.ForeignKey('orders.Order', on_delete=models.CASCADE, related_name='products', verbose_name='Заказ')
 
     class Meta:
@@ -30,7 +32,7 @@ class Order(models.Model):
     RECIPIENT_OTHER = 'RECIPIENT_OTHER'
     RECIPIENT_CALL_BACK = 'RECIPIENT_CALL_BACK'
     RECIPIENT_NOT_CALL_BACK = 'RECIPIENT_NOT_CALL_BACK'
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Пользователь')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders', verbose_name='Пользователь')
     RECIPIENT_CHOICE = (
         (RECIPIENT_IAM, 'Получаю я сам(-а)'),
         (RECIPIENT_OTHER, 'Указать получателя'),
@@ -76,9 +78,9 @@ class Order(models.Model):
         return f'Заказ {self.id}'
 
     def create_order_products(self):
-        cart_products = CartProduct.objects.filter(user=self.user)
+        cart_products = CartProduct.objects.filter(cart__user=self.user)
         order_products = [
-            OrderProduct.objects.create(
+            OrderProduct(
                 product=cart_product.product,
                 qty=cart_product.qty,
                 price=cart_product.price,
@@ -86,5 +88,5 @@ class Order(models.Model):
             )
             for cart_product in cart_products]
 
-        OrderProduct.objects.bulk_create(*order_products)
+        OrderProduct.objects.bulk_create(order_products)
         cart_products.delete()
