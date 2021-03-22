@@ -6,13 +6,65 @@
 
     <div class="row">
         <div class="col">
-            <h1>ОФОРМЛЕНИЕ ЗАКАЗА</h1>
+            <h2>ОФОРМЛЕНИЕ ЗАКАЗА</h2>
         </div>
     </div>
     <div class="row">
-    <div class="col">
-        {% crispy form form.helper %}
+        <div class="col">
+            <div class="steps d-flex justify-content-center my-5">
+                <div class="items d-flex justify-content-center">
+                    <div class="step active ">
+                        <div class="icon">
+                            <span></span>
+                        </div>
+                        <div class="name">Контакты и доставка</div>
+                    </div>
+                    <div class="step  ">
+                        <div class="icon">
+                            <span></span>
+                        </div>
+                        <div class="name">Оплата</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    <div class="row my-5 order-products">
+        <div class="col">
+            <div class="box float-left">
+                <div class="title">
+                    В корзине
+                </div>
+                {% for cart_product in cart_products %}
+                    <div class="order-product d-flex justify-content-center my-3" id="cart-product-{{ cart_product.pk }}">
+                        <div class="img">
+                            <a href="{% url 'product-detail' cart_product.product.slug %}">
+                                <img src="{{ cart_product.product.small_image.url }}"
+                                     alt="{{ cart_product.product.title }}">
+                            </a>
+                        </div>
+                        <div class="info">
+                            <div class="name mb-1">
+                                <a href="{% url 'product-detail' cart_product.product.slug %}">{{ cart_product.product.title }}
+                                    - {{ cart_product.qty }} шт</a>
+                            </div>
+                            <div class="price">
+                                {{ cart_product.price|floatformat:0 }} ₽
+                            </div>
+                        </div>
+                        <div class="delete my-2">
+                            {% csrf_token %}
+                            <a pk="{{ cart_product.pk }}" class="cart-product-delete" url="{% url 'cart-product-delete' cart_product.pk %}">Удалить</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            {% crispy form form.helper %}
+        </div>
     </div>
 
 {% endblock %}

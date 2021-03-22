@@ -37,24 +37,24 @@ class OrderForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            Div(InlineRadios('postcard'), css_class='row'),
-            Div(Field('postcard_text'), hidden='true', css_class='row postcard_text'),
-            Div(InlineRadios('delivery_type'), css_class='row'),
-            Div('delivery_date', css_class='row'),
-            Div(InlineRadios('recipient'), css_class='row'),
+            Div(InlineRadios('postcard'), css_class='row my-2'),
+            Div(Field('postcard_text'), hidden='true', css_class='row my-2 postcard_text'),
+            Div(InlineRadios('delivery_type'), css_class='row my-2'),
+            Div('delivery_date', css_class='row my-2'),
+            Div(InlineRadios('recipient'), css_class='row my-2'),
             Div(
                 Div('recipient_name', css_class='mr-3 recipient_info', hidden='true'),
                 Div('recipient_phone', css_class='recipient_info', hidden='true'),
-                css_class='row'
+                css_class='row my-2'
             ),
-            Div(InlineRadios('recipient_call'), css_class='row recipient_call', hidden='true'),
+            Div(InlineRadios('recipient_call'), css_class='row my-2 recipient_call', hidden='true'),
             Div(
                 Div('recipient_address', css_class='mr-3 delivery_info', hidden='true'),
                 Div('delivery_time', css_class='delivery_info', hidden='true'),
-                css_class='row'
+                css_class='row my-2'
             ),
-            Div('comment', css_class='row'),
-            Div(Submit('submit', 'Заказать', css_class='btn orange-btn'), css_class='row')
+            Div('comment', css_class='row my-2'),
+            Div(Submit('submit', 'Заказать', css_class='btn orange-btn'), css_class='row my-2')
         )
         self.helper.form_method = 'post'
         self.helper.form_action = 'order-create'

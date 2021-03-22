@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django import forms
+from django.http import JsonResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.views import generic
 
@@ -37,4 +38,13 @@ class AddProductToCartView(LoginRequiredMixin, generic.View):
         bouquet_size = request.GET.get('size')
         cart.add_product(product, bouquet_size)
         return redirect('cart-product-update')
+
+
+class DeleteProductFromCartView(LoginRequiredMixin, generic.View):
+    model = CartProduct
+
+    def post(self, request, pk, *args, **kwargs):
+        cart_product = get_object_or_404(CartProduct, pk=pk)
+        cart_product.delete()
+        return JsonResponse({'status': 'ok'})
 
