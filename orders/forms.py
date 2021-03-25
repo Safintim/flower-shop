@@ -60,3 +60,25 @@ class OrderForm(forms.ModelForm):
         self.helper.form_action = 'order-create'
         self.helper.form_class = 'order-form'
         self.helper.label_class = 'label'
+
+
+class OrderCheckStatusForm(forms.Form):
+    pk = forms.IntegerField(min_value=1)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_show_labels = False
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'order-check-status'
+        self.helper.layout = Layout(
+            'pk',
+            Submit('submit', 'Проверить', css_class='btn orange-btn')
+        )
+
+    def clean_pk(self):
+        pk = self.cleaned_data.get('pk')
+        order = Order.objects.filter(pk=pk).first()
+        if not order:
+            self.add_error('pk', 'Заказ с данным номером не найден')
+        return pk

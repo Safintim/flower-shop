@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="row text-center">
+        <div class="col">
+            <h2>СТАТУС И ОПЛАТА ЗАКАЗА</h2>
+        </div>
+    </div>
+    <div class="row text-center">
+        <div class="col">
+            <p>Чтобы узнать статус заказа и оплатить, введите его номер и нажмите "Проверить" или "Оплатить"</p>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-4 text-center">
+            {% crispy form form.helper %}
+        </div>
+    </div>
+
+{% endblock %}

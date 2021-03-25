@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row my-4 last-order">
+        <div class="col-4 last-order-info">
+            <h6>Код: {{ order.pk }}</h6>
+            <h6>Дата заказа: {{ order.created_at }}</h6>
+            <h6>Статус: {{ order.get_status_display }}</h6>
+            <h6>Сумма: {{ order.price_total }} ₽</h6>
+        </div>
+        <div class="col-8 d-flex align-self-center justify-content-center">
+            {% for cart_product in order.products.all %}
+                <div class="">
+                    <img class="mx-2" width="72" src="
+                            {% if cart_product.product.small_image %}{{ cart_product.product.small_image.url }} {% else %} https://via.placeholder.com/372 {% endif %}"
+                         alt="">
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
