@@ -208,9 +208,20 @@ a {
 }
 
 .card-product .product-price {
-    font-weight: bold;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.4;
+    display: inline-block;
 }
 
+.card-product .prices .price-old {
+    margin-right: 8px;
+    color: #777;
+    font-weight: 500;
+}
+.card-product .strike {
+    text-decoration: line-through;
+}
 .card-product a {
     color: black;
 }

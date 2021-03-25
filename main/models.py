@@ -110,6 +110,10 @@ class Product(models.Model):
     def is_present(self):
         return self.type == self.TYPE_PRESENT
 
+    @property
+    def cheap_bouquet(self):
+        return self.bouquets.order_by('price').first()
+
     def get_small_bouquet(self):
         return self.bouquets.filter(size=Bouquet.SIZE_SM).first()
 

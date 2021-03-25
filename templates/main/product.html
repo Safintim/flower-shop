@@ -13,14 +13,24 @@
                 <div class="notify-badge badge-discount mb-1">-{{ object.discount }}%</div>
             {% endif %}
         </div>
-        <img class="card-img-top" src="{% if object.small_image %}{{ object.small_image.url }} {% else %} https://via.placeholder.com/372 {% endif %}" alt="">
+        <img class="card-img-top" src="
+                {% if object.small_image %}{{ object.small_image.url }} {% else %} https://via.placeholder.com/372 {% endif %}"
+             alt="">
     </a>
     <div class="card-body">
         <h4 class="card-title">
             <a href="{% url 'product-detail' object.slug %}">{{ object.title }}</a>
         </h4>
-        <h5 class="product-price">от {{ object.price|floatformat:0 }} ₽</h5>
+        <div class="prices">
+            <div class="product-price price-old">
+                {% if object.discount %}
+                    <span class="strike">{{ object.price|floatformat:0 }} ₽</span>
+                {% endif %}
+            </div>
+            <div class="product-price"><span>от {{ object.price|floatformat:0 }}</span></div>
+        </div>
         {% csrf_token %}
-        <a url="{% url 'cart-product-create' object.pk %}?size={{ object.get_middle_bouquet.size }}" class="btn-add-cart"><span>Добавить в корзину</span></a>
+        <a url="{% url 'cart-product-create' object.pk %}?size={{ object.cheap_bouquet.size }}"
+           class="btn-add-cart"><span>Добавить в корзину</span></a>
     </div>
 </div>
