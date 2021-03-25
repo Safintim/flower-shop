@@ -1,13 +1,15 @@
 from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models import Sum
 
 from cart.models import Cart, CartProduct
-from main.models import Product
+from main.models import Product, Bouquet
 
 
 class OrderProduct(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Продукт')
+    bouquet = models.ForeignKey(Bouquet, on_delete=models.CASCADE, verbose_name='Букет', blank=True, null=True)
     price = models.DecimalField('Цена', max_digits=9, decimal_places=2, default=0, blank=True)
     qty = models.PositiveIntegerField('Количество', default=1, blank=True, validators=[MinValueValidator(1)])
     order = models.ForeignKey('orders.Order', on_delete=models.CASCADE, related_name='products', verbose_name='Заказ')
@@ -83,6 +85,7 @@ class Order(models.Model):
             OrderProduct(
                 product=cart_product.product,
                 qty=cart_product.qty,
+                bouquet=cart_product.bouquet,
                 price=cart_product.price,
                 order=self
             )
@@ -90,3 +93,7 @@ class Order(models.Model):
 
         OrderProduct.objects.bulk_create(order_products)
         cart_products.delete()
+
+    @property
+    def price_total(self):
+        return self.products.aggregate(total=Sum('price'))['total']
