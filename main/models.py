@@ -5,7 +5,7 @@ from django.db.models import Sum, F
 from django_random_queryset.queryset import RandomQuerySet
 from phonenumber_field.modelfields import PhoneNumberField
 
-from core.models import ActiveQuerySet
+from core.models import ActiveQuerySet, CreationModificationModel
 
 
 class CategoryQuerySet(ActiveQuerySet):
@@ -72,7 +72,7 @@ class ProductQuerySet(ActiveQuerySet, RandomQuerySet):
         return self.filter(is_new=True)
 
 
-class Product(models.Model):
+class Product(CreationModificationModel):
     TYPE_PRESENT = 'PRESENT'
     TYPE_BOUQUET = 'BOUQUET'
     TYPE_CHOICE = (
@@ -142,7 +142,7 @@ class Product(models.Model):
     get_big_bouquet_price.short_description = 'Цена большого букета'
 
 
-class Flower(models.Model):
+class Flower(CreationModificationModel):
     title = models.CharField('Название', max_length=100)
     price = models.DecimalField('Цена', max_digits=9, decimal_places=2)
     is_add_filter = models.BooleanField('Добавить в фильтр', default=True)
@@ -156,7 +156,7 @@ class Flower(models.Model):
         return self.title
 
 
-class Bouquet(models.Model):
+class Bouquet(CreationModificationModel):
     SIZE_SM = 'SMALL'
     SIZE_MD = 'MIDDLE'
     SIZE_BG = 'BIG'
@@ -195,7 +195,7 @@ class Bouquet(models.Model):
         return bouquet_price
 
 
-class BouquetFlower(models.Model):
+class BouquetFlower(CreationModificationModel):
     count = models.PositiveIntegerField('Количество', default=0)
     flower = models.ForeignKey(Flower, on_delete=models.CASCADE, verbose_name='Цветок')
     bouquet = models.ForeignKey(Bouquet, on_delete=models.CASCADE, verbose_name='Букет')
@@ -208,7 +208,7 @@ class BouquetFlower(models.Model):
         return f'{self.flower} - {self.bouquet}'
 
 
-class Configuration(models.Model):
+class Configuration(CreationModificationModel):
     singleton_instance_id = 1
     bouquet_price_coefficient = models.FloatField('Наценка на цветы', default=1)
 
@@ -231,11 +231,9 @@ class Configuration(models.Model):
         return 'Настройки'
 
 
-class Callback(models.Model):
+class Callback(CreationModificationModel):
     phone = PhoneNumberField(verbose_name='Номер телефона')
     is_new = models.BooleanField('Новая заявка', default=True)
-    created_at = models.DateTimeField('Дата поступления', auto_now_add=True)
-    updated_at = models.DateTimeField('Дата обновления', auto_now=True)
 
     class Meta:
         verbose_name = 'Заявка'

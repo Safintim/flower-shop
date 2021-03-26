@@ -4,10 +4,11 @@ from django.db import models
 from django.db.models import Sum
 
 from cart.models import Cart, CartProduct
+from core.models import CreationModificationModel
 from main.models import Product, Bouquet
 
 
-class OrderProduct(models.Model):
+class OrderProduct(CreationModificationModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Продукт')
     bouquet = models.ForeignKey(Bouquet, on_delete=models.CASCADE, verbose_name='Букет', blank=True, null=True)
     price = models.DecimalField('Цена', max_digits=9, decimal_places=2, default=0, blank=True)
@@ -22,7 +23,7 @@ class OrderProduct(models.Model):
         return f'{self.order.user.phone} - {self.product.title}'
 
 
-class Order(models.Model):
+class Order(CreationModificationModel):
     STATUS_NEW = 'NEW'
     STATUS_CANCEL = 'CANCEL'
     STATUS_END = 'END'
@@ -68,8 +69,6 @@ class Order(models.Model):
         (STATUS_END, 'Завершен'),
     )
     status = models.CharField('Статус', choices=STATUS_CHOICE, max_length=6, default=STATUS_NEW)
-    created_at = models.DateTimeField('Дата создания', auto_now_add=True)
-    updated_at = models.DateTimeField('Дата обновления', auto_now=True)
 
     class Meta:
         verbose_name = 'Заказ'

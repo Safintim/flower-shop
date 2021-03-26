@@ -3,10 +3,11 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import F, Sum
 
+from core.models import CreationModificationModel
 from main.models import Product, Bouquet
 
 
-class CartProduct(models.Model):
+class CartProduct(CreationModificationModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Продукт')
     bouquet = models.ForeignKey(Bouquet, on_delete=models.CASCADE, verbose_name='Букет', blank=True, null=True)
     qty = models.PositiveIntegerField('Количество', default=1, blank=True, validators=[MinValueValidator(1)])
