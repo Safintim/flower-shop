@@ -133,11 +133,6 @@ class FlowerAdmin(BaseModelAdmin):
     search_fields = ('title',)
 
 
-class ConfigurationAdmin(BaseModelAdmin):
-    list_display = ('__str__', 'bouquet_price_coefficient',)
-    list_editable = ('bouquet_price_coefficient',)
-
-
 class CategoryAdmin(BaseModelAdmin):
     list_display = ('id', 'title', 'parent', 'is_active')
     list_display_links = ('id', 'title')
@@ -145,18 +140,9 @@ class CategoryAdmin(BaseModelAdmin):
     list_filter = ('is_active', 'parent')
 
 
-class CallbackAdmin(BaseModelAdmin):
-    list_display = ('id', 'is_new', 'phone', 'created_at', 'updated_at')
-    list_display_links = ('id', 'phone')
-    list_editable = ('is_new',)
-    list_filter = ('is_new',)
-
-
 admin.site.register(models.Reason)
 admin.site.register(models.Category, CategoryAdmin)
 admin.site.register(models.Color)
 admin.site.register(models.Product, ProductAdmin)
 admin.site.register(models.Flower, FlowerAdmin)
-admin.site.register(models.Configuration, ConfigurationAdmin)
 admin.site.register(models.Bouquet, BouquetAdmin)
-admin.site.register(models.Callback, CallbackAdmin)

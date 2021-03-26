@@ -1,9 +1,8 @@
 from django.conf import settings
 from django.db import models
+from django_random_queryset.queryset import RandomQuerySet
 
 from core.models import ActiveQuerySet, CreationModificationModel
-
-from django_random_queryset.queryset import RandomQuerySet
 
 
 class ReviewQuerySet(ActiveQuerySet, RandomQuerySet):
