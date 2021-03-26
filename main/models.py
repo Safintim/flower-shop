@@ -60,10 +60,10 @@ class Color(models.Model):
 
 class ProductQuerySet(ActiveQuerySet, RandomQuerySet):
     def presents(self):
-        return self.filter(type=Product.TYPE_PRESENT)
+        return self.filter(type=Product.Type.PRESENT)
 
     def bouquets(self):
-        return self.filter(type=Product.TYPE_BOUQUET)
+        return self.filter(type=Product.Type.BOUQUET)
 
     def hits(self):
         return self.filter(is_hit=True)
@@ -73,13 +73,11 @@ class ProductQuerySet(ActiveQuerySet, RandomQuerySet):
 
 
 class Product(CreationModificationModel):
-    TYPE_PRESENT = 'PRESENT'
-    TYPE_BOUQUET = 'BOUQUET'
-    TYPE_CHOICE = (
-        (TYPE_PRESENT, 'Подарок'),
-        (TYPE_BOUQUET, 'Букет'),
-    )
-    type = models.CharField('Тип', choices=TYPE_CHOICE, max_length=12)
+    class Type(models.TextChoices):
+        PRESENT = 'PRESENT', 'Подарок'
+        BOUQUET = 'BOUQUET', 'Букет'
+
+    type = models.CharField('Тип', choices=Type.choices, max_length=12)
     title = models.CharField('Название', max_length=200)
     slug = models.SlugField('Слаг', unique=True)
     price = models.DecimalField('Цена', max_digits=9, decimal_places=2, default=0, blank=True)
@@ -104,24 +102,24 @@ class Product(CreationModificationModel):
 
     @property
     def is_bouquet(self):
-        return self.type == self.TYPE_BOUQUET
+        return self.type == self.Type.BOUQUET
 
     @property
     def is_present(self):
-        return self.type == self.TYPE_PRESENT
+        return self.type == self.Type.PRESENT
 
     @property
     def cheap_bouquet(self):
         return self.bouquets.order_by('price').first()
 
     def get_small_bouquet(self):
-        return self.bouquets.filter(size=Bouquet.SIZE_SM).first()
+        return self.bouquets.filter(size=Bouquet.Size.SM).first()
 
     def get_middle_bouquet(self):
-        return self.bouquets.filter(size=Bouquet.SIZE_MD).first()
+        return self.bouquets.filter(size=Bouquet.Size.MD).first()
 
     def get_big_bouquet(self):
-        return self.bouquets.filter(size=Bouquet.SIZE_BG).first()
+        return self.bouquets.filter(size=Bouquet.Size.BG).first()
 
     def get_bouquet_by_size(self, size):
         return self.bouquets.filter(size=size).first()
@@ -157,15 +155,13 @@ class Flower(CreationModificationModel):
 
 
 class Bouquet(CreationModificationModel):
-    SIZE_SM = 'SMALL'
-    SIZE_MD = 'MIDDLE'
-    SIZE_BG = 'BIG'
-    SIZE_CHOICE = (
-        (SIZE_SM, 'Маленький'),
-        (SIZE_MD, 'Средний (как на фото)'),
-        (SIZE_BG, 'Большой'),
-    )
-    size = models.CharField('Размер', choices=SIZE_CHOICE, max_length=7, db_index=True)
+
+    class Size(models.TextChoices):
+        SM = 'SMALL', 'Маленький'
+        MD = 'MIDDLE', 'Средний (как на фото)'
+        BG = 'BIG', 'Большой'
+
+    size = models.CharField('Размер', choices=Size.choices, max_length=7, db_index=True)
     title = models.CharField('Название', max_length=100, db_index=True)
     price = models.DecimalField('Цена', max_digits=9, decimal_places=2, default=0, blank=True)
     flowers = models.ManyToManyField(

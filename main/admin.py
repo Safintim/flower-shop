@@ -59,7 +59,7 @@ class ProductAdminForm(forms.ModelForm):
     def clean_bouquets(self):
         bouquets = self.cleaned_data.get('bouquets')
         product_type = self.cleaned_data.get('type', self.instance.type)
-        if product_type != models.Product.TYPE_BOUQUET:
+        if product_type != models.Product.Type.BOUQUET:
             return bouquets
 
         bouquets_count = bouquets.count()
@@ -109,7 +109,7 @@ class ProductAdmin(BaseModelAdmin):
 
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)
-        if form.instance.type == models.Product.TYPE_BOUQUET:
+        if form.instance.type == models.Product.Type.BOUQUET:
             min_price = form.instance.bouquets.aggregate(Min('price'))['price__min']
             form.instance.price = min_price
             form.save()
