@@ -34,6 +34,4 @@ $(function () {
     $('.add-cart-detail').on('click', function () {
         addToCart($(this));
     })
-
-
 });

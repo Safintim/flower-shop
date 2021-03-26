@@ -1,5 +1,5 @@
 $(function () {
-    const URL = $('form.filter').attr('action');
+    const URL = $('.filter form').attr('action');
     $('#slider').slider({
         range: true,
         min: 0,
@@ -24,7 +24,6 @@ $(function () {
         })
     })
     $('.filter :checkbox').on('change', function () {
-
         let reasonIds = $(".filter input[type=checkbox]:checked").map(function () {
             return $(this).val();
         }).get();
