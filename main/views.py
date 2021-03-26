@@ -21,9 +21,9 @@ class BaseProductListMixin:
 
     def get_context_data(self):
         context = super().get_context_data(object_list=self.get_queryset())
-        context['reasons'] = models.Reason.objects.all()
-        context['colors'] = models.Color.objects.all()
-        context['flowers'] = models.Flower.objects.all()
+        context['reasons'] = models.Reason.objects.active()
+        context['colors'] = models.Color.objects.active()
+        context['flowers'] = models.Flower.objects.active()
         context['filter'] = ProductFilter()
         return context
 

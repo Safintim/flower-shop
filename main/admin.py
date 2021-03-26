@@ -126,10 +126,10 @@ class ProductAdmin(BaseModelAdmin):
 
 
 class FlowerAdmin(BaseModelAdmin):
-    list_display = ('id', 'title', 'price', 'is_add_filter')
+    list_display = ('id', 'title', 'price', 'is_active', 'is_add_filter')
     list_display_links = ('id', 'title')
     list_filter = ('is_add_filter',)
-    list_editable = ('price', 'is_add_filter')
+    list_editable = ('price', 'is_active', 'is_add_filter')
     search_fields = ('title',)
 
 
@@ -140,9 +140,20 @@ class CategoryAdmin(BaseModelAdmin):
     list_filter = ('is_active', 'parent')
 
 
-admin.site.register(models.Reason)
+class ReasonAdmin(BaseModelAdmin):
+    list_display = ('id', 'title', 'is_active')
+    list_display_links = ('id', 'title')
+    list_editable = ('is_active',)
+    list_filter = ('is_active',)
+
+
+class ColorAdmin(ReasonAdmin):
+    pass
+
+
+admin.site.register(models.Reason, ReasonAdmin)
 admin.site.register(models.Category, CategoryAdmin)
-admin.site.register(models.Color)
+admin.site.register(models.Color, ColorAdmin)
 admin.site.register(models.Product, ProductAdmin)
 admin.site.register(models.Flower, FlowerAdmin)
 admin.site.register(models.Bouquet, BouquetAdmin)

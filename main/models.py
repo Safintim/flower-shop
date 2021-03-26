@@ -14,6 +14,7 @@ class CategoryQuerySet(ActiveQuerySet):
 
 class CommonFields(models.Model):
     title = models.CharField('Название', max_length=200)
+    is_active = models.BooleanField('Активно', default=False, db_index=True)
 
     class Meta:
         abstract = True
@@ -29,7 +30,6 @@ class Category(SlugifyMixin, CommonFields):
         blank=True,
         verbose_name='Родительская'
     )
-    is_active = models.BooleanField('Активна', default=True)
     objects = CategoryQuerySet.as_manager()
 
     slug_source_field = 'title'
@@ -44,6 +44,7 @@ class Category(SlugifyMixin, CommonFields):
 
 
 class Reason(CommonFields):
+    objects = ActiveQuerySet.as_manager()
 
     class Meta:
         verbose_name = 'Повод'
@@ -54,6 +55,7 @@ class Reason(CommonFields):
 
 
 class Color(CommonFields):
+    objects = ActiveQuerySet.as_manager()
 
     class Meta:
         verbose_name = 'Цвет'
@@ -87,7 +89,6 @@ class Product(SlugifyMixin, CreationModificationModel, CommonFields):
     price = models.DecimalField('Цена', max_digits=9, decimal_places=2, default=0, blank=True)
     small_image = models.ImageField('Изображение(маленькое)', upload_to=settings.IMAGE_UPLOAD_PATH, help_text='Размер 372х372')
     big_image = models.ImageField('Изображение(большое)', upload_to=settings.IMAGE_UPLOAD_PATH, help_text='Размер 640x640')
-    is_active = models.BooleanField('Активный', default=False, db_index=True)
     is_hit = models.BooleanField('Хит', default=False, db_index=True)
     is_new = models.BooleanField('Новинка', default=False, db_index=True)
     discount = models.PositiveIntegerField('Скидка', default=0, blank=True)
@@ -150,6 +151,8 @@ class Product(SlugifyMixin, CreationModificationModel, CommonFields):
 class Flower(CreationModificationModel, CommonFields):
     price = models.DecimalField('Цена', max_digits=9, decimal_places=2)
     is_add_filter = models.BooleanField('Добавить в фильтр', default=True)
+
+    objects = ActiveQuerySet.as_manager()
 
     class Meta:
         verbose_name = 'Цветок'
