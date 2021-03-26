@@ -4,18 +4,23 @@ from django.db.models import Sum, F
 
 from django_random_queryset.queryset import RandomQuerySet
 
-from core.models import ActiveQuerySet, CreationModificationModel, Configuration
+from core.models import ActiveQuerySet, CreationModificationModel, Configuration, SlugifyMixin
 
 
 class CategoryQuerySet(ActiveQuerySet):
-
     def parent_null(self):
         return self.filter(parent__isnull=True)
 
 
-class Category(models.Model):
-    title = models.CharField('Название', max_length=100)
-    slug = models.SlugField('Слаг', unique=True)
+class CommonFields(models.Model):
+    title = models.CharField('Название', max_length=200)
+
+    class Meta:
+        abstract = True
+
+
+class Category(SlugifyMixin, CommonFields):
+    slug = models.SlugField('Слаг', unique=True, blank=True)
     parent = models.ForeignKey(
         'main.Category',
         on_delete=models.SET_NULL,
@@ -27,6 +32,9 @@ class Category(models.Model):
     is_active = models.BooleanField('Активна', default=True)
     objects = CategoryQuerySet.as_manager()
 
+    slug_source_field = 'title'
+    slug_target_field = 'slug'
+
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
@@ -35,8 +43,7 @@ class Category(models.Model):
         return self.title
 
 
-class Reason(models.Model):
-    title = models.CharField('Название', max_length=100)
+class Reason(CommonFields):
 
     class Meta:
         verbose_name = 'Повод'
@@ -46,8 +53,7 @@ class Reason(models.Model):
         return self.title
 
 
-class Color(models.Model):
-    title = models.CharField('Название', max_length=100)
+class Color(CommonFields):
 
     class Meta:
         verbose_name = 'Цвет'
@@ -71,14 +77,13 @@ class ProductQuerySet(ActiveQuerySet, RandomQuerySet):
         return self.filter(is_new=True)
 
 
-class Product(CreationModificationModel):
+class Product(SlugifyMixin, CreationModificationModel, CommonFields):
     class Type(models.TextChoices):
         PRESENT = 'PRESENT', 'Подарок'
         BOUQUET = 'BOUQUET', 'Букет'
 
     type = models.CharField('Тип', choices=Type.choices, max_length=12)
-    title = models.CharField('Название', max_length=200)
-    slug = models.SlugField('Слаг', unique=True)
+    slug = models.SlugField('Слаг', unique=True, blank=True)
     price = models.DecimalField('Цена', max_digits=9, decimal_places=2, default=0, blank=True)
     small_image = models.ImageField('Изображение(маленькое)', upload_to=settings.IMAGE_UPLOAD_PATH, help_text='Размер 372х372')
     big_image = models.ImageField('Изображение(большое)', upload_to=settings.IMAGE_UPLOAD_PATH, help_text='Размер 640x640')
@@ -91,6 +96,9 @@ class Product(CreationModificationModel):
     reasons = models.ManyToManyField(Reason, blank=True, verbose_name='Поводы', db_index=True)
     bouquets = models.ManyToManyField('main.Bouquet', verbose_name='Букеты', blank=True, db_index=True)
     objects = ProductQuerySet.as_manager()
+
+    slug_source_field = 'title'
+    slug_target_field = 'slug'
 
     class Meta:
         verbose_name = 'Товар'
@@ -139,8 +147,7 @@ class Product(CreationModificationModel):
     get_big_bouquet_price.short_description = 'Цена большого букета'
 
 
-class Flower(CreationModificationModel):
-    title = models.CharField('Название', max_length=100)
+class Flower(CreationModificationModel, CommonFields):
     price = models.DecimalField('Цена', max_digits=9, decimal_places=2)
     is_add_filter = models.BooleanField('Добавить в фильтр', default=True)
 
@@ -154,7 +161,6 @@ class Flower(CreationModificationModel):
 
 
 class Bouquet(CreationModificationModel):
-
     class Size(models.TextChoices):
         SM = 'SMALL', 'Маленький'
         MD = 'MIDDLE', 'Средний (как на фото)'

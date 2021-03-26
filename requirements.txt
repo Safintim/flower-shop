@@ -12,3 +12,4 @@ django-random-queryset==0.1.3
 django-crispy-forms==1.11.1
 phonenumbers==8.12.20
 django-phonenumber-field==5.0.0
+transliterate==1.10.2

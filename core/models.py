@@ -1,5 +1,10 @@
+import random
+from string import digits
+
 from django.db import models
+from django.utils.text import slugify
 from phonenumber_field.modelfields import PhoneNumberField
+from transliterate import translit
 
 
 class ActiveQuerySet(models.QuerySet):
@@ -13,6 +18,22 @@ class CreationModificationModel(models.Model):
 
     class Meta:
         abstract = True
+
+
+class SlugifyMixin:
+    slug_source_field = None
+    slug_target_field = None
+
+    def save(self, *args, **kwargs):
+        slug = translit(slugify(getattr(self, self.slug_source_field), allow_unicode=True), reversed=True)
+
+        model = self.__class__
+        while model.objects.exclude(pk=self.pk).filter(slug=slug).exists():
+            new_slug = translit(slugify(getattr(self, self.slug_source_field), allow_unicode=True), reversed=True)
+            slug = '{}-{}'.format(new_slug, random.choice(digits))
+
+        setattr(self, self.slug_target_field, slug)
+        super().save(*args, **kwargs)
 
 
 class Configuration(CreationModificationModel):
