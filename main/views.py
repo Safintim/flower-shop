@@ -17,12 +17,13 @@ class BaseProductListMixin:
         return self.filterset.qs.distinct()
 
     def get_context_data(self):
-        context = super().get_context_data(object_list=self.get_queryset())
-        context['reasons'] = models.Reason.objects.active()
-        context['colors'] = models.Color.objects.active()
-        context['flowers'] = models.Flower.objects.active()
-        context['filter'] = ProductFilter()
-        return context
+        kwargs = {
+            'reasons': models.Reason.objects.active(),
+            'colors': models.Color.objects.active(),
+            'flowers': models.Flower.objects.active(),
+            'filter': ProductFilter(),
+        }
+        return super().get_context_data(object_list=self.get_queryset(), **kwargs)
 
 
 class ProductByCategoryListView(BaseProductListMixin, generic.ListView):
@@ -46,23 +47,21 @@ class ProductDetailView(generic.DetailView):
     model = models.Product
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        obj = context['object']
+        obj = self.get_object()
         if obj.is_bouquet:
-            context['bouquets'] = obj.bouquets.order_by('-size')
-        context['reviews'] = Review.objects.active().random(6)
-        context['similar_products'] = models.Product.objects.active().filter(
+            kwargs['bouquets'] = obj.bouquets.order_by('-size')
+        kwargs['reviews'] = Review.objects.active().random(6)
+        kwargs['similar_products'] = models.Product.objects.active().filter(
             categories__in=obj.categories.all()).random(4).exclude(pk=obj.pk)
-        return context
+        return super().get_context_data(**kwargs)
 
 
 class IndexTemplateView(generic.TemplateView):
     template_name = 'index.html'
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['hit_products'] = models.Product.objects.active().bouquets().hits().random(6)
-        context['new_products'] = models.Product.objects.active().bouquets().new().random(6)
-        context['reviews'] = Review.objects.active().random(6)
-        return context
+        kwargs['hit_products'] = models.Product.objects.active().bouquets().hits().random(6)
+        kwargs['new_products'] = models.Product.objects.active().bouquets().new().random(6)
+        kwargs['reviews'] = Review.objects.active().random(6)
+        return super().get_context_data(**kwargs)
 

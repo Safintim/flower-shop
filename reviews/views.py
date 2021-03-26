@@ -14,9 +14,8 @@ class ReviewListView(generic.ListView):
         return Review.objects.active()
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(object_list=object_list, **kwargs)
-        context['form'] = ReviewForm()
-        return context
+        kwargs['form'] = ReviewForm()
+        return super().get_context_data(object_list=object_list, **kwargs)
 
 
 class ReviewCreateView(generic.FormView):
