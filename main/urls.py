@@ -4,13 +4,9 @@ from main import views
 
 
 urlpatterns = [
-    path('about/', views.AboutView.as_view(), name='about'),
-    path('shipping/', views.ShippingAndPaymentView.as_view(), name='shipping'),
-    path('contacts/', views.Contacts.as_view(), name='contacts'),
-    path('catalog/product/<str:slug>/', views.ProductDetail.as_view(), name='product-detail'),
-    path('catalog/all/', views.ProductList.as_view(), name='product-list'),
+    path('catalog/product/<str:slug>/', views.ProductDetailView.as_view(), name='product-detail'),
+    path('catalog/all/', views.BouquetListView.as_view(), name='product-list'),
     path('catalog/filter/', views.ProductFilterView.as_view(), name='product-list-filter'),
-    path('catalog/<str:slug>/', views.ProductByCategory.as_view(), name='product-by-category'),
-    path('callback/create/', views.CallbackView.as_view(), name='callback-create'),
-    path('', views.IndexView.as_view(), name='index'),
+    path('catalog/<str:slug>/', views.ProductByCategoryListView.as_view(), name='product-by-category'),
+    path('', views.IndexTemplateView.as_view(), name='index'),
 ]

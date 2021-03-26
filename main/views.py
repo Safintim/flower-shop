@@ -1,6 +1,3 @@
-import phonenumbers
-from django.conf import settings
-from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import generic
 
@@ -28,13 +25,13 @@ class BaseProductListMixin:
         return context
 
 
-class ProductByCategory(BaseProductListMixin, generic.ListView):
+class ProductByCategoryListView(BaseProductListMixin, generic.ListView):
     def get_queryset(self):
         qs = super().get_queryset()
         return qs.filter(categories__slug=self.kwargs['slug'])
 
 
-class ProductList(BaseProductListMixin, generic.ListView):
+class BouquetListView(BaseProductListMixin, generic.ListView):
     def get_queryset(self):
         return super().get_queryset().bouquets()
 
@@ -45,7 +42,7 @@ class ProductFilterView(BaseProductListMixin, generic.ListView):
         return render(request, 'main/list.html', context)
 
 
-class ProductDetail(generic.DetailView):
+class ProductDetailView(generic.DetailView):
     model = models.Product
 
     def get_context_data(self, **kwargs):
@@ -59,20 +56,7 @@ class ProductDetail(generic.DetailView):
         return context
 
 
-class CallbackView(generic.View):
-    def post(self, request, *args, **kwargs):
-        phone = request.POST.get('phone')
-        try:
-            phone_parse = phonenumbers.parse(phone, settings.PHONENUMBER_DEFAULT_REGION)
-            if phonenumbers.is_valid_number(phone_parse):
-                models.Callback.objects.create(phone=phone)
-                return JsonResponse({'status': 'ok'})
-        except phonenumbers.phonenumberutil.NumberParseException:
-            pass
-        return JsonResponse({'status': 'error'})
-
-
-class IndexView(generic.TemplateView):
+class IndexTemplateView(generic.TemplateView):
     template_name = 'index.html'
 
     def get_context_data(self, **kwargs):
@@ -82,14 +66,3 @@ class IndexView(generic.TemplateView):
         context['reviews'] = Review.objects.active().random(6)
         return context
 
-
-class AboutView(generic.TemplateView):
-    template_name = 'about.html'
-
-
-class ShippingAndPaymentView(generic.TemplateView):
-    template_name = 'shipping_and_payment.html'
-
-
-class Contacts(generic.TemplateView):
-    template_name = 'contacts.html'
