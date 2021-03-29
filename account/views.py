@@ -3,7 +3,7 @@ from django.views import generic
 from django.contrib.auth import get_user_model, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
-from account.forms import UserRegistrationForm, UserLoginForm
+from account.forms import UserRegistrationForm, UserLoginForm, UserUpdateForm
 
 
 class OnlyNotAuthenticated(UserPassesTestMixin):
@@ -21,7 +21,7 @@ class UserView(generic.TemplateView):
 class UserUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = get_user_model()
     template_name = 'account/user_update.html'
-    fields = ('first_name', 'last_name', 'phone',)
+    form_class = UserUpdateForm
 
     def get_object(self, queryset=None):
         return self.request.user
