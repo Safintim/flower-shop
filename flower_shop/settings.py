@@ -44,9 +44,11 @@ INSTALLED_APPS = [
     'django_filters',
     'crispy_forms',
     'phonenumber_field',
+    'django_tables2',
     'django_extensions',  # for shell_plus
 
     'account.apps.AccountConfig',
+    'custom_admin.apps.CustomAdminConfig',
     'main.apps.MainConfig',
     'core.apps.CoreConfig',
     'reviews.apps.ReviewsConfig',
