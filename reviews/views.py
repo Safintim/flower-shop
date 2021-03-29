@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.views import generic
 
-from reviews.forms import ReviewForm
+from reviews.forms import ReviewCreateForm
 from reviews.models import Review
 
 
@@ -14,12 +14,12 @@ class ReviewListView(generic.ListView):
         return Review.objects.active()
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        kwargs['form'] = ReviewForm()
+        kwargs['form'] = ReviewCreateForm()
         return super().get_context_data(object_list=object_list, **kwargs)
 
 
 class ReviewCreateView(generic.FormView):
-    form_class = ReviewForm
+    form_class = ReviewCreateForm
 
     def form_valid(self, form):
         form.save()

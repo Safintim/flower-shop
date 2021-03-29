@@ -1,3 +1,5 @@
+{% load crispy_forms_tags %}
+
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content px-2 py-1">
@@ -6,7 +8,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <h5 class="modal-title text-center" id="exampleModalLabel">Оставить отзыв</h5>
-                {% include 'form.html' with view_name='review-create' btn_text='Оставить отзыв' %}
+                {% crispy form form.helper %}
             </div>
         </div>
     </div>
