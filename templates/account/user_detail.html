@@ -31,15 +31,11 @@
                 {% for cart_product in order.products.all %}
                     <div class="">
                         <img class="mx-2" width="72" src="
-
                                 {% if cart_product.product.small_image %}{{ cart_product.product.small_image.url }} {% else %} https://via.placeholder.com/372 {% endif %}"
                              alt="">
                     </div>
-
                 {% endfor %}
             </div>
-
         </div>
     {% endfor %}
-
 {% endblock %}

@@ -12,7 +12,7 @@ CartProductFormset = forms.modelformset_factory(CartProduct, fields=('qty', ), e
 
 class CartProductListView(LoginRequiredMixin, generic.FormView):
     model = CartProduct
-    template_name = 'cart/product_list.html'
+    template_name = 'cart/cart_product_list.html'
     form_class = CartProductFormset
 
     def get_form_kwargs(self):

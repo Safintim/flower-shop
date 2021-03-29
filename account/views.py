@@ -1,10 +1,9 @@
 from django.shortcuts import redirect
 from django.views import generic
 from django.contrib.auth import get_user_model, login, logout
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
-from account.forms import UserRegistrationForm
+from account.forms import UserRegistrationForm, UserLoginForm
 
 
 class OnlyNotAuthenticated(UserPassesTestMixin):
@@ -40,7 +39,7 @@ class UserRegistrationView(OnlyNotAuthenticated, generic.CreateView):
 
 
 class Login(OnlyNotAuthenticated, generic.FormView):
-    form_class = AuthenticationForm
+    form_class = UserLoginForm
     template_name = 'account/user_login.html'
 
     def form_valid(self, form):
