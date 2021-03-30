@@ -3,7 +3,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Submit
 from django.urls import reverse_lazy
 
-from main.models import Category, Reason
+from main.models import Category, Reason, Color
 
 
 class ConfigFilter:
@@ -38,6 +38,9 @@ class ReasonFilterFormHelper(FormHelper):
     )
 
 
+ColorFilterFormHelper = ReasonFilterFormHelper
+
+
 class CategoryFilter(django_filters.FilterSet):
     class Meta:
         model = Category
@@ -48,3 +51,8 @@ class ReasonFilter(django_filters.FilterSet):
     class Meta:
         model = Reason
         fields = ('title', 'is_active',)
+
+
+class ColorFilter(ReasonFilter):
+    class Meta(ReasonFilter.Meta):
+        model = Color

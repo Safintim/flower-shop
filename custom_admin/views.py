@@ -3,10 +3,11 @@ from django.views import generic
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin
 
-from custom_admin.filters import CategoryFilter, CategoryFilterFormHelper, ReasonFilter, ReasonFilterFormHelper
+from custom_admin.filters import CategoryFilter, CategoryFilterFormHelper, ReasonFilter, ReasonFilterFormHelper, \
+    ColorFilter, ColorFilterFormHelper
 from custom_admin.forms import CreateUpdateFormHelper
-from custom_admin.tables import CategoryTable, ReasonTable
-from main.models import Category, Reason
+from custom_admin.tables import CategoryTable, ReasonTable, ColorTable
+from main.models import Category, Reason, Color
 
 
 class BaseTemplateResponseMixin:
@@ -140,5 +141,36 @@ class ReasonDeleteView(DeleteMixin, generic.DeleteView):
     model = Reason
     success_url = reverse_lazy('custom_admin:reason-list')
     update_view_name = 'custom_admin:reason-update'
+
+
+class ColorListView(FilteredSingleTableView):
+    model = Color
+    table_class = ColorTable
+    filterset_class = ColorFilter
+    form_helper_class = ColorFilterFormHelper
+    create_view_name = 'custom_admin:color-create'
+
+
+class ColorUpdateView(CreateUpdateMixin, generic.UpdateView):
+    model = Color
+    views = {
+        'create_update': 'custom_admin:color-update',
+        'delete': 'custom_admin:color-delete',
+        'success': 'custom_admin:color-update',
+    }
+
+
+class ColorCreateView(CreateUpdateMixin, generic.CreateView):
+    model = Color
+    views = {
+        'create_update': 'custom_admin:color-create',
+        'success': 'custom_admin:color-update',
+    }
+
+
+class ColorDeleteView(DeleteMixin, generic.DeleteView):
+    model = Color
+    success_url = reverse_lazy('custom_admin:color-list')
+    update_view_name = 'custom_admin:color-update'
 
 

@@ -1,6 +1,6 @@
 import django_tables2 as tables
 
-from main.models import Category, Reason
+from main.models import Category, Reason, Color
 
 
 class ConfigTable:
@@ -24,4 +24,11 @@ class ReasonTable(tables.Table):
         model = Reason
         attrs = ConfigTable.attrs
         fields = ('id', 'title', 'is_active')
+
+
+class ColorTable(ReasonTable):
+    title = tables.Column(linkify=('custom_admin:color-update', ConfigTable.url_params))
+
+    class Meta(ReasonTable.Meta):
+        model = Color
 

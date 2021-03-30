@@ -14,5 +14,10 @@ urlpatterns = [
     path('reasons/<int:pk>/', views.ReasonUpdateView.as_view(), name='reason-update'),
     path('reasons/', views.ReasonListView.as_view(), name='reason-list'),
 
+    path('colors/<int:pk>/delete/', views.ColorDeleteView.as_view(), name='color-delete'),
+    path('colors/create/', views.ColorCreateView.as_view(), name='color-create'),
+    path('colors/<int:pk>/', views.ColorUpdateView.as_view(), name='color-update'),
+    path('colors/', views.ColorListView.as_view(), name='color-list'),
+
     path('', views.IndexTemplateView.as_view(), name='index'),
 ]
