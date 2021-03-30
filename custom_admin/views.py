@@ -1,11 +1,12 @@
 from django.urls import reverse_lazy
 from django.views import generic
 
-from custom_admin.filter_helpers import CategoryFilterFormHelper, ReasonFilterFormHelper, ColorFilterFormHelper
-from custom_admin.filters import CategoryFilter, ReasonFilter, ColorFilter
+from custom_admin.filter_helpers import CategoryFilterFormHelper, ReasonFilterFormHelper, ColorFilterFormHelper, \
+    FlowerFilterFormHelper
+from custom_admin.filters import CategoryFilter, ReasonFilter, ColorFilter, FlowerFilter
 from custom_admin.mixins import FilteredSingleTableView, CreateUpdateMixin, DeleteMixin
-from custom_admin.tables import CategoryTable, ReasonTable, ColorTable
-from main.models import Category, Reason, Color
+from custom_admin.tables import CategoryTable, ReasonTable, ColorTable, FlowerTable
+from main.models import Category, Reason, Color, Flower
 
 
 class IndexTemplateView(generic.TemplateView):
@@ -103,5 +104,36 @@ class ColorDeleteView(DeleteMixin, generic.DeleteView):
     model = Color
     success_url = reverse_lazy('custom_admin:color-list')
     update_view_name = 'custom_admin:color-update'
+
+
+class FlowerListView(FilteredSingleTableView):
+    model = Flower
+    table_class = FlowerTable
+    filterset_class = FlowerFilter
+    form_helper_class = FlowerFilterFormHelper
+    create_view_name = 'custom_admin:flower-create'
+
+
+class FlowerUpdateView(CreateUpdateMixin, generic.UpdateView):
+    model = Flower
+    views = {
+        'create_update': 'custom_admin:flower-update',
+        'delete': 'custom_admin:flower-delete',
+        'success': 'custom_admin:flower-update',
+    }
+
+
+class FlowerCreateView(CreateUpdateMixin, generic.CreateView):
+    model = Flower
+    views = {
+        'create_update': 'custom_admin:flower-create',
+        'success': 'custom_admin:flower-update',
+    }
+
+
+class FlowerDeleteView(DeleteMixin, generic.DeleteView):
+    model = Flower
+    success_url = reverse_lazy('custom_admin:flower-list')
+    update_view_name = 'custom_admin:flower-update'
 
 

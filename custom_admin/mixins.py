@@ -15,7 +15,6 @@ class BaseTemplateResponseMixin:
 # TEMPLATE_NAME_PATTERN = 'custom_admin/{}.html'
 
 
-
 class FilteredSingleTableView(BaseTemplateResponseMixin, SingleTableMixin, FilterView):
     template_name_suffix = 'list'
     form_helper_class = None

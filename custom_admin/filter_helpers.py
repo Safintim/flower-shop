@@ -36,3 +36,19 @@ class ReasonFilterFormHelper(FormHelper):
 
 
 ColorFilterFormHelper = ReasonFilterFormHelper
+
+
+class FlowerFilterFormHelper(FormHelper):
+    form_method = ConfigFilter.method
+    form_action = reverse_lazy('custom_admin:flower-list')
+    column_classes = 'form-group col-md-4 mb-0'
+    layout = Layout(
+        Row(
+            Column('title', css_class=column_classes),
+            Column('price_min', css_class=column_classes),
+            Column('price_max', css_class=column_classes),
+            Column('is_active', css_class=column_classes),
+            Column('is_add_filter', css_class=column_classes),
+        ),
+        Row(ConfigFilter.button)
+    )

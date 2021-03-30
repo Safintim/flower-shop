@@ -1,6 +1,6 @@
 import django_tables2 as tables
 
-from main.models import Category, Reason, Color
+from main.models import Category, Reason, Color, Flower
 
 
 class ConfigTable:
@@ -32,3 +32,11 @@ class ColorTable(ReasonTable):
     class Meta(ReasonTable.Meta):
         model = Color
 
+
+class FlowerTable(tables.Table):
+    title = tables.Column(linkify=('custom_admin:flower-update', ConfigTable.url_params))
+
+    class Meta:
+        model = Flower
+        attrs = ConfigTable.attrs
+        fields = ('id', 'title', 'is_active', 'price', 'is_add_filter', 'updated_at')
