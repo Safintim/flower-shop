@@ -3,10 +3,10 @@ from django.views import generic
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin
 
-from custom_admin.filters import CategoryFilter, CategoryFilterFormHelper
+from custom_admin.filters import CategoryFilter, CategoryFilterFormHelper, ReasonFilter, ReasonFilterFormHelper
 from custom_admin.forms import CreateUpdateFormHelper
-from custom_admin.tables import CategoryTable
-from main.models import Category
+from custom_admin.tables import CategoryTable, ReasonTable
+from main.models import Category, Reason
 
 
 class BaseTemplateResponseMixin:
@@ -109,4 +109,36 @@ class CategoryDeleteView(DeleteMixin, generic.DeleteView):
     model = Category
     success_url = reverse_lazy('custom_admin:category-list')
     update_view_name = 'custom_admin:category-update'
+
+
+class ReasonListView(FilteredSingleTableView):
+    model = Reason
+    table_class = ReasonTable
+    filterset_class = ReasonFilter
+    form_helper_class = ReasonFilterFormHelper
+    create_view_name = 'custom_admin:reason-create'
+
+
+class ReasonUpdateView(CreateUpdateMixin, generic.UpdateView):
+    model = Reason
+    views = {
+        'create_update': 'custom_admin:reason-update',
+        'delete': 'custom_admin:reason-delete',
+        'success': 'custom_admin:reason-update',
+    }
+
+
+class ReasonCreateView(CreateUpdateMixin, generic.CreateView):
+    model = Reason
+    views = {
+        'create_update': 'custom_admin:reason-create',
+        'success': 'custom_admin:reason-update',
+    }
+
+
+class ReasonDeleteView(DeleteMixin, generic.DeleteView):
+    model = Reason
+    success_url = reverse_lazy('custom_admin:reason-list')
+    update_view_name = 'custom_admin:reason-update'
+
 

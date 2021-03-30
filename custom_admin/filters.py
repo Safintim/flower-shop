@@ -3,7 +3,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Submit
 from django.urls import reverse_lazy
 
-from main.models import Category
+from main.models import Category, Reason
 
 
 class ConfigFilter:
@@ -25,8 +25,26 @@ class CategoryFilterFormHelper(FormHelper):
     )
 
 
+class ReasonFilterFormHelper(FormHelper):
+    form_method = ConfigFilter.method
+    form_action = reverse_lazy('custom_admin:reason-list')
+    column_classes = 'form-group col-md-6 mb-0'
+    layout = Layout(
+        Row(
+            Column('title', css_class=column_classes),
+            Column('is_active', css_class=column_classes),
+        ),
+        Row(ConfigFilter.button)
+    )
+
+
 class CategoryFilter(django_filters.FilterSet):
     class Meta:
         model = Category
         fields = ('title', 'parent', 'is_active',)
 
+
+class ReasonFilter(django_filters.FilterSet):
+    class Meta:
+        model = Reason
+        fields = ('title', 'is_active',)
