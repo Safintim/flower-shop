@@ -4,7 +4,7 @@ from string import digits
 from django.db import models
 from django.utils.text import slugify
 from phonenumber_field.modelfields import PhoneNumberField
-from transliterate import translit
+from transliterate import translit, detect_language
 
 
 class ActiveQuerySet(models.QuerySet):
@@ -24,15 +24,28 @@ class SlugifyMixin:
     slug_source_field = None
     slug_target_field = None
 
-    def save(self, *args, **kwargs):
-        slug = translit(slugify(getattr(self, self.slug_source_field), allow_unicode=True), reversed=True)
+    def get_slug(self):
+        return translit(slugify(getattr(self, self.slug_source_field), allow_unicode=True), reversed=True)
 
-        model = self.__class__
+    def set_unique_slug(self, model):
+        slug = self.get_slug()
         while model.objects.exclude(pk=self.pk).filter(slug=slug).exists():
-            new_slug = translit(slugify(getattr(self, self.slug_source_field), allow_unicode=True), reversed=True)
-            slug = '{}-{}'.format(new_slug, random.choice(digits))
-
+            slug = '{}-{}'.format(self.get_slug(), random.choice(digits))
         setattr(self, self.slug_target_field, slug)
+
+    def is_changed_source(self, old):
+        return getattr(old, self.slug_source_field) != getattr(self, self.slug_source_field)
+
+    def save(self, *args, **kwargs):
+        model = self.__class__
+
+        old = model.objects.filter(pk=self.pk).first()
+        if old:
+            if self.is_changed_source(old):
+                self.set_unique_slug(model)
+        else:
+            self.set_unique_slug(model)
+
         super().save(*args, **kwargs)
 
 

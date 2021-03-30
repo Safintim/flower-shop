@@ -1,0 +1,19 @@
+{% extends 'custom_admin/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="row text-center">
+        <div class="col">
+            <div class="alert alert-dismissible alert-light">
+                <form method="post">
+                    {% csrf_token %}
+                    <p><strong>Вы уверены, что хотите удалить:</strong> <i>{{ object_name }} "{{ object }}"</i>?</p>
+                    <a href="{{ back_link }}" type="submit" class="btn btn-secondary">Назад</a>
+                    <button type="submit" class="btn btn-danger">Подтвердить</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
