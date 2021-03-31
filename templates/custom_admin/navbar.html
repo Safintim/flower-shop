@@ -38,7 +38,7 @@
                     Магазин
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Товары</a>
+                    <a class="dropdown-item" href="{% url 'custom_admin:product-list' %}">Товары</a>
                     <a class="dropdown-item" href="{% url 'custom_admin:category-list' %}">Категории</a>
                     <a class="dropdown-item" href="{% url 'custom_admin:reason-list' %}">Поводы</a>
                     <a class="dropdown-item" href="{% url 'custom_admin:flower-list' %}">Цветы</a>

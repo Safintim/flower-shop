@@ -14,9 +14,20 @@
             <h4>{{ title }}</h4>
         </div>
         <div class="col text-right">
-            <h4>{% if create_view_name %} <a href="{% url create_view_name %}" type="button" class="btn btn-secondary">Добавить</a>{% endif %}</h4>
+            {% if create_view_name %}
+                <h4>
+                    <a href="{% url create_view_name %}" type="button" class="btn btn-secondary">Добавить</a>
+                </h4>
+            {% endif %}
+            {% if present_create_view_name and bouquet_create_view_name %}
+                <h4>
+                    <a href="{% url present_create_view_name %}" type="button" class="btn btn-secondary">Добавить
+                        Подарок</a>
+                    <a href="{% url bouquet_create_view_name %}" type="button" class="btn btn-secondary">Добавить
+                        Букет</a>
+                </h4>
+            {% endif %}
         </div>
-
     </div>
     <div class="row">
         <div class="col">

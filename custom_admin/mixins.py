@@ -1,3 +1,4 @@
+from django.core.exceptions import ImproperlyConfigured
 from django.urls import reverse
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin
@@ -37,29 +38,23 @@ class CreateUpdateMixin(BaseTemplateResponseMixin):
     template_name_suffix = 'edit'
     fields = '__all__'
     form_helper_class = CreateUpdateFormHelper
-    actions = None
     success_view_name = None
-    views = {}
+    delete_view_name = None
 
-    def get_actions(self):
-        kwargs = {}
-        if self.object:
-            kwargs['pk'] = self.object.pk
-
-        actions = {
-            'create_update_action': reverse(self.views.get('create_update'), kwargs=kwargs),
-        }
-        if self.views.get('delete'):
-            actions['delete_action'] = reverse(self.views.get('delete'), kwargs=kwargs)
-        return actions
+    def get_delete_action(self):
+        if self.delete_view_name:
+            return reverse(self.delete_view_name, kwargs={'pk':self.object.pk})
 
     def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.helper = self.form_helper_class(form=form, **self.get_actions())
-        return form
+        if form_class is None:
+            form_class = self.get_form_class()
+        form = form_class()
+        helper = self.form_helper_class(form=form, delete_action=self.get_delete_action())
+        form_class.helper = property(lambda _: helper)
+        return form_class(**self.get_form_kwargs())
 
     def get_success_url(self):
-        return reverse(self.views.get('success'), kwargs={'pk': self.object.pk})
+        return reverse(self.success_view_name, kwargs={'pk': self.object.pk})
 
 
 class DeleteMixin(BaseTemplateResponseMixin):

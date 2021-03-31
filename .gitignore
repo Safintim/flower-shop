@@ -6,3 +6,4 @@ db.sqlite3
 staticfiles/
 static/admin/
 static/ckeditor/
+static/uploads/

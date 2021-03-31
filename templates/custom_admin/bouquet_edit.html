@@ -1,0 +1,61 @@
+{% extends 'custom_admin/base.html' %}
+
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+    <form action="{% url 'custom_admin:product-bouquet-create' %}" method="post" enctype="multipart/form-data">
+
+        {% crispy form %}
+
+        <hr>
+        <div class="row">
+            <div class="col">
+                <legend>Букеты</legend>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col">
+                <p class="mb-1">Маленький</p>
+                {% include 'custom_admin/formset_bouquet.html' with formset=small_bouquet_formset %}
+            </div>
+            <div class="col">
+                <p class="mb-1">Средний</p>
+                {% include 'custom_admin/formset_bouquet.html' with formset=middle_bouquet_formset %}
+            </div>
+            <div class="col">
+                <p class="mb-1">Большой</p>
+                {% include 'custom_admin/formset_bouquet.html' with formset=big_bouquet_formset %}
+            </div>
+        </div>
+        <div class="row text-center my-5">
+            <div class="col">
+                <input type="submit" name="save" value="Сохранить" class="btn btn-primary btn-lg" id="submit-id-save">
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/jquery.formset.js' %}"></script>
+    <script type="text/javascript">
+        const options = {
+            addText: 'Добавить',
+            deleteText: 'Удалить',
+            addCssClass: 'btn btn-primary',
+            deleteCssClass: 'btn btn-secondary',
+        }
+        $('.formset_row-{{ small_bouquet_formset.prefix }}').formset({
+            prefix: '{{ small_bouquet_formset.prefix }}',
+            ...options
+        });
+        $('.formset_row-{{ middle_bouquet_formset.prefix }}').formset({
+            prefix: '{{ middle_bouquet_formset.prefix }}',
+            ...options
+        });
+        $('.formset_row-{{ big_bouquet_formset.prefix }}').formset({
+            prefix: '{{ big_bouquet_formset.prefix }}',
+            ...options
+        });
+    </script>
+{% endblock %}

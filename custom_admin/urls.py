@@ -24,5 +24,11 @@ urlpatterns = [
     path('flowers/<int:pk>/', views.FlowerUpdateView.as_view(), name='flower-update'),
     path('flowers/', views.FlowerListView.as_view(), name='flower-list'),
 
+    path('products/<int:pk>/delete/', views.FlowerDeleteView.as_view(), name='product-delete'),
+    path('products/present/create/', views.ProductPresentCreateView.as_view(), name='product-present-create'),
+    path('products/bouquet/create/', views.ProductBouquetCreateView.as_view(), name='product-bouquet-create'),
+    path('products/<int:pk>/', views.ProductPresentUpdateView.as_view(), name='product-update'),
+    path('products/', views.ProductListView.as_view(), name='product-list'),
+
     path('', views.IndexTemplateView.as_view(), name='index'),
 ]

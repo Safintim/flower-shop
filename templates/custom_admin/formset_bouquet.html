@@ -1,0 +1,13 @@
+{% load crispy_forms_tags %}
+
+{{ formset.management_form }}
+{% for form in formset.forms %}
+    <div class="formset_row formset_row-{{ formset.prefix }} mb-5">
+        {% if forloop.first %}
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+        {% endif %}
+        {% crispy form %}
+    </div>
+{% endfor %}
