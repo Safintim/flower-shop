@@ -1,10 +1,11 @@
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 
 from custom_admin.filter_helpers import CategoryFilterFormHelper, ReasonFilterFormHelper, ColorFilterFormHelper, \
     FlowerFilterFormHelper, ProductFilterFormHelper
 from custom_admin.filters import CategoryFilter, ReasonFilter, ColorFilter, FlowerFilter, ProductFilter
-from custom_admin.forms import ProductPresentForm, ProductBouquetForm, BouquetForm, BouquetFlowerFormSet
+from custom_admin.forms import ProductPresentForm, ProductBouquetForm, BouquetFlowerFormSet
 from custom_admin.mixins import FilteredSingleTableView, CreateUpdateMixin, DeleteMixin, BaseTemplateResponseMixin
 from custom_admin.tables import CategoryTable, ReasonTable, ColorTable, FlowerTable, ProductTable
 from main.models import Category, Reason, Color, Flower, Product, Bouquet
@@ -138,42 +139,41 @@ class ProductPresentCreateView(PresentUpdateCreate, generic.CreateView):
 
 class ProductPresentUpdateView(PresentUpdateCreate, generic.UpdateView):
     def get_success_url(self):
-        return reverse('custom_admin:product-update', kwargs={'pk': self.object.pk})
+        return reverse('custom_admin:product-present-update', kwargs={'pk': self.object.pk})
 
 
 class BouquetUpdateCreate(BaseTemplateResponseMixin):
-    template_name_suffix = 'edit'
     model = Product
     form_class = ProductBouquetForm
 
 
 class ProductBouquetCreateView(BouquetUpdateCreate, generic.CreateView):
+    template_name_suffix = 'edit'
+
+
+class ProductBouquetUpdateView(BouquetUpdateCreate, generic.UpdateView):
     template_name_suffix = 'bouquet_edit'
 
+
+class BouquetSmallCreateView(BaseTemplateResponseMixin, generic.FormView):
+    template_name_suffix = 'bouquet_size_edit'
+    form_class = BouquetFlowerFormSet
+
     def get_context_data(self, **kwargs):
-        if self.request.POST:
-            kwargs['small_bouquet_formset'] = BouquetFlowerFormSet(data=self.request.POST, prefix='small_bouquet_formset')
-            kwargs['middle_bouquet_formset'] = BouquetFlowerFormSet(data=self.request.POST, prefix='middle_bouquet_formset')
-            kwargs['big_bouquet_formset'] = BouquetFlowerFormSet(data=self.request.POST, prefix='big_bouquet_formset')
+        return super().get_context_data(formset=self.get_form(), **kwargs)
+
+    def post(self, request, pk, *args, **kwargs):
+        self.product = get_object_or_404(Product, pk=pk)
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
         else:
-            kwargs['small_bouquet_formset'] = BouquetFlowerFormSet(prefix='small_bouquet_formset')
-            kwargs['middle_bouquet_formset'] = BouquetFlowerFormSet(prefix='middle_bouquet_formset')
-            kwargs['big_bouquet_formset'] = BouquetFlowerFormSet(prefix='big_bouquet_formset')
+            return self.form_invalid(form)
 
-        return super().get_context_data(**kwargs)
-
-    def form_valid(self, form):
-        print(self.request.POST)
-        context = self.get_context_data()
-        print(context)
-        small_bouquet_formset = context['small_bouquet_formset']
-        middle_bouquet_formset = context['middle_bouquet_formset']
-        big_bouquet_formset = context['big_bouquet_formset']
-        print(small_bouquet_formset.is_valid())
-        print(middle_bouquet_formset.is_valid())
-        print(big_bouquet_formset.is_valid())
-        print(dir(big_bouquet_formset))
-        print(big_bouquet_formset.management_form)
-        big_bouquet_formset
-        return super().form_valid(form)
-
+    def form_valid(self, formset):
+        bouquet = Bouquet.objects.create(size=Bouquet.Size.SM)
+        flowers = formset.save(commit=False)
+        flowers.instance = bouquet
+        flowers.save()
+        self.product.bouquets.add(bouquet)
+        return redirect('custom_admin:product-bouquet-update')

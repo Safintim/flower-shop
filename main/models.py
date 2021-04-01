@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import Sum, F
 from django_random_queryset.queryset import RandomQuerySet
@@ -199,7 +200,7 @@ class Bouquet(CreationModificationModel):
 
 
 class BouquetFlower(CreationModificationModel):
-    count = models.PositiveIntegerField('Количество', default=0)
+    count = models.PositiveIntegerField('Количество', default=0, validators=[MinValueValidator(1)])
     flower = models.ForeignKey(Flower, on_delete=models.CASCADE, verbose_name='Цветок')
     bouquet = models.ForeignKey(Bouquet, on_delete=models.CASCADE, verbose_name='Букет')
 

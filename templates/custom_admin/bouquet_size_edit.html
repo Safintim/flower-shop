@@ -1,0 +1,38 @@
+{% extends 'custom_admin/base.html' %}
+
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+    <div class="row">
+        <div class="col justify-content-center d-flex flex-column text-center">
+            <form action="">
+                {{ formset.management_form }}
+                {% for form in formset.forms %}
+                    <div class="formset_row formset_row-{{ formset.prefix }} mb-5 w-50 mx-auto">
+                        {% if forloop.first %}
+                            {% for hidden in form.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
+                        {% endif %}
+                        {% crispy form %}
+                    </div>
+                {% endfor %}
+            </form>
+        </div>
+
+    </div>
+
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/jquery.formset.js' %}"></script>
+    <script type="text/javascript">
+        $('.formset_row-{{ formset.prefix }}').formset({
+            addText: 'Добавить',
+            deleteText: 'Удалить',
+            prefix: '{{ formset.prefix }}',
+        });
+    </script>
+{% endblock %}

@@ -2,6 +2,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, HTML, Row, Fieldset, Column
 from django import forms
 from django.forms import inlineformset_factory
+from django.forms.models import BaseInlineFormSet
 
 from main.models import Product, Category, Reason, Bouquet, BouquetFlower
 
@@ -51,6 +52,12 @@ class ProductFormHelper(FormHelper):
         ),
     )
     button_layout = Row(Submit('save', 'Сохранить', css_class='btn-lg'), css_class='justify-content-center')
+    layout = Layout(
+        base_info_layout,
+        price_info_layout,
+        filters_layout,
+        button_layout
+    )
 
 
 class ProductForm(forms.ModelForm):
@@ -68,6 +75,8 @@ class ProductForm(forms.ModelForm):
         required=False,
     )
 
+    TYPE = None
+
     class Meta:
         model = Product
         fields = (
@@ -84,59 +93,31 @@ class ProductForm(forms.ModelForm):
             'reasons',
         )
 
-
-class ProductPresentForm(ProductForm):
-    Meta = ProductForm.Meta
-
     def save(self, commit=True):
         obj = super().save(commit=False)
-        obj.type = Product.Type.PRESENT
+        obj.type = self.TYPE
         if commit:
             obj.save()
             self.save_m2m()
         return obj
 
+
+class ProductPresentForm(ProductForm):
+    Meta = ProductForm.Meta
+    TYPE = Product.Type.PRESENT
+
     @property
     def helper(self):
-        helper = ProductFormHelper()
-        helper.layout = Layout(
-            helper.base_info_layout,
-            helper.price_info_layout,
-            helper.filters_layout,
-            helper.button_layout
-        )
-        return helper
+        return ProductFormHelper()
 
 
 class ProductBouquetForm(ProductForm):
     Meta = ProductForm.Meta
-
-    def save(self, commit=True):
-        obj = super().save(commit=False)
-        obj.type = Product.Type.BOUQUET
-        if commit:
-            obj.save()
-            self.save_m2m()
-        return obj
+    TYPE = Product.Type.BOUQUET
 
     @property
     def helper(self):
-        helper = ProductFormHelper()
-        helper.form_tag = False
-        helper.layout = Layout(
-            helper.base_info_layout,
-            helper.price_info_layout,
-            helper.filters_layout,
-        )
-        return helper
-
-
-class BouquetForm(forms.ModelForm):
-    size = forms.ChoiceField(widget=forms.HiddenInput())
-
-    class Meta:
-        model = Bouquet
-        fields = ('size', )
+        return ProductFormHelper()
 
 
 class BouquetFlowerForm(forms.ModelForm):
@@ -151,7 +132,7 @@ class BouquetFlowerForm(forms.ModelForm):
         helper.disable_csrf = True
         helper.layout = Layout(
             Row(
-                Column('count', css_class='col-3'), Column('flower', css_class='col-6'),
+                Column('count', css_class='col-2'), Column('flower', css_class='col-10'),
                 css_class='justify-content-center'
             )
         )
@@ -163,5 +144,15 @@ BouquetFlowerFormSet = inlineformset_factory(
     BouquetFlower,
     form=BouquetFlowerForm,
     extra=1,
-    can_delete=False
+    can_delete=True
+)
+
+BouquetFlowerMiddleFormSet = inlineformset_factory(
+    Bouquet,
+    BouquetFlower,
+    form=BouquetFlowerForm,
+    extra=0,
+    can_delete=True,
+    min_num=1,
+    validate_min=True,
 )
