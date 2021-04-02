@@ -1,5 +1,6 @@
 import django_filters
 
+from core.models import Callback
 from main.models import Category, Reason, Color, Flower, Product
 from reviews.models import Review
 
@@ -28,7 +29,13 @@ class ColorFilter(ReasonFilter):
 class ReviewFilter(django_filters.FilterSet):
     class Meta:
         model = Review
-        fields = ('name', 'is_active', )
+        fields = ('name', 'is_active')
+
+
+class CallbackFilter(django_filters.FilterSet):
+    class Meta:
+        model = Callback
+        fields = ('phone', 'is_new')
 
 
 class FlowerFilter(django_filters.FilterSet):

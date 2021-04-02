@@ -2,9 +2,10 @@ import random
 from string import digits
 
 from django.db import models
+from django.urls import reverse
 from django.utils.text import slugify
 from phonenumber_field.modelfields import PhoneNumberField
-from transliterate import translit, detect_language
+from transliterate import translit
 
 
 class ActiveQuerySet(models.QuerySet):
@@ -79,7 +80,10 @@ class Callback(CreationModificationModel):
     class Meta:
         verbose_name = 'Заявка'
         verbose_name_plural = 'Перезвоните мне'
-        ordering = ('-created_at', )
+        ordering = ('-created_at',)
 
     def __str__(self):
         return self.phone.raw_input
+
+    def get_absolute_url(self):
+        return reverse('custom_admin:callback-update', kwargs={'pk': self.pk})

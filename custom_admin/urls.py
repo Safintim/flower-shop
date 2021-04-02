@@ -28,6 +28,12 @@ urlpatterns = [
     path('reviews/<int:pk>/', views.ReviewUpdateView.as_view(), name='review-update'),
     path('reviews/', views.ReviewListView.as_view(), name='review-list'),
 
+    path('callbacks/<int:pk>/delete/', views.CallbackDeleteView.as_view(), name='callback-delete'),
+    path('callbacks/create/', views.CallbackCreateView.as_view(), name='callback-create'),
+    path('callbacks/<int:pk>/', views.CallbackUpdateView.as_view(), name='callback-update'),
+    path('callbacks/', views.CallbackListView.as_view(), name='callback-list'),
+
+
     path('products/present/<int:pk>/', views.ProductPresentUpdateView.as_view(), name='product-present-update'),
     path('products/bouquet/<int:pk>/', views.ProductBouquetUpdateView.as_view(), name='product-bouquet-update'),
     path('products/', views.ProductListView.as_view(), name='product-list'),

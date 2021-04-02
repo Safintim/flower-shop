@@ -2,11 +2,14 @@ from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 
+from core.models import Callback
 from custom_admin.filter_helpers import ProductFilterFormHelper
-from custom_admin.filters import CategoryFilter, ReasonFilter, ColorFilter, FlowerFilter, ProductFilter, ReviewFilter
+from custom_admin.filters import CategoryFilter, ReasonFilter, ColorFilter, FlowerFilter, ProductFilter, ReviewFilter, \
+    CallbackFilter
 from custom_admin.forms import ProductPresentForm, ProductBouquetForm, BouquetFlowerFormSet
 from custom_admin.mixins import FilteredSingleTableView, CreateUpdateMixin, DeleteMixin, BaseTemplateResponseMixin
-from custom_admin.tables import CategoryTable, ReasonTable, ColorTable, FlowerTable, ProductTable, ReviewTable
+from custom_admin.tables import CategoryTable, ReasonTable, ColorTable, FlowerTable, ProductTable, ReviewTable, \
+    CallbackTable
 from main.models import Category, Reason, Color, Flower, Product, Bouquet, BouquetFlower
 from reviews.models import Review
 
@@ -133,6 +136,41 @@ class ReviewDeleteView(DeleteMixin, generic.DeleteView):
     model = Review
     success_url = reverse_lazy('custom_admin:review-list')
     update_view_name = 'custom_admin:review-update'
+
+
+class CallbackListView(FilteredSingleTableView):
+    model = Callback
+    table_class = CallbackTable
+    filterset_class = CallbackFilter
+    create_view_name = 'custom_admin:callback-create'
+
+
+class CallbackUpdateView(CreateUpdateMixin, generic.UpdateView):
+    model = Callback
+    success_view_name = 'custom_admin:callback-update'
+    delete_view_name = 'custom_admin:callback-delete'
+    fields = ('phone',)
+
+    def set_read(self):
+        obj = self.get_object()
+        obj.is_new = False
+        obj.save()
+
+    def get(self, request, *args, **kwargs):
+        self.set_read()
+        return super().get(request, *args, **kwargs)
+
+
+class CallbackCreateView(CreateUpdateMixin, generic.CreateView):
+    model = Callback
+    success_view_name = 'custom_admin:callback-update'
+
+
+class CallbackDeleteView(DeleteMixin, generic.DeleteView):
+    model = Callback
+    success_url = reverse_lazy('custom_admin:callback-list')
+    update_view_name = 'custom_admin:callback-update'
+
 
 
 

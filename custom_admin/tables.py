@@ -1,5 +1,6 @@
 import django_tables2 as tables
 
+from core.models import Callback
 from main.models import Category, Reason, Color, Flower, Product
 from reviews.models import Review
 
@@ -61,3 +62,12 @@ class ReviewTable(tables.Table):
     class Meta:
         model = Review
         fields = ('id', 'name', 'is_active', 'created_at')
+
+
+class CallbackTable(tables.Table):
+    phone = tables.Column(linkify=True)
+
+    class Meta:
+        model = Callback
+        fields = ('id', 'phone', 'is_new', 'created_at', 'updated_at')
+
