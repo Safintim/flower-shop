@@ -2,6 +2,7 @@ from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import Sum, F
+from django.urls import reverse
 from django_random_queryset.queryset import RandomQuerySet
 
 from core.models import ActiveQuerySet, CreationModificationModel, Configuration, SlugifyMixin
@@ -42,6 +43,9 @@ class Category(SlugifyMixin, CommonFields):
     def __str__(self):
         return self.title
 
+    def get_absolute_url(self):
+        return reverse('custom_admin:category-update', kwargs={'pk': self.pk})
+
 
 class Reason(CommonFields):
     objects = ActiveQuerySet.as_manager()
@@ -53,6 +57,9 @@ class Reason(CommonFields):
     def __str__(self):
         return self.title
 
+    def get_absolute_url(self):
+        return reverse('custom_admin:reason-update', kwargs={'pk': self.pk})
+
 
 class Color(CommonFields):
     objects = ActiveQuerySet.as_manager()
@@ -63,6 +70,9 @@ class Color(CommonFields):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('custom_admin:color-update', kwargs={'pk': self.pk})
 
 
 class ProductQuerySet(ActiveQuerySet, RandomQuerySet):
@@ -147,6 +157,11 @@ class Product(SlugifyMixin, CreationModificationModel, CommonFields):
         return bouquet.price if bouquet else '-'
     get_big_bouquet_price.short_description = 'Цена большого букета'
 
+    def get_absolute_url(self):
+        if self.is_present:
+            return reverse('custom_admin:product-present-update', kwargs={'pk': self.pk})
+        return reverse('custom_admin:product-bouquet-update', kwargs={'pk': self.pk})
+
 
 class Flower(CreationModificationModel, CommonFields):
     price = models.DecimalField('Цена', max_digits=9, decimal_places=2)
@@ -161,6 +176,9 @@ class Flower(CreationModificationModel, CommonFields):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('custom_admin:flower-update', kwargs={'pk': self.pk})
 
 
 class Bouquet(CreationModificationModel):

@@ -2,7 +2,6 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, HTML, Row, Fieldset, Column
 from django import forms
 from django.forms import inlineformset_factory
-from django.forms.models import BaseInlineFormSet
 
 from main.models import Product, Category, Reason, Bouquet, BouquetFlower
 
@@ -123,7 +122,7 @@ class ProductBouquetForm(ProductForm):
 class BouquetFlowerForm(forms.ModelForm):
     class Meta:
         model = BouquetFlower
-        exclude = ()
+        exclude = ('id',)
 
     @property
     def helper(self):
@@ -132,19 +131,24 @@ class BouquetFlowerForm(forms.ModelForm):
         helper.disable_csrf = True
         helper.layout = Layout(
             Row(
-                Column('count', css_class='col-2'), Column('flower', css_class='col-10'),
+                Column('count', css_class='col-2'),
+                Column('flower', css_class='col-8'),
+                Column('DELETE', css_class='col-8'),
                 css_class='justify-content-center'
-            )
+            ),
         )
         return helper
 
 
+# TODO удалить все ниже
 BouquetFlowerFormSet = inlineformset_factory(
     Bouquet,
     BouquetFlower,
     form=BouquetFlowerForm,
-    extra=1,
-    can_delete=True
+    extra=0,
+    can_delete=True,
+    min_num=1,
+    validate_min=True,
 )
 
 BouquetFlowerMiddleFormSet = inlineformset_factory(

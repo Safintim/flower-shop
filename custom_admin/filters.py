@@ -3,16 +3,20 @@ import django_filters
 from main.models import Category, Reason, Color, Flower, Product
 
 
+class ConfigFilter:
+    common_fields = ('is_active', 'title')
+
+
 class CategoryFilter(django_filters.FilterSet):
     class Meta:
         model = Category
-        fields = ('title', 'parent', 'is_active',)
+        fields = ConfigFilter.common_fields + ('parent',)
 
 
 class ReasonFilter(django_filters.FilterSet):
     class Meta:
         model = Reason
-        fields = ('title', 'is_active',)
+        fields = ConfigFilter.common_fields
 
 
 class ColorFilter(ReasonFilter):
@@ -26,7 +30,7 @@ class FlowerFilter(django_filters.FilterSet):
 
     class Meta:
         model = Flower
-        fields = ('title', 'price_min', 'price_max', 'is_active', 'is_add_filter')
+        fields = ConfigFilter.common_fields + ('price_min', 'price_max', 'is_add_filter')
 
 
 class ProductFilter(django_filters.FilterSet):
@@ -35,11 +39,9 @@ class ProductFilter(django_filters.FilterSet):
 
     class Meta:
         model = Product
-        fields = (
-            'title',
+        fields = ConfigFilter.common_fields + (
             'price_min',
             'price_max',
-            'is_active',
             'is_hit',
             'is_new',
             'type',

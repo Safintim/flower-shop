@@ -13,9 +13,6 @@ class BaseTemplateResponseMixin:
         return 'custom_admin/{}.html'.format(self.template_name_suffix)
 
 
-# TEMPLATE_NAME_PATTERN = 'custom_admin/{}.html'
-
-
 class FilteredSingleTableView(BaseTemplateResponseMixin, SingleTableMixin, FilterView):
     template_name_suffix = 'list'
     form_helper_class = None

@@ -4,52 +4,48 @@ from main.models import Category, Reason, Color, Flower, Product
 
 
 class ConfigTable:
-    url_params = {'pk': tables.A('pk')}
     attrs = {'class': 'table table-hover'}
+    common_fields = ('id', 'title', 'is_active')
 
 
-class CategoryTable(tables.Table):
-    title = tables.Column(linkify=('custom_admin:category-update', ConfigTable.url_params))
+class TableWithLinkifyTitle(tables.Table):
+    title = tables.Column(linkify=True)
 
+
+class CategoryTable(TableWithLinkifyTitle):
     class Meta:
         model = Category
         attrs = ConfigTable.attrs
-        fields = ('id', 'title', 'is_active', 'slug', 'parent')
+        fields = ConfigTable.common_fields + ('slug', 'parent')
 
 
-class ReasonTable(tables.Table):
-    title = tables.Column(linkify=('custom_admin:reason-update', ConfigTable.url_params))
-
+class ReasonTable(TableWithLinkifyTitle):
     class Meta:
         model = Reason
         attrs = ConfigTable.attrs
-        fields = ('id', 'title', 'is_active')
+        fields = ConfigTable.common_fields
 
 
 class ColorTable(ReasonTable):
-    title = tables.Column(linkify=('custom_admin:color-update', ConfigTable.url_params))
-
     class Meta(ReasonTable.Meta):
         model = Color
 
 
-class FlowerTable(tables.Table):
-    title = tables.Column(linkify=('custom_admin:flower-update', ConfigTable.url_params))
-
+class FlowerTable(TableWithLinkifyTitle):
     class Meta:
         model = Flower
         attrs = ConfigTable.attrs
-        fields = ('id', 'title', 'is_active', 'price', 'is_add_filter', 'updated_at')
+        fields = ConfigTable.common_fields + ('price', 'is_add_filter', 'updated_at')
 
 
 def get_image():
-    image_url = '{% if record.small_image %} {{ record.small_image.url }} {% else %}https://via.placeholder.com/100/{% endif %}'
-    update_url = '{% url "custom_admin:product-present-update" record.pk %}'
+    image_url = '''
+    {% if record.small_image %} {{ record.small_image.url }} {% else %}https://via.placeholder.com/100/{% endif %}'''
+    update_url = '{{ record.get_absolute_url }}'
     return f'<a href={update_url}><img src="{image_url}" width=100 height="100"></a>'
 
 
-class ProductTable(tables.Table):
-    title = tables.Column(linkify=('custom_admin:product-bouquet-update', ConfigTable.url_params))
+class ProductTable(TableWithLinkifyTitle):
     image = tables.TemplateColumn(template_code=get_image(), verbose_name='Изображение', orderable=False)
 
     class Meta:

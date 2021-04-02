@@ -2,7 +2,6 @@ from django.urls import path
 
 from custom_admin import views
 
-
 urlpatterns = [
     path('categories/<int:pk>/delete/', views.CategoryDeleteView.as_view(), name='category-delete'),
     path('categories/create/', views.CategoryCreateView.as_view(), name='category-create'),
@@ -24,13 +23,15 @@ urlpatterns = [
     path('flowers/<int:pk>/', views.FlowerUpdateView.as_view(), name='flower-update'),
     path('flowers/', views.FlowerListView.as_view(), name='flower-list'),
 
-    path('products/<int:pk>/delete/', views.FlowerDeleteView.as_view(), name='product-delete'),
-    path('products/present/create/', views.ProductPresentCreateView.as_view(), name='product-present-create'),
-    path('products/bouquet/create/', views.ProductBouquetCreateView.as_view(), name='product-bouquet-create'),
     path('products/present/<int:pk>/', views.ProductPresentUpdateView.as_view(), name='product-present-update'),
     path('products/bouquet/<int:pk>/', views.ProductBouquetUpdateView.as_view(), name='product-bouquet-update'),
-    path('products/bouquet/<int:pk>/small/create/', views.BouquetSmallCreateView.as_view(), name='bouquet-small-create'),
     path('products/', views.ProductListView.as_view(), name='product-list'),
+    path('products/present/create/', views.ProductPresentCreateView.as_view(), name='product-present-create'),
+    path('products/bouquet/create/', views.ProductBouquetCreateView.as_view(), name='product-bouquet-create'),
+
+    # path('products/<int:pk>/delete/', views.FlowerDeleteView.as_view(), name='product-delete'),
+    # path('products/bouquet/<int:pk>/small/create/', views.BouquetSmallCreateView.as_view(), name='bouquet-small-create'),
+    # path('products/bouquet/<int:pk>/small/update/', views.BouquetSmallUpdateView.as_view(), name='bouquet-small-update'),
 
     path('', views.IndexTemplateView.as_view(), name='index'),
 ]
