@@ -1,6 +1,7 @@
 import django_filters
 
 from main.models import Category, Reason, Color, Flower, Product
+from reviews.models import Review
 
 
 class ConfigFilter:
@@ -22,6 +23,12 @@ class ReasonFilter(django_filters.FilterSet):
 class ColorFilter(ReasonFilter):
     class Meta(ReasonFilter.Meta):
         model = Color
+
+
+class ReviewFilter(django_filters.FilterSet):
+    class Meta:
+        model = Review
+        fields = ('name', 'is_active', )
 
 
 class FlowerFilter(django_filters.FilterSet):

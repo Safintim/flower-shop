@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.urls import reverse
 from django_random_queryset.queryset import RandomQuerySet
 
 from core.models import ActiveQuerySet, CreationModificationModel
@@ -26,3 +27,6 @@ class Review(CreationModificationModel):
 
     def __str__(self):
         return f'{self.name}'
+
+    def get_absolute_url(self):
+        return reverse('custom_admin:review-update', kwargs={'pk': self.pk})

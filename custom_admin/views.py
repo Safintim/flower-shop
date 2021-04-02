@@ -2,13 +2,13 @@ from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 
-from custom_admin.filter_helpers import CategoryFilterFormHelper, ReasonFilterFormHelper, ColorFilterFormHelper, \
-    FlowerFilterFormHelper, ProductFilterFormHelper
-from custom_admin.filters import CategoryFilter, ReasonFilter, ColorFilter, FlowerFilter, ProductFilter
+from custom_admin.filter_helpers import ProductFilterFormHelper
+from custom_admin.filters import CategoryFilter, ReasonFilter, ColorFilter, FlowerFilter, ProductFilter, ReviewFilter
 from custom_admin.forms import ProductPresentForm, ProductBouquetForm, BouquetFlowerFormSet
 from custom_admin.mixins import FilteredSingleTableView, CreateUpdateMixin, DeleteMixin, BaseTemplateResponseMixin
-from custom_admin.tables import CategoryTable, ReasonTable, ColorTable, FlowerTable, ProductTable
+from custom_admin.tables import CategoryTable, ReasonTable, ColorTable, FlowerTable, ProductTable, ReviewTable
 from main.models import Category, Reason, Color, Flower, Product, Bouquet, BouquetFlower
+from reviews.models import Review
 
 
 class IndexTemplateView(generic.TemplateView):
@@ -19,7 +19,6 @@ class CategoryListView(FilteredSingleTableView):
     model = Category
     table_class = CategoryTable
     filterset_class = CategoryFilter
-    form_helper_class = CategoryFilterFormHelper
     create_view_name = 'custom_admin:category-create'
 
 
@@ -44,7 +43,6 @@ class ReasonListView(FilteredSingleTableView):
     model = Reason
     table_class = ReasonTable
     filterset_class = ReasonFilter
-    form_helper_class = ReasonFilterFormHelper
     create_view_name = 'custom_admin:reason-create'
 
 
@@ -69,7 +67,6 @@ class ColorListView(FilteredSingleTableView):
     model = Color
     table_class = ColorTable
     filterset_class = ColorFilter
-    form_helper_class = ColorFilterFormHelper
     create_view_name = 'custom_admin:color-create'
 
 
@@ -94,7 +91,6 @@ class FlowerListView(FilteredSingleTableView):
     model = Flower
     table_class = FlowerTable
     filterset_class = FlowerFilter
-    form_helper_class = FlowerFilterFormHelper
     create_view_name = 'custom_admin:flower-create'
 
 
@@ -113,6 +109,31 @@ class FlowerDeleteView(DeleteMixin, generic.DeleteView):
     model = Flower
     success_url = reverse_lazy('custom_admin:flower-list')
     update_view_name = 'custom_admin:flower-update'
+
+
+class ReviewListView(FilteredSingleTableView):
+    model = Review
+    table_class = ReviewTable
+    filterset_class = ReviewFilter
+    create_view_name = 'custom_admin:review-create'
+
+
+class ReviewUpdateView(CreateUpdateMixin, generic.UpdateView):
+    model = Review
+    success_view_name = 'custom_admin:review-update'
+    delete_view_name = 'custom_admin:review-delete'
+
+
+class ReviewCreateView(CreateUpdateMixin, generic.CreateView):
+    model = Review
+    success_view_name = 'custom_admin:review-update'
+
+
+class ReviewDeleteView(DeleteMixin, generic.DeleteView):
+    model = Review
+    success_url = reverse_lazy('custom_admin:review-list')
+    update_view_name = 'custom_admin:review-update'
+
 
 
 class ProductListView(FilteredSingleTableView):

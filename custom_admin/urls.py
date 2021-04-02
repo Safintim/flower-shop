@@ -23,6 +23,11 @@ urlpatterns = [
     path('flowers/<int:pk>/', views.FlowerUpdateView.as_view(), name='flower-update'),
     path('flowers/', views.FlowerListView.as_view(), name='flower-list'),
 
+    path('reviews/<int:pk>/delete/', views.ReviewDeleteView.as_view(), name='review-delete'),
+    path('reviews/create/', views.ReviewCreateView.as_view(), name='review-create'),
+    path('reviews/<int:pk>/', views.ReviewUpdateView.as_view(), name='review-update'),
+    path('reviews/', views.ReviewListView.as_view(), name='review-list'),
+
     path('products/present/<int:pk>/', views.ProductPresentUpdateView.as_view(), name='product-present-update'),
     path('products/bouquet/<int:pk>/', views.ProductBouquetUpdateView.as_view(), name='product-bouquet-update'),
     path('products/', views.ProductListView.as_view(), name='product-list'),

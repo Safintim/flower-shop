@@ -1,8 +1,8 @@
-from django.core.exceptions import ImproperlyConfigured
 from django.urls import reverse
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin
 
+from custom_admin.filter_helpers import ListFormHelper
 from custom_admin.forms import CreateUpdateFormHelper
 
 
@@ -19,10 +19,15 @@ class FilteredSingleTableView(BaseTemplateResponseMixin, SingleTableMixin, Filte
     create_view_name = None
     paginate_by = 10
 
+    def get_form_helper(self, form=None):
+        if self.form_helper_class is None:
+            return ListFormHelper(form=form)
+        return self.form_helper_class()
+
     def get_filterset(self, filterset_class):
         kwargs = self.get_filterset_kwargs(filterset_class)
         filterset = filterset_class(**kwargs)
-        filterset.form.helper = self.form_helper_class()
+        filterset.form.helper = self.get_form_helper(form=filterset.form)
         return filterset
 
     def get_context_data(self, **kwargs):

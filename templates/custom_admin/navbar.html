@@ -24,7 +24,7 @@
                 <a class="nav-link" href="#">Пользователи</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Отзывы</a>
+                <a class="nav-link" href="{% url 'custom_admin:review-list' %}">Отзывы</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Настройки</a>
@@ -43,8 +43,6 @@
                     <a class="dropdown-item" href="{% url 'custom_admin:reason-list' %}">Поводы</a>
                     <a class="dropdown-item" href="{% url 'custom_admin:flower-list' %}">Цветы</a>
                     <a class="dropdown-item" href="{% url 'custom_admin:color-list' %}">Цвета букетов</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Букеты</a>
                 </div>
             </li>
         </ul>

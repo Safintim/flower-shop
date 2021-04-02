@@ -1,6 +1,7 @@
 import django_tables2 as tables
 
 from main.models import Category, Reason, Color, Flower, Product
+from reviews.models import Review
 
 
 class ConfigTable:
@@ -52,3 +53,11 @@ class ProductTable(TableWithLinkifyTitle):
         model = Product
         attrs = ConfigTable.attrs
         fields = ('id', 'image', 'title', 'price', 'is_active', 'is_hit', 'is_new', 'color')
+
+
+class ReviewTable(tables.Table):
+    name = tables.Column(linkify=True)
+
+    class Meta:
+        model = Review
+        fields = ('id', 'name', 'is_active', 'created_at')
