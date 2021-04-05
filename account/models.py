@@ -50,4 +50,4 @@ class User(AbstractUser):
         return self.phone.raw_input
 
     def get_absolute_url(self):
-        return reverse('user-detail')
+        return reverse('custom_admin:user-update', kwargs={'pk': self.pk})

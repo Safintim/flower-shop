@@ -1,4 +1,5 @@
 import django_filters
+from django.contrib.auth import get_user_model
 
 from core.models import Callback
 from main.models import Category, Reason, Color, Flower, Product
@@ -36,6 +37,15 @@ class CallbackFilter(django_filters.FilterSet):
     class Meta:
         model = Callback
         fields = ('phone', 'is_new')
+
+
+User = get_user_model()
+
+
+class UserFilter(django_filters.FilterSet):
+    class Meta:
+        model = User
+        fields = ('phone', 'is_active', 'first_name', 'last_name')
 
 
 class FlowerFilter(django_filters.FilterSet):

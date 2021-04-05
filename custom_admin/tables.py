@@ -1,4 +1,5 @@
 import django_tables2 as tables
+from django.contrib.auth import get_user_model
 
 from core.models import Callback
 from main.models import Category, Reason, Color, Flower, Product
@@ -71,3 +72,13 @@ class CallbackTable(tables.Table):
         model = Callback
         fields = ('id', 'phone', 'is_new', 'created_at', 'updated_at')
 
+
+User = get_user_model()
+
+
+class UserTable(tables.Table):
+    phone = tables.Column(linkify=True)
+
+    class Meta:
+        model = User
+        fields = ('id', 'phone', 'is_active', 'first_name', 'last_name', 'last_login')

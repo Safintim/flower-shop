@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import generic
@@ -5,11 +6,11 @@ from django.views import generic
 from core.models import Callback, Configuration
 from custom_admin.filter_helpers import ProductFilterFormHelper
 from custom_admin.filters import CategoryFilter, ReasonFilter, ColorFilter, FlowerFilter, ProductFilter, ReviewFilter, \
-    CallbackFilter
+    CallbackFilter, UserFilter
 from custom_admin.forms import ProductPresentForm, ProductBouquetForm, BouquetFlowerFormSet
 from custom_admin.mixins import FilteredSingleTableView, CreateUpdateMixin, DeleteMixin, BaseTemplateResponseMixin
 from custom_admin.tables import CategoryTable, ReasonTable, ColorTable, FlowerTable, ProductTable, ReviewTable, \
-    CallbackTable
+    CallbackTable, UserTable
 from main.models import Category, Reason, Color, Flower, Product, Bouquet, BouquetFlower
 from reviews.models import Review
 
@@ -181,6 +182,35 @@ class ConfigurationUpdateView(CreateUpdateMixin, generic.UpdateView):
 
     def get_success_url(self):
         return reverse(self.success_view_name)
+
+
+User = get_user_model()
+
+
+class UserListView(FilteredSingleTableView):
+    model = User
+    table_class = UserTable
+    filterset_class = UserFilter
+    create_view_name = 'custom_admin:user-create'
+
+
+class UserUpdateView(CreateUpdateMixin, generic.UpdateView):
+    model = User
+    success_view_name = 'custom_admin:user-update'
+    delete_view_name = 'custom_admin:user-delete'
+    fields = ('phone', 'first_name', 'last_name', 'email', 'is_active', 'last_login', 'date_joined')
+
+
+class UserCreateView(CreateUpdateMixin, generic.CreateView):
+    model = User
+    success_view_name = 'custom_admin:user-update'
+    fields = ('phone', 'password', 'first_name', 'last_name', 'email', 'is_active')
+
+
+class UserDeleteView(DeleteMixin, generic.DeleteView):
+    model = User
+    success_url = reverse_lazy('custom_admin:user-list')
+    update_view_name = 'custom_admin:user-update'
 
 
 class ProductListView(FilteredSingleTableView):
