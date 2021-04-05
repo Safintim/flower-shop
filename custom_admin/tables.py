@@ -1,6 +1,7 @@
 import django_tables2 as tables
 from django.contrib.auth import get_user_model
 
+from cart.models import Cart
 from core.models import Callback
 from main.models import Category, Reason, Color, Flower, Product
 from reviews.models import Review
@@ -82,3 +83,13 @@ class UserTable(tables.Table):
     class Meta:
         model = User
         fields = ('id', 'phone', 'is_active', 'first_name', 'last_name', 'last_login')
+
+
+class CartTable(tables.Table):
+    user = tables.Column(linkify=lambda record: record.get_absolute_url())
+    product_total = tables.Column(orderable=False, verbose_name='Количество товаров')
+    price_total = tables.Column(orderable=False, verbose_name='Общая стоимость')
+
+    class Meta:
+        model = Cart
+        fields = ('id', 'user', 'product_total', 'price_total', )

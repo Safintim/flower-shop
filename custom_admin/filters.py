@@ -1,6 +1,7 @@
 import django_filters
 from django.contrib.auth import get_user_model
 
+from cart.models import Cart
 from core.models import Callback
 from main.models import Category, Reason, Color, Flower, Product
 from reviews.models import Review
@@ -46,6 +47,12 @@ class UserFilter(django_filters.FilterSet):
     class Meta:
         model = User
         fields = ('phone', 'is_active', 'first_name', 'last_name')
+
+
+class CartFilter(django_filters.FilterSet):
+    class Meta:
+        model = Cart
+        fields = ('user', 'user__phone')
 
 
 class FlowerFilter(django_filters.FilterSet):

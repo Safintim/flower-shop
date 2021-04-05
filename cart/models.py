@@ -2,6 +2,7 @@ from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import F, Sum
+from django.urls import reverse
 
 from core.models import CreationModificationModel
 from main.models import Product, Bouquet
@@ -68,3 +69,6 @@ class Cart(models.Model):
             cart_product = CartProduct.objects.create(cart=self, product=product, bouquet=bouquet)
 
         return cart_product
+
+    def get_absolute_url(self):
+        return reverse('custom_admin:cart-detail', kwargs={'pk': self.pk})

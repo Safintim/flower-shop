@@ -3,14 +3,15 @@ from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 
+from cart.models import Cart
 from core.models import Callback, Configuration
 from custom_admin.filter_helpers import ProductFilterFormHelper
 from custom_admin.filters import CategoryFilter, ReasonFilter, ColorFilter, FlowerFilter, ProductFilter, ReviewFilter, \
-    CallbackFilter, UserFilter
+    CallbackFilter, UserFilter, CartFilter
 from custom_admin.forms import ProductPresentForm, ProductBouquetForm, BouquetFlowerFormSet
 from custom_admin.mixins import FilteredSingleTableView, CreateUpdateMixin, DeleteMixin, BaseTemplateResponseMixin
 from custom_admin.tables import CategoryTable, ReasonTable, ColorTable, FlowerTable, ProductTable, ReviewTable, \
-    CallbackTable, UserTable
+    CallbackTable, UserTable, CartTable
 from main.models import Category, Reason, Color, Flower, Product, Bouquet, BouquetFlower
 from reviews.models import Review
 
@@ -211,6 +212,17 @@ class UserDeleteView(DeleteMixin, generic.DeleteView):
     model = User
     success_url = reverse_lazy('custom_admin:user-list')
     update_view_name = 'custom_admin:user-update'
+
+
+class CartListView(FilteredSingleTableView):
+    model = Cart
+    table_class = CartTable
+    filterset_class = CartFilter
+
+
+class CartDetailView(BaseTemplateResponseMixin, generic.DetailView):
+    template_name_suffix = 'detail'
+    model = Cart
 
 
 class ProductListView(FilteredSingleTableView):

@@ -38,6 +38,9 @@ urlpatterns = [
     path('users/<int:pk>/', views.UserUpdateView.as_view(), name='user-update'),
     path('users/', views.UserListView.as_view(), name='user-list'),
 
+    path('carts/', views.CartListView.as_view(), name='cart-list'),
+    path('carts/<int:pk>', views.CartDetailView.as_view(), name='cart-detail'),
+
 
     path('configurations/', views.ConfigurationUpdateView.as_view(), name='configuration-update'),
 

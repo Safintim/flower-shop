@@ -1,0 +1,56 @@
+{% extends 'custom_admin/base.html' %}
+{% load static %}
+
+{% load custom_tags %}
+
+{% block content %}
+    <div class="row text-center">
+        <div class="col">
+            <h3>Товары в корзине пользователя {{ object.user }}</h3>
+        </div>
+    </div>
+    {% for cart_product in object.products.all %}
+        {% with product=cart_product.product %}
+            <div class="row my-5 justify-content-center">
+                <div class="col-2 card-product">
+                    <a href="{% url 'product-detail' product.slug %}">
+                        <div class="badges d-flex flex-column">
+                            {% if product.is_hit %}
+                                <div class="notify-badge badge-is-hit mb-1">{{ product|get_field_name:'is_hit'|upper }}</div>
+                            {% endif %}
+                            {% if product.is_new %}
+                                <div class="notify-badge badge-is-new mb-1">{{ product|get_field_name:'is_new'|upper }}</div>
+                            {% endif %}
+                            {% if product.discount %}
+                                <div class="notify-badge badge-discount mb-1">-{{ product.discount }}%</div>
+                            {% endif %}
+                        </div>
+                        <img class="card-img-top" src="
+                                {% if product.small_image %}{{ product.small_image.url }} {% else %} https://via.placeholder.com/372 {% endif %}"
+                             alt="">
+                    </a>
+                </div>
+                <div class="col-5 text-right align-self-center">
+                    <div>
+                        <h4 class="card-title">
+                            <a href="{% url 'product-detail' product.slug %}">
+                                {% if product.is_bouquet %}
+                                    {{ product.title }} <br> {{ cart_product.bouquet.get_size_display }}
+                                {% else %}
+                                    {{ product.title }}
+                                {% endif %}
+                            </a>
+                        </h4>
+                        <h5 class="product-price">{{ cart_product.price|floatformat:0 }} ₽</h5>
+                    </div>
+                </div>
+            </div>
+        {% endwith %}
+    {% endfor %}
+    <div class="row text-center">
+        <div class="col">
+            <h4>Количество товаров: {{ cart.product_total }}</h4>
+            <h4>Общая сумма: {{ cart.price_total }}</h4>
+        </div>
+    </div>
+{% endblock %}
