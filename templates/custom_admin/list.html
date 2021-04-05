@@ -17,9 +17,10 @@
             <h4>{{ title }}</h4>
         </div>
         <div class="col text-right">
-            {% if create_view_name %}
+            {% if show_button_create %}
                 <h4>
-                    <a href="{% url create_view_name %}" type="button" class="btn btn-secondary">Добавить</a>
+                {{ create_view_name }}
+                    <a href="{{ create_url }}" type="button" class="btn btn-secondary">Добавить</a>
                 </h4>
             {% endif %}
             {% if present_create_view_name and bouquet_create_view_name %}

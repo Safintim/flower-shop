@@ -9,7 +9,7 @@ from custom_admin.filter_helpers import ProductFilterFormHelper
 from custom_admin.filters import CategoryFilter, ReasonFilter, ColorFilter, FlowerFilter, ProductFilter, ReviewFilter, \
     CallbackFilter, UserFilter, CartFilter, OrderFilter
 from custom_admin.forms import ProductPresentForm, ProductBouquetForm, BouquetFlowerFormSet
-from custom_admin.mixins import FilteredSingleTableView, CreateUpdateMixin, DeleteMixin, BaseTemplateResponseMixin, \
+from custom_admin.mixins import FilteredSingleTableView, DeleteMixin, BaseTemplateResponseMixin, \
     DetailMixin, UpdateMixin, CreateMixin
 from custom_admin.tables import CategoryTable, ReasonTable, ColorTable, FlowerTable, ProductTable, ReviewTable, \
     CallbackTable, UserTable, CartTable, OrderTable
@@ -26,133 +26,100 @@ class CategoryListView(FilteredSingleTableView):
     model = Category
     table_class = CategoryTable
     filterset_class = CategoryFilter
-    create_view_name = 'custom_admin:category-create'
 
 
 class CategoryUpdateView(UpdateMixin, generic.UpdateView):
     model = Category
-    success_view_name = 'custom_admin:category-update'
-    delete_view_name = 'custom_admin:category-delete'
 
 
 class CategoryCreateView(CreateMixin, generic.CreateView):
     model = Category
-    success_view_name = 'custom_admin:category-update'
 
 
 class CategoryDeleteView(DeleteMixin, generic.DeleteView):
     model = Category
-    success_url = reverse_lazy('custom_admin:category-list')
-    update_view_name = 'custom_admin:category-update'
 
 
 class ReasonListView(FilteredSingleTableView):
     model = Reason
     table_class = ReasonTable
     filterset_class = ReasonFilter
-    create_view_name = 'custom_admin:reason-create'
 
 
 class ReasonUpdateView(UpdateMixin, generic.UpdateView):
     model = Reason
-    success_view_name = 'custom_admin:reason-update'
-    delete_view_name = 'custom_admin:reason-delete'
 
 
 class ReasonCreateView(CreateMixin, generic.CreateView):
     model = Reason
-    success_view_name = 'custom_admin:reason-update'
 
 
 class ReasonDeleteView(DeleteMixin, generic.DeleteView):
     model = Reason
-    success_url = reverse_lazy('custom_admin:reason-list')
-    update_view_name = 'custom_admin:reason-update'
 
 
 class ColorListView(FilteredSingleTableView):
     model = Color
     table_class = ColorTable
     filterset_class = ColorFilter
-    create_view_name = 'custom_admin:color-create'
 
 
 class ColorUpdateView(UpdateMixin, generic.UpdateView):
     model = Color
-    success_view_name = 'custom_admin:color-update'
-    delete_view_name = 'custom_admin:color-delete'
 
 
 class ColorCreateView(CreateMixin, generic.CreateView):
     model = Color
-    success_view_name = 'custom_admin:color-update'
 
 
 class ColorDeleteView(DeleteMixin, generic.DeleteView):
     model = Color
-    success_url = reverse_lazy('custom_admin:color-list')
-    update_view_name = 'custom_admin:color-update'
 
 
 class FlowerListView(FilteredSingleTableView):
     model = Flower
     table_class = FlowerTable
     filterset_class = FlowerFilter
-    create_view_name = 'custom_admin:flower-create'
 
 
 class FlowerUpdateView(UpdateMixin, generic.UpdateView):
     model = Flower
-    success_view_name = 'custom_admin:flower-update'
-    delete_view_name = 'custom_admin:flower-delete'
 
 
 class FlowerCreateView(CreateMixin, generic.CreateView):
     model = Flower
-    success_view_name = 'custom_admin:flower-update'
 
 
 class FlowerDeleteView(DeleteMixin, generic.DeleteView):
     model = Flower
-    success_url = reverse_lazy('custom_admin:flower-list')
-    update_view_name = 'custom_admin:flower-update'
 
 
 class ReviewListView(FilteredSingleTableView):
     model = Review
     table_class = ReviewTable
     filterset_class = ReviewFilter
-    create_view_name = 'custom_admin:review-create'
 
 
 class ReviewUpdateView(UpdateMixin, generic.UpdateView):
     model = Review
-    success_view_name = 'custom_admin:review-update'
-    delete_view_name = 'custom_admin:review-delete'
 
 
 class ReviewCreateView(CreateMixin, generic.CreateView):
     model = Review
-    success_view_name = 'custom_admin:review-update'
 
 
 class ReviewDeleteView(DeleteMixin, generic.DeleteView):
     model = Review
-    success_url = reverse_lazy('custom_admin:review-list')
-    update_view_name = 'custom_admin:review-update'
 
 
 class CallbackListView(FilteredSingleTableView):
     model = Callback
     table_class = CallbackTable
     filterset_class = CallbackFilter
-    create_view_name = 'custom_admin:callback-create'
 
 
 class CallbackUpdateView(UpdateMixin, generic.UpdateView):
     model = Callback
-    success_view_name = 'custom_admin:callback-update'
-    delete_view_name = 'custom_admin:callback-delete'
     fields = ('phone',)
 
     def set_read(self):
@@ -167,13 +134,10 @@ class CallbackUpdateView(UpdateMixin, generic.UpdateView):
 
 class CallbackCreateView(CreateMixin, generic.CreateView):
     model = Callback
-    success_view_name = 'custom_admin:callback-update'
 
 
 class CallbackDeleteView(DeleteMixin, generic.DeleteView):
     model = Callback
-    success_url = reverse_lazy('custom_admin:callback-list')
-    update_view_name = 'custom_admin:callback-update'
 
 
 class ConfigurationUpdateView(UpdateMixin, generic.UpdateView):
@@ -194,32 +158,27 @@ class UserListView(FilteredSingleTableView):
     model = User
     table_class = UserTable
     filterset_class = UserFilter
-    create_view_name = 'custom_admin:user-create'
 
 
 class UserUpdateView(UpdateMixin, generic.UpdateView):
     model = User
-    success_view_name = 'custom_admin:user-update'
-    delete_view_name = 'custom_admin:user-delete'
     fields = ('phone', 'first_name', 'last_name', 'email', 'is_active', 'last_login', 'date_joined')
 
 
 class UserCreateView(CreateMixin, generic.CreateView):
     model = User
-    success_view_name = 'custom_admin:user-update'
     fields = ('phone', 'password', 'first_name', 'last_name', 'email', 'is_active')
 
 
 class UserDeleteView(DeleteMixin, generic.DeleteView):
     model = User
-    success_url = reverse_lazy('custom_admin:user-list')
-    update_view_name = 'custom_admin:user-update'
 
 
 class CartListView(FilteredSingleTableView):
     model = Cart
     table_class = CartTable
     filterset_class = CartFilter
+    show_button_create = False
 
 
 class CartDetailView(DetailMixin, BaseTemplateResponseMixin, generic.DetailView):
@@ -231,11 +190,12 @@ class OrderListView(FilteredSingleTableView):
     model = Order
     table_class = OrderTable
     filterset_class = OrderFilter
+    show_button_create = False
 
 
 class OrderDetailView(DetailMixin, UpdateMixin, generic.UpdateView):
     model = Order
-    success_view_name = 'custom_admin:order-update'
+    show_button_delete = False
     fields = ('status',)
 
 

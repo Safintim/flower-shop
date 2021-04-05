@@ -6,15 +6,25 @@ from django.forms import inlineformset_factory
 from main.models import Product, Category, Reason, Bouquet, BouquetFlower
 
 
+def get_link(css_class, action, text):
+    return f'<a class="btn btn-{css_class} mr-2" href="{action}">{text}</a>' if action else ''
+
+
+def get_submit(is_update):
+    return '<input type="submit" name="save" value="Сохранить" class="btn btn-primary mr-2" id="submit-id-save">' if is_update else ''
+
+
 class CreateUpdateFormHelper(FormHelper):
-    def __init__(self, delete_action=None, *args, **kwargs):
+    def __init__(self, delete_action=None, is_update=False, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.form_method = 'POST'
-        html = f'<a class="btn btn-danger" href="{delete_action}">Удалить</a>' if delete_action else ''
+        delete_link = get_link(css_class='danger', action=delete_action, text='Удалить')
+        list_input = get_submit(is_update)
         self.layout = Layout(
             *self.layout.fields,
-            Submit('save', 'Сохранить'),
-            HTML(html)
+            Submit('continue', 'Сохранить и продолжить редактирование'),
+            HTML(list_input),
+            HTML(delete_link)
         )
 
 
