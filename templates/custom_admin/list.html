@@ -4,6 +4,9 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+
+    {% include 'messages.html' %}
+
     <div class="row my-5">
         <div class="col">
             {% crispy filter.form filter.form.helper %}

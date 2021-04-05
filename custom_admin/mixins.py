@@ -1,3 +1,5 @@
+from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin
@@ -11,6 +13,14 @@ class BaseTemplateResponseMixin:
         if self.template_name:
             return self.template_name
         return 'custom_admin/{}.html'.format(self.template_name_suffix)
+
+
+class CustomSuccessMessageMixin(SuccessMessageMixin):
+    success_message_suffix = None
+
+    def get_success_message(self, cleaned_data=None):
+        model_name = self.model._meta.verbose_name
+        return f'{model_name} №{self.object.pk} успешно {self.success_message_suffix}'
 
 
 class FilteredSingleTableView(BaseTemplateResponseMixin, SingleTableMixin, FilterView):
@@ -59,7 +69,16 @@ class CreateUpdateMixin(BaseTemplateResponseMixin):
         return reverse(self.success_view_name, kwargs={'pk': self.object.pk})
 
 
-class DeleteMixin(BaseTemplateResponseMixin):
+class CreateMixin(CustomSuccessMessageMixin, CreateUpdateMixin):
+    success_message_suffix = 'создан'
+
+
+class UpdateMixin(CustomSuccessMessageMixin, CreateUpdateMixin):
+    success_message_suffix = 'обновлен'
+
+
+class DeleteMixin(CustomSuccessMessageMixin, BaseTemplateResponseMixin):
+    success_message_suffix = 'удален'
     template_name_suffix = 'delete'
     update_view_name = None
 
@@ -67,6 +86,13 @@ class DeleteMixin(BaseTemplateResponseMixin):
         kwargs['object_name'] = self.model._meta.verbose_name
         kwargs['back_link'] = reverse(self.update_view_name, kwargs={'pk': self.object.pk})
         return super().get_context_data(**kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        response = super().delete(request, *args, **kwargs)
+        success_message = self.get_success_message()
+        if success_message:
+            messages.success(request, success_message)
+        return response
 
 
 class DetailMixin:

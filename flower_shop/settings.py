@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+from django.contrib import messages
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -221,3 +223,11 @@ DJANGO_TABLES2_TEMPLATE = 'django_tables2/bootstrap4.html'
 
 PHONENUMBER_DB_FORMAT = 'NATIONAL'
 PHONENUMBER_DEFAULT_REGION = 'RU'
+
+MESSAGE_TAGS = {
+        messages.DEBUG: 'alert-secondary',
+        messages.INFO: 'alert-info',
+        messages.SUCCESS: 'alert-success',
+        messages.WARNING: 'alert-warning',
+        messages.ERROR: 'alert-danger',
+ }

@@ -10,7 +10,7 @@ from custom_admin.filters import CategoryFilter, ReasonFilter, ColorFilter, Flow
     CallbackFilter, UserFilter, CartFilter, OrderFilter
 from custom_admin.forms import ProductPresentForm, ProductBouquetForm, BouquetFlowerFormSet
 from custom_admin.mixins import FilteredSingleTableView, CreateUpdateMixin, DeleteMixin, BaseTemplateResponseMixin, \
-    DetailMixin
+    DetailMixin, UpdateMixin, CreateMixin
 from custom_admin.tables import CategoryTable, ReasonTable, ColorTable, FlowerTable, ProductTable, ReviewTable, \
     CallbackTable, UserTable, CartTable, OrderTable
 from main.models import Category, Reason, Color, Flower, Product, Bouquet, BouquetFlower
@@ -29,13 +29,13 @@ class CategoryListView(FilteredSingleTableView):
     create_view_name = 'custom_admin:category-create'
 
 
-class CategoryUpdateView(CreateUpdateMixin, generic.UpdateView):
+class CategoryUpdateView(UpdateMixin, generic.UpdateView):
     model = Category
     success_view_name = 'custom_admin:category-update'
     delete_view_name = 'custom_admin:category-delete'
 
 
-class CategoryCreateView(CreateUpdateMixin, generic.CreateView):
+class CategoryCreateView(CreateMixin, generic.CreateView):
     model = Category
     success_view_name = 'custom_admin:category-update'
 
@@ -53,13 +53,13 @@ class ReasonListView(FilteredSingleTableView):
     create_view_name = 'custom_admin:reason-create'
 
 
-class ReasonUpdateView(CreateUpdateMixin, generic.UpdateView):
+class ReasonUpdateView(UpdateMixin, generic.UpdateView):
     model = Reason
     success_view_name = 'custom_admin:reason-update'
     delete_view_name = 'custom_admin:reason-delete'
 
 
-class ReasonCreateView(CreateUpdateMixin, generic.CreateView):
+class ReasonCreateView(CreateMixin, generic.CreateView):
     model = Reason
     success_view_name = 'custom_admin:reason-update'
 
@@ -77,13 +77,13 @@ class ColorListView(FilteredSingleTableView):
     create_view_name = 'custom_admin:color-create'
 
 
-class ColorUpdateView(CreateUpdateMixin, generic.UpdateView):
+class ColorUpdateView(UpdateMixin, generic.UpdateView):
     model = Color
     success_view_name = 'custom_admin:color-update'
     delete_view_name = 'custom_admin:color-delete'
 
 
-class ColorCreateView(CreateUpdateMixin, generic.CreateView):
+class ColorCreateView(CreateMixin, generic.CreateView):
     model = Color
     success_view_name = 'custom_admin:color-update'
 
@@ -101,13 +101,13 @@ class FlowerListView(FilteredSingleTableView):
     create_view_name = 'custom_admin:flower-create'
 
 
-class FlowerUpdateView(CreateUpdateMixin, generic.UpdateView):
+class FlowerUpdateView(UpdateMixin, generic.UpdateView):
     model = Flower
     success_view_name = 'custom_admin:flower-update'
     delete_view_name = 'custom_admin:flower-delete'
 
 
-class FlowerCreateView(CreateUpdateMixin, generic.CreateView):
+class FlowerCreateView(CreateMixin, generic.CreateView):
     model = Flower
     success_view_name = 'custom_admin:flower-update'
 
@@ -125,13 +125,13 @@ class ReviewListView(FilteredSingleTableView):
     create_view_name = 'custom_admin:review-create'
 
 
-class ReviewUpdateView(CreateUpdateMixin, generic.UpdateView):
+class ReviewUpdateView(UpdateMixin, generic.UpdateView):
     model = Review
     success_view_name = 'custom_admin:review-update'
     delete_view_name = 'custom_admin:review-delete'
 
 
-class ReviewCreateView(CreateUpdateMixin, generic.CreateView):
+class ReviewCreateView(CreateMixin, generic.CreateView):
     model = Review
     success_view_name = 'custom_admin:review-update'
 
@@ -149,7 +149,7 @@ class CallbackListView(FilteredSingleTableView):
     create_view_name = 'custom_admin:callback-create'
 
 
-class CallbackUpdateView(CreateUpdateMixin, generic.UpdateView):
+class CallbackUpdateView(UpdateMixin, generic.UpdateView):
     model = Callback
     success_view_name = 'custom_admin:callback-update'
     delete_view_name = 'custom_admin:callback-delete'
@@ -165,7 +165,7 @@ class CallbackUpdateView(CreateUpdateMixin, generic.UpdateView):
         return super().get(request, *args, **kwargs)
 
 
-class CallbackCreateView(CreateUpdateMixin, generic.CreateView):
+class CallbackCreateView(CreateMixin, generic.CreateView):
     model = Callback
     success_view_name = 'custom_admin:callback-update'
 
@@ -176,7 +176,7 @@ class CallbackDeleteView(DeleteMixin, generic.DeleteView):
     update_view_name = 'custom_admin:callback-update'
 
 
-class ConfigurationUpdateView(CreateUpdateMixin, generic.UpdateView):
+class ConfigurationUpdateView(UpdateMixin, generic.UpdateView):
     model = Configuration
     success_view_name = 'custom_admin:configuration-update'
 
@@ -197,14 +197,14 @@ class UserListView(FilteredSingleTableView):
     create_view_name = 'custom_admin:user-create'
 
 
-class UserUpdateView(CreateUpdateMixin, generic.UpdateView):
+class UserUpdateView(UpdateMixin, generic.UpdateView):
     model = User
     success_view_name = 'custom_admin:user-update'
     delete_view_name = 'custom_admin:user-delete'
     fields = ('phone', 'first_name', 'last_name', 'email', 'is_active', 'last_login', 'date_joined')
 
 
-class UserCreateView(CreateUpdateMixin, generic.CreateView):
+class UserCreateView(CreateMixin, generic.CreateView):
     model = User
     success_view_name = 'custom_admin:user-update'
     fields = ('phone', 'password', 'first_name', 'last_name', 'email', 'is_active')
@@ -233,7 +233,7 @@ class OrderListView(FilteredSingleTableView):
     filterset_class = OrderFilter
 
 
-class OrderDetailView(DetailMixin, CreateUpdateMixin, generic.UpdateView):
+class OrderDetailView(DetailMixin, UpdateMixin, generic.UpdateView):
     model = Order
     success_view_name = 'custom_admin:order-update'
     fields = ('status',)

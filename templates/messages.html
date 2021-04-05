@@ -1,7 +1,7 @@
 {% if messages %}
     <div class="messages mb-3 mt-3">
         {% for message in messages %}
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
                 {{ message }}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>

@@ -3,5 +3,6 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    {% crispy form  %}
+    {% include 'messages.html' %}
+    {% crispy form %}
 {% endblock %}
