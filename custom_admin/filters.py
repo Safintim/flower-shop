@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from cart.models import Cart
 from core.models import Callback
 from main.models import Category, Reason, Color, Flower, Product
+from orders.models import Order
 from reviews.models import Review
 
 
@@ -53,6 +54,17 @@ class CartFilter(django_filters.FilterSet):
     class Meta:
         model = Cart
         fields = ('user', 'user__phone')
+
+
+class OrderFilter(django_filters.FilterSet):
+    class Meta:
+        model = Order
+        fields = (
+            'user', 'delivery_date', 'delivery_time',
+            'recipient', 'recipient_address', 'recipient_phone',
+            'recipient_call', 'delivery_type', 'postcard',
+            'status'
+        )
 
 
 class FlowerFilter(django_filters.FilterSet):

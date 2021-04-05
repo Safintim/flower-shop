@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from cart.models import Cart
 from core.models import Callback
 from main.models import Category, Reason, Color, Flower, Product
+from orders.models import Order
 from reviews.models import Review
 
 
@@ -85,11 +86,21 @@ class UserTable(tables.Table):
         fields = ('id', 'phone', 'is_active', 'first_name', 'last_name', 'last_login')
 
 
-class CartTable(tables.Table):
+class CartOrderCommonColumn(tables.Table):
     user = tables.Column(linkify=lambda record: record.get_absolute_url())
-    product_total = tables.Column(orderable=False, verbose_name='Количество товаров')
     price_total = tables.Column(orderable=False, verbose_name='Общая стоимость')
+
+
+class CartTable(CartOrderCommonColumn):
+    product_total = tables.Column(orderable=False, verbose_name='Количество товаров')
 
     class Meta:
         model = Cart
-        fields = ('id', 'user', 'product_total', 'price_total', )
+        fields = ('id', 'user', 'product_total', 'price_total')
+
+
+class OrderTable(CartOrderCommonColumn):
+
+    class Meta:
+        model = Order
+        fields = ('id', 'user', 'status', 'delivery_date', 'delivery_time', 'price_total')

@@ -2,6 +2,7 @@ from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import Sum
+from django.urls import reverse
 
 from cart.models import Cart, CartProduct
 from core.models import CreationModificationModel
@@ -85,3 +86,6 @@ class Order(CreationModificationModel):
     @property
     def price_total(self):
         return self.products.aggregate(total=Sum('price'))['total']
+
+    def get_absolute_url(self):
+        return reverse('custom_admin:order-update', kwargs={'pk': self.pk})

@@ -67,3 +67,11 @@ class DeleteMixin(BaseTemplateResponseMixin):
         kwargs['object_name'] = self.model._meta.verbose_name
         kwargs['back_link'] = reverse(self.update_view_name, kwargs={'pk': self.object.pk})
         return super().get_context_data(**kwargs)
+
+
+class DetailMixin:
+    template_name_suffix = 'detail'
+
+    def get_context_data(self, **kwargs):
+        kwargs['title'] = '{} пользователя {}'.format(self.model._meta.verbose_name, self.object.user)
+        return super().get_context_data(**kwargs)

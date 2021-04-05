@@ -39,7 +39,10 @@ urlpatterns = [
     path('users/', views.UserListView.as_view(), name='user-list'),
 
     path('carts/', views.CartListView.as_view(), name='cart-list'),
-    path('carts/<int:pk>', views.CartDetailView.as_view(), name='cart-detail'),
+    path('carts/<int:pk>/', views.CartDetailView.as_view(), name='cart-detail'),
+
+    path('orders/', views.OrderListView.as_view(), name='order-list'),
+    path('orders/<int:pk>/', views.OrderDetailView.as_view(), name='order-update'),
 
 
     path('configurations/', views.ConfigurationUpdateView.as_view(), name='configuration-update'),

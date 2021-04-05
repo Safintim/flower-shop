@@ -7,12 +7,14 @@ from cart.models import Cart
 from core.models import Callback, Configuration
 from custom_admin.filter_helpers import ProductFilterFormHelper
 from custom_admin.filters import CategoryFilter, ReasonFilter, ColorFilter, FlowerFilter, ProductFilter, ReviewFilter, \
-    CallbackFilter, UserFilter, CartFilter
+    CallbackFilter, UserFilter, CartFilter, OrderFilter
 from custom_admin.forms import ProductPresentForm, ProductBouquetForm, BouquetFlowerFormSet
-from custom_admin.mixins import FilteredSingleTableView, CreateUpdateMixin, DeleteMixin, BaseTemplateResponseMixin
+from custom_admin.mixins import FilteredSingleTableView, CreateUpdateMixin, DeleteMixin, BaseTemplateResponseMixin, \
+    DetailMixin
 from custom_admin.tables import CategoryTable, ReasonTable, ColorTable, FlowerTable, ProductTable, ReviewTable, \
-    CallbackTable, UserTable, CartTable
+    CallbackTable, UserTable, CartTable, OrderTable
 from main.models import Category, Reason, Color, Flower, Product, Bouquet, BouquetFlower
+from orders.models import Order
 from reviews.models import Review
 
 
@@ -220,9 +222,21 @@ class CartListView(FilteredSingleTableView):
     filterset_class = CartFilter
 
 
-class CartDetailView(BaseTemplateResponseMixin, generic.DetailView):
-    template_name_suffix = 'detail'
+class CartDetailView(DetailMixin, BaseTemplateResponseMixin, generic.DetailView):
     model = Cart
+    extra_context = {'is_cart': True}
+
+
+class OrderListView(FilteredSingleTableView):
+    model = Order
+    table_class = OrderTable
+    filterset_class = OrderFilter
+
+
+class OrderDetailView(DetailMixin, CreateUpdateMixin, generic.UpdateView):
+    model = Order
+    success_view_name = 'custom_admin:order-update'
+    fields = ('status',)
 
 
 class ProductListView(FilteredSingleTableView):
