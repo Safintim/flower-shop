@@ -2,7 +2,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 
-from core.models import Callback
+from core.models import Callback, Configuration
 from custom_admin.filter_helpers import ProductFilterFormHelper
 from custom_admin.filters import CategoryFilter, ReasonFilter, ColorFilter, FlowerFilter, ProductFilter, ReviewFilter, \
     CallbackFilter
@@ -172,6 +172,15 @@ class CallbackDeleteView(DeleteMixin, generic.DeleteView):
     update_view_name = 'custom_admin:callback-update'
 
 
+class ConfigurationUpdateView(CreateUpdateMixin, generic.UpdateView):
+    model = Configuration
+    success_view_name = 'custom_admin:configuration-update'
+
+    def get_object(self, queryset=None):
+        return Configuration.load()
+
+    def get_success_url(self):
+        return reverse(self.success_view_name)
 
 
 class ProductListView(FilteredSingleTableView):

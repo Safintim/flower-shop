@@ -33,6 +33,7 @@ urlpatterns = [
     path('callbacks/<int:pk>/', views.CallbackUpdateView.as_view(), name='callback-update'),
     path('callbacks/', views.CallbackListView.as_view(), name='callback-list'),
 
+    path('configurations/', views.ConfigurationUpdateView.as_view(), name='configuration-update'),
 
     path('products/present/<int:pk>/', views.ProductPresentUpdateView.as_view(), name='product-present-update'),
     path('products/bouquet/<int:pk>/', views.ProductBouquetUpdateView.as_view(), name='product-bouquet-update'),
