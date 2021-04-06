@@ -1,6 +1,8 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 from django.urls import reverse
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin
@@ -9,7 +11,14 @@ from custom_admin.filter_helpers import ListFormHelper
 from custom_admin.forms import CreateUpdateFormHelper
 
 
-class BaseTemplateResponseMixin:
+class SuperUserCheck(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.is_superuser
+
+
+class BaseTemplateResponseMixin(SuperUserCheck):
+    template_name_suffix = None
+
     def get_template_names(self):
         if self.template_name:
             return self.template_name

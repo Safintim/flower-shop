@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect, get_object_or_404
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse
 from django.views import generic
 
 from cart.models import Cart
@@ -18,8 +18,8 @@ from orders.models import Order
 from reviews.models import Review
 
 
-class IndexTemplateView(generic.TemplateView):
-    template_name = 'custom_admin/index.html'
+class IndexTemplateView(BaseTemplateResponseMixin, generic.TemplateView):
+    template_name_suffix = 'index'
 
 
 class CategoryListView(FilteredSingleTableView):
