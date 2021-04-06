@@ -1,10 +1,11 @@
-from rest_framework import viewsets
+from rest_framework.viewsets import ModelViewSet
 
-from api.serializers import ColorSerializer, CategorySerializer, ReasonSerializer, FlowerSerializer
+from api.serializers import ColorSerializer, CategorySerializer, ReasonSerializer, FlowerSerializer, CallbackSerializer
+from core.models import Callback
 from main.models import Color, Category, Reason, Flower
 
 
-class BaseViewSet(viewsets.ModelViewSet):
+class BaseViewSet(ModelViewSet):
     http_method_names = ('get', 'list')
     pagination_class = None
 
@@ -27,3 +28,9 @@ class ReasonViewSet(BaseViewSet):
 class FlowerViewSet(BaseViewSet):
     queryset = Flower.objects.active().is_add_filter()
     serializer_class = FlowerSerializer
+
+
+class CallbackViewSet(ModelViewSet):
+    http_method_names = ('post',)
+    queryset = Callback.objects.all()
+    serializer_class = CallbackSerializer

@@ -1,5 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 
+from core.models import Callback
 from main.models import Color, Category, Reason, Flower
 
 
@@ -35,3 +36,9 @@ class FlowerSerializer(ModelSerializer):
     class Meta:
         model = Flower
         fields = BaseSerializer.fields
+
+
+class CallbackSerializer(ModelSerializer):
+    class Meta:
+        model = Callback
+        fields = ('phone',)
