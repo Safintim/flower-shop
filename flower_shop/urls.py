@@ -3,8 +3,11 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+from api.router import router
+
 
 urlpatterns = [
+    path('api/', include(router.urls)),
     path('admin/', admin.site.urls),
     path('custom_admin/', include(('custom_admin.urls', 'custom_admin'))),
     path('ckeditor/', include('ckeditor_uploader.urls')),

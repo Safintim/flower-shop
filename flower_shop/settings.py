@@ -48,7 +48,9 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'django_tables2',
     'django_extensions',  # for shell_plus
+    'rest_framework',
 
+    'api.apps.ApiConfig',
     'account.apps.AccountConfig',
     'custom_admin.apps.CustomAdminConfig',
     'main.apps.MainConfig',
