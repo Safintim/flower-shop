@@ -18,4 +18,5 @@ class CallbackTests(APITestCase):
         data = {'phone': 'asdasdsad'}
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTrue('phone' in response.data)
 

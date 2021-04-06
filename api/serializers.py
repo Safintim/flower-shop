@@ -2,6 +2,7 @@ from rest_framework.serializers import ModelSerializer
 
 from core.models import Callback
 from main.models import Color, Category, Reason, Flower
+from reviews.models import Review
 
 
 class BaseSerializer:
@@ -42,3 +43,9 @@ class CallbackSerializer(ModelSerializer):
     class Meta:
         model = Callback
         fields = ('phone',)
+
+
+class ReviewSerializer(ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ('phone', 'name', 'city', 'image', 'social_link', 'text')
