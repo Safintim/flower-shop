@@ -1,22 +1,21 @@
 from rest_framework.serializers import ModelSerializer
 
-from main.models import Color, Category
+from main.models import Color, Category, Reason
 
 
-class ConfigSerializer:
-    common_fields = ('id', 'title')
+class BaseSerializer:
+    fields = ('id', 'title')
 
 
 class ColorSerializer(ModelSerializer):
-    class Meta:
+    class Meta(BaseSerializer):
         model = Color
-        fields = ConfigSerializer.common_fields
 
 
 class CategoryChildrenSerializer(ModelSerializer):
     class Meta:
         model = Category
-        fields = ConfigSerializer.common_fields + ('slug',)
+        fields = BaseSerializer.fields + ('slug',)
 
 
 class CategorySerializer(ModelSerializer):
@@ -24,4 +23,9 @@ class CategorySerializer(ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ConfigSerializer.common_fields + ('slug', 'children')
+        fields = BaseSerializer.fields + ('slug', 'children')
+
+
+class ReasonSerializer(ModelSerializer):
+    class Meta(BaseSerializer):
+        model = Reason
