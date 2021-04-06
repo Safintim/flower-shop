@@ -25,5 +25,5 @@ class ReasonViewSet(BaseViewSet):
 
 
 class FlowerViewSet(BaseViewSet):
-    queryset = Flower.objects.active()
+    queryset = Flower.objects.active().is_add_filter()
     serializer_class = FlowerSerializer

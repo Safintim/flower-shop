@@ -34,4 +34,4 @@ class ReasonSerializer(ModelSerializer):
 class FlowerSerializer(ModelSerializer):
     class Meta:
         model = Flower
-        fields = BaseSerializer.fields + ('is_add_filter',)
+        fields = BaseSerializer.fields

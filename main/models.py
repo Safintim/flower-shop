@@ -163,11 +163,16 @@ class Product(SlugifyMixin, CreationModificationModel, CommonFields):
         return reverse('custom_admin:product-bouquet-update', kwargs={'pk': self.pk})
 
 
+class FlowerQuerySet(ActiveQuerySet, RandomQuerySet):
+    def is_add_filter(self):
+        return self.filter(is_add_filter=True)
+
+
 class Flower(CreationModificationModel, CommonFields):
     price = models.DecimalField('Цена', max_digits=9, decimal_places=2)
     is_add_filter = models.BooleanField('Добавить в фильтр', default=True)
 
-    objects = ActiveQuerySet.as_manager()
+    objects = FlowerQuerySet.as_manager()
 
     class Meta:
         verbose_name = 'Цветок'

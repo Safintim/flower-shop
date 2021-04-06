@@ -20,7 +20,7 @@ class BaseProductListMixin:
         kwargs = {
             'reasons': models.Reason.objects.active(),
             'colors': models.Color.objects.active(),
-            'flowers': models.Flower.objects.active(),
+            'flowers': models.Flower.objects.active().is_add_filter(),
             'filter': ProductFilter(),
         }
         return super().get_context_data(object_list=self.get_queryset(), **kwargs)
