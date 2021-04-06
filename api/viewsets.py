@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 
-from api.serializers import ColorSerializer, CategorySerializer, ReasonSerializer
-from main.models import Color, Category, Reason
+from api.serializers import ColorSerializer, CategorySerializer, ReasonSerializer, FlowerSerializer
+from main.models import Color, Category, Reason, Flower
 
 
 class BaseViewSet(viewsets.ModelViewSet):
@@ -22,3 +22,8 @@ class CategoryViewSet(BaseViewSet):
 class ReasonViewSet(BaseViewSet):
     queryset = Reason.objects.active()
     serializer_class = ReasonSerializer
+
+
+class FlowerViewSet(BaseViewSet):
+    queryset = Flower.objects.active()
+    serializer_class = FlowerSerializer

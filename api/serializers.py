@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 
-from main.models import Color, Category, Reason
+from main.models import Color, Category, Reason, Flower
 
 
 class BaseSerializer:
@@ -29,3 +29,9 @@ class CategorySerializer(ModelSerializer):
 class ReasonSerializer(ModelSerializer):
     class Meta(BaseSerializer):
         model = Reason
+
+
+class FlowerSerializer(ModelSerializer):
+    class Meta:
+        model = Flower
+        fields = BaseSerializer.fields + ('is_add_filter',)
