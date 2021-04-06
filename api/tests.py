@@ -1,3 +1,30 @@
-from django.test import TestCase
+from django.urls import reverse
+from rest_framework import status
+from rest_framework.test import APITestCase
 
-# Create your tests here.
+from main.models import Color
+
+
+class ColorTests(APITestCase):
+    def setUp(self):
+        self.active_color = Color.objects.create(title='Нежный', is_active=True)
+        self.not_active_color = Color.objects.create(title='Яркий')
+
+    def test_list(self):
+        url = reverse('api:colors-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['title'], self.active_color.title)
+
+    def test_retrieve_active_color(self):
+        url = reverse('api:colors-detail', args=[self.active_color.pk])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, Color.objects.active().values('id', 'title').first())
+
+    def test_retrieve_no_active_color(self):
+        url = reverse('api:colors-detail', args=[self.not_active_color.pk])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
