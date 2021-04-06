@@ -1,7 +1,8 @@
 from rest_framework.serializers import ModelSerializer
 
+from cart.models import Cart, CartProduct
 from core.models import Callback
-from main.models import Color, Category, Reason, Flower
+from main.models import Color, Category, Reason, Flower, Product, Bouquet, BouquetFlower
 from reviews.models import Review
 
 
@@ -48,4 +49,49 @@ class CallbackSerializer(ModelSerializer):
 class ReviewSerializer(ModelSerializer):
     class Meta:
         model = Review
-        fields = ('phone', 'name', 'city', 'image', 'social_link', 'text')
+        fields = ('id', 'phone', 'name', 'city', 'image', 'social_link', 'text')
+
+
+class ProductSerializer(ModelSerializer):
+    class Meta:
+        model = Product
+        fields = (
+            'id',
+            'type',
+            'slug',
+            'price',
+            'discount',
+            'is_hit',
+            'is_new',
+        )
+
+
+class BouquetFlowerSerializer(ModelSerializer):
+    class Meta:
+        model = BouquetFlower
+        fields = ('count', 'flower')
+
+
+class BouquetSerializer(ModelSerializer):
+    flowers = BouquetFlowerSerializer(source='flowers_set', many=True, read_only=True)
+
+    class Meta:
+        model = Bouquet
+        fields = ('id', 'size', 'price', 'flowers')
+
+
+class CartProductSerializer(ModelSerializer):
+    bouquet = BouquetSerializer()
+    product = ProductSerializer()
+
+    class Meta:
+        model = CartProduct
+        fields = ('product', 'bouquet', 'qty', 'price')
+
+
+class CartSerializer(ModelSerializer):
+    products = CartProductSerializer(many=True)
+
+    class Meta:
+        model = Cart
+        fields = ('product_total', 'price_total', 'products')

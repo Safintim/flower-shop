@@ -36,6 +36,7 @@ class Cart(models.Model):
     class Meta:
         verbose_name = 'Корзина'
         verbose_name_plural = 'Корзины'
+        ordering = ('-id', )
 
     def __str__(self):
         return f'{self.id} - {self.user.phone}'
