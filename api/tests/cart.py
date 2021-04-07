@@ -39,13 +39,6 @@ class CartTests(APITestCase):
         self.assertEqual(carts.count(), 1)
         self.assertEqual(response.data, CartSerializer(cart).data)
 
-    def test_retrieve(self):
-        self.client.force_login(user=self.user)
-        cart = Cart.objects.create(user=self.user)
-        url = reverse('api:cart-detail', args=[cart.pk])
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
     def check_add_to_cart(self, response):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         cart = self.user.cart_set.first()
@@ -89,3 +82,23 @@ class CartTests(APITestCase):
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertTrue('bouquet_size' in response.data)
+
+    def test_delete_from_cart_valid(self):
+        self.client.force_login(user=self.user)
+        product = Product.objects.create(type=Product.Type.PRESENT, title='Конфеты', price=600, is_active=True)
+        cart = Cart.objects.create(user=self.user)
+        cart.add_product(product)
+        data = {'product_id': product.pk}
+        url = reverse('api:cart-delete-product')
+        response = self.client.delete(url, data=data)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(cart.products.count(), 0)
+
+    def test_delete_from_cart_not_valid(self):
+        self.client.force_login(user=self.user)
+        data = {'product_id': 123}
+        url = reverse('api:cart-delete-product')
+        response = self.client.delete(url, data=data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTrue('product_id' in response.data)
+

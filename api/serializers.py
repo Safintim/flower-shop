@@ -122,3 +122,15 @@ class AddBouquetToCartSerializer(AddPresentToCartSerializer):
             raise serializers.ValidationError('bouquet does not exist')
         return value
 
+
+class DeleteProductFromCartSerializer(Serializer):
+    product_id = serializers.IntegerField()
+
+    def validate_product_id(self, value):
+        user = self.context['request'].user
+
+        qs = CartProduct.objects.filter(cart__user=user, product_id=value)
+        self.instance = qs.first()
+        if not qs.exists():
+            raise serializers.ValidationError('cart product does not exist')
+        return value

@@ -1,7 +1,7 @@
 from rest_framework import status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from api.serializers import (
     AddBouquetToCartSerializer,
@@ -10,6 +10,7 @@ from api.serializers import (
     CartSerializer,
     ColorSerializer,
     CategorySerializer,
+    DeleteProductFromCartSerializer,
     FlowerSerializer,
     ReasonSerializer,
     ReviewSerializer,
@@ -62,8 +63,8 @@ class ReviewViewSet(DisableRetrieveMixin, ModelViewSet):
     serializer_class = ReviewSerializer
 
 
-class CartViewSet(DisableRetrieveMixin, ModelViewSet):
-    http_method_names = ('get', 'post')
+class CartViewSet(GenericViewSet):
+    http_method_names = ('get', 'post', 'delete')
     permission_classes = (permissions.IsAuthenticated,)
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
@@ -71,6 +72,7 @@ class CartViewSet(DisableRetrieveMixin, ModelViewSet):
         'list': CartSerializer,
         'add_present': AddPresentToCartSerializer,
         'add_bouquet': AddBouquetToCartSerializer,
+        'delete_product': DeleteProductFromCartSerializer
     }
 
     def get_serializer_class(self):
@@ -84,26 +86,31 @@ class CartViewSet(DisableRetrieveMixin, ModelViewSet):
         serializer = self.get_serializer(cart)
         return Response(serializer.data)
 
-    def validate_add(self, request):
+    def validate_serializer(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         return serializer
 
     def response_after_add(self, cart):
         cart_serializer = self.serializer_class(cart).data
-        headers = self.get_success_headers(cart_serializer)
-        return Response(cart_serializer, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(cart_serializer, status=status.HTTP_201_CREATED)
 
     @action(detail=False, methods=['post'], url_name='add-present')
     def add_present(self, request):
-        serializer = self.validate_add(request)
+        serializer = self.validate_serializer(request)
         cart, _ = Cart.objects.get_or_create(user=request.user)
         cart.add_product(serializer.instance)
         return self.response_after_add(cart)
 
     @action(detail=False, methods=['post'], url_name='add-bouquet')
     def add_bouquet(self, request):
-        serializer = self.validate_add(request)
+        serializer = self.validate_serializer(request)
         cart, _ = Cart.objects.get_or_create(user=request.user)
         cart.add_product(serializer.instance, bouquet_size=serializer.validated_data['bouquet_size'])
         return self.response_after_add(cart)
+
+    @action(detail=False, methods=['delete'], url_name='delete-product')
+    def delete_product(self, request):
+        serializer = self.validate_serializer(request)
+        serializer.instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
