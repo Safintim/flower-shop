@@ -1,13 +1,14 @@
 from rest_framework.routers import DefaultRouter
 
 from api.viewsets import (
-    ColorViewSet,
     CategoryViewSet,
-    ReasonViewSet,
-    FlowerViewSet,
     CallbackViewSet,
-    ReviewViewSet,
     CartViewSet,
+    ColorViewSet,
+    FlowerViewSet,
+    OrderViewSet,
+    ReasonViewSet,
+    ReviewViewSet,
 )
 
 
@@ -19,3 +20,4 @@ router.register(r'flowers', FlowerViewSet)
 router.register(r'callback', CallbackViewSet)
 router.register(r'review', ReviewViewSet)
 router.register(r'cart', CartViewSet)
+router.register(r'orders', OrderViewSet)

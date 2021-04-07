@@ -14,34 +14,37 @@ from api.serializers import (
     FlowerSerializer,
     ReasonSerializer,
     ReviewSerializer,
+    OrderSerializer,
+    OrderCreateSerializer,
 )
-from cart.models import Cart
+from cart.models import Cart, CartProduct
 from core.models import Callback
 from main.models import Color, Category, Reason, Flower
+from orders.models import Order
 from reviews.models import Review
 
 
-class BaseViewSet(ModelViewSet):
+class BaseModelViewSet(ModelViewSet):
     http_method_names = ('get', 'list')
     pagination_class = None
 
 
-class ColorViewSet(BaseViewSet):
+class ColorViewSet(BaseModelViewSet):
     queryset = Color.objects.active()
     serializer_class = ColorSerializer
 
 
-class CategoryViewSet(BaseViewSet):
+class CategoryViewSet(BaseModelViewSet):
     queryset = Category.objects.active().filter(parent=None)
     serializer_class = CategorySerializer
 
 
-class ReasonViewSet(BaseViewSet):
+class ReasonViewSet(BaseModelViewSet):
     queryset = Reason.objects.active()
     serializer_class = ReasonSerializer
 
 
-class FlowerViewSet(BaseViewSet):
+class FlowerViewSet(BaseModelViewSet):
     queryset = Flower.objects.active().is_add_filter()
     serializer_class = FlowerSerializer
 
@@ -63,7 +66,22 @@ class ReviewViewSet(DisableRetrieveMixin, ModelViewSet):
     serializer_class = ReviewSerializer
 
 
-class CartViewSet(GenericViewSet):
+class BaseGenericViewSet(GenericViewSet):
+    serializer_action_classes = {}
+
+    def get_serializer_class(self):
+        try:
+            return self.serializer_action_classes[self.action]
+        except (AttributeError, KeyError):
+            return super().get_serializer_class()
+
+    def validate_serializer(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return serializer
+
+
+class CartViewSet(BaseGenericViewSet):
     http_method_names = ('get', 'post', 'delete')
     permission_classes = (permissions.IsAuthenticated,)
     queryset = Cart.objects.all()
@@ -74,12 +92,6 @@ class CartViewSet(GenericViewSet):
         'add_bouquet': AddBouquetToCartSerializer,
         'delete_product': DeleteProductFromCartSerializer
     }
-
-    def get_serializer_class(self):
-        try:
-            return self.serializer_action_classes[self.action]
-        except (AttributeError, KeyError):
-            return super().get_serializer_class()
 
     def list(self, request, *args, **kwargs):
         cart, _ = Cart.objects.get_or_create(user=request.user)
@@ -114,3 +126,33 @@ class CartViewSet(GenericViewSet):
         serializer = self.validate_serializer(request)
         serializer.instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class OrderViewSet(BaseGenericViewSet):
+    http_method_names = ('get', 'post')
+    permission_classes = (permissions.IsAuthenticated,)
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    serializer_action_classes = {
+        'list': serializer_class,
+        'create': OrderCreateSerializer
+    }
+
+    def get_queryset(self):
+        return Order.objects.filter(user=self.request.user)
+
+    def list(self, request):
+        serializer = self.get_serializer(self.get_queryset(), many=True)
+        return Response(serializer.data)
+
+    def is_exists_cart_product(self, request):
+        return CartProduct.objects.filter(cart__user=request.user).exists()
+
+    def create(self, request):
+        if not self.is_exists_cart_product(request):
+            return Response({'detail': 'cart products does not exist'}, status=status.HTTP_403_FORBIDDEN)
+
+        serializer = self.validate_serializer(request)
+        order = serializer.save(user=request.user)
+        order.create_order_products()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -6,6 +6,7 @@ from rest_framework.serializers import ModelSerializer, Serializer
 from cart.models import Cart, CartProduct
 from core.models import Callback
 from main.models import Color, Category, Reason, Flower, Product, Bouquet, BouquetFlower
+from orders.models import Order, OrderProduct
 from reviews.models import Review
 
 
@@ -134,3 +135,39 @@ class DeleteProductFromCartSerializer(Serializer):
         if not qs.exists():
             raise serializers.ValidationError('cart product does not exist')
         return value
+
+
+class OrderProductSerializer(ModelSerializer):
+    bouquet = BouquetSerializer()
+    product = ProductSerializer()
+
+    class Meta:
+        model = OrderProduct
+        fields = ('product', 'bouquet', 'price', 'qty')
+
+
+class OrderSerializer(ModelSerializer):
+    code = serializers.IntegerField(source='pk')
+    products = OrderProductSerializer(many=True)
+
+    class Meta:
+        model = Order
+        fields = ('code', 'created_at', 'delivery_date', 'delivery_time', 'status', 'price_total', 'products')
+
+
+class OrderCreateSerializer(ModelSerializer):
+    class Meta:
+        model = Order
+        fields = (
+            'recipient',
+            'recipient_name',
+            'recipient_phone',
+            'recipient_address',
+            'recipient_call',
+            'delivery_type',
+            'delivery_date',
+            'delivery_time',
+            'postcard',
+            'postcard_text',
+            'comment',
+        )
