@@ -5,6 +5,7 @@ from rest_framework.test import APITestCase
 
 from api.serializers import CartSerializer
 from cart.models import Cart
+from main.models import Product, Bouquet, Flower, BouquetFlower
 
 User = get_user_model()
 
@@ -39,14 +40,52 @@ class CartTests(APITestCase):
         self.assertEqual(response.data, CartSerializer(cart).data)
 
     def test_retrieve(self):
+        self.client.force_login(user=self.user)
         cart = Cart.objects.create(user=self.user)
         url = reverse('api:cart-detail', args=[cart.pk])
-        self.client.force_login(user=self.user)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_add_to_cart(self):
-        pass
+    def check_add_to_cart(self, response):
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        cart = self.user.cart_set.first()
+        self.assertEqual(response.data, CartSerializer(cart).data)
+        self.assertEqual(cart.products.count(), 1)
 
-    def test_delete_from_cart(self):
-        pass
+    def test_add_present_to_cart_valid(self):
+        self.client.force_login(user=self.user)
+        present = Product.objects.create(type=Product.Type.PRESENT, title='Конфеты', price=600, is_active=True)
+        data = {'product_id': present.pk}
+        url = reverse('api:cart-add-present')
+        response = self.client.post(url, data=data)
+        self.check_add_to_cart(response)
+
+    def test_add_bouquet_to_cart_valid(self):
+        self.client.force_login(user=self.user)
+        product = Product.objects.create(type=Product.Type.BOUQUET, title='Букет из пион', is_active=True)
+        flower = Flower.objects.create(title='Пион', price=80)
+        bouquet = Bouquet.objects.create(size=Bouquet.Size.MD)
+        BouquetFlower.objects.create(count=10, flower=flower, bouquet=bouquet)
+        product.bouquets.add(bouquet)
+
+        data = {'product_id': product.pk, 'bouquet_size': bouquet.size}
+        url = reverse('api:cart-add-bouquet')
+        response = self.client.post(url, data=data)
+        self.check_add_to_cart(response)
+
+    def test_add_present_to_cart_not_valid(self):
+        self.client.force_login(user=self.user)
+        data = {'product_id': 123}
+        url = reverse('api:cart-add-present')
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTrue('product_id' in response.data)
+
+    def test_add_bouquet_to_cart_not_valid(self):
+        self.client.force_login(user=self.user)
+        product = Product.objects.create(type=Product.Type.BOUQUET, title='Букет из пион', is_active=True)
+        data = {'product_id': product.pk, 'bouquet_size': 'MIDDLE'}
+        url = reverse('api:cart-add-bouquet')
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTrue('bouquet_size' in response.data)

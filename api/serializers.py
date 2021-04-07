@@ -1,4 +1,7 @@
-from rest_framework.serializers import ModelSerializer
+from collections import OrderedDict
+
+from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer, Serializer
 
 from cart.models import Cart, CartProduct
 from core.models import Callback
@@ -63,6 +66,8 @@ class ProductSerializer(ModelSerializer):
             'discount',
             'is_hit',
             'is_new',
+            'small_image',
+            'big_image',
         )
 
 
@@ -95,3 +100,25 @@ class CartSerializer(ModelSerializer):
     class Meta:
         model = Cart
         fields = ('product_total', 'price_total', 'products')
+
+
+class AddPresentToCartSerializer(Serializer):
+    product_id = serializers.IntegerField()
+
+    def validate_product_id(self, value):
+        qs = Product.objects.active().filter(pk=value)
+        self.instance = qs.first()
+        if not qs.exists():
+            raise serializers.ValidationError('product does not exist')
+        return value
+
+
+class AddBouquetToCartSerializer(AddPresentToCartSerializer):
+    bouquet_size = serializers.ChoiceField(choices=Bouquet.Size)
+
+    def validate_bouquet_size(self, value):
+        product = self.instance
+        if not (product and product.get_bouquet_by_size(size=value)):
+            raise serializers.ValidationError('bouquet does not exist')
+        return value
+

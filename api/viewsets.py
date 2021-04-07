@@ -1,8 +1,11 @@
 from rest_framework import status, permissions
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from api.serializers import (
+    AddBouquetToCartSerializer,
+    AddPresentToCartSerializer,
     CallbackSerializer,
     CartSerializer,
     ColorSerializer,
@@ -64,8 +67,43 @@ class CartViewSet(DisableRetrieveMixin, ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
+    serializer_action_classes = {
+        'list': CartSerializer,
+        'add_present': AddPresentToCartSerializer,
+        'add_bouquet': AddBouquetToCartSerializer,
+    }
+
+    def get_serializer_class(self):
+        try:
+            return self.serializer_action_classes[self.action]
+        except (AttributeError, KeyError):
+            return super().get_serializer_class()
 
     def list(self, request, *args, **kwargs):
         cart, _ = Cart.objects.get_or_create(user=request.user)
         serializer = self.get_serializer(cart)
         return Response(serializer.data)
+
+    def validate_add(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return serializer
+
+    def response_after_add(self, cart):
+        cart_serializer = self.serializer_class(cart).data
+        headers = self.get_success_headers(cart_serializer)
+        return Response(cart_serializer, status=status.HTTP_201_CREATED, headers=headers)
+
+    @action(detail=False, methods=['post'], url_name='add-present')
+    def add_present(self, request):
+        serializer = self.validate_add(request)
+        cart, _ = Cart.objects.get_or_create(user=request.user)
+        cart.add_product(serializer.instance)
+        return self.response_after_add(cart)
+
+    @action(detail=False, methods=['post'], url_name='add-bouquet')
+    def add_bouquet(self, request):
+        serializer = self.validate_add(request)
+        cart, _ = Cart.objects.get_or_create(user=request.user)
+        cart.add_product(serializer.instance, bouquet_size=serializer.validated_data['bouquet_size'])
+        return self.response_after_add(cart)
