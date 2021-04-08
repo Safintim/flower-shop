@@ -112,11 +112,6 @@ class ProductTests(APITestCase):
         )
         self.assertEqual(response.data['count'], 6)
 
-    def test_retrieve(self):
-        url = reverse('api:product-detail', args=[self.present1.pk])
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
     def test_filter_by_category(self):
         url = reverse('api:product-list')
         data = {'categories': f'{self.category1.pk},{self.category2.pk}'}
@@ -163,4 +158,14 @@ class ProductTests(APITestCase):
             response.data['results'],
             ProductSerializer(qs, many=True, context=self.get_context(url)).data
         )
+
+    def test_create_present_not_superuser(self):
+        url = reverse('api:product-create-present')
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_create_bouquet_not_superuser(self):
+        url = reverse('api:product-create-bouquet')
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 

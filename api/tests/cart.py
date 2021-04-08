@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.request import Request
+from rest_framework.test import APITestCase, APIRequestFactory
 
 from api.serializers import CartSerializer
 from cart.models import Cart
@@ -39,10 +40,15 @@ class CartTests(APITestCase):
         self.assertEqual(carts.count(), 1)
         self.assertEqual(response.data, CartSerializer(cart).data)
 
-    def check_add_to_cart(self, response):
+    def get_context(self, url):
+        factory = APIRequestFactory()
+        request = factory.post(url)
+        return {'request': Request(request)}
+
+    def check_add_to_cart(self, response, url):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         cart = self.user.cart_set.first()
-        self.assertEqual(response.data, CartSerializer(cart).data)
+        self.assertEqual(response.data, CartSerializer(cart, context=self.get_context(url)).data)
         self.assertEqual(cart.products.count(), 1)
 
     def test_add_present_to_cart_valid(self):
@@ -51,7 +57,7 @@ class CartTests(APITestCase):
         data = {'product_id': present.pk}
         url = reverse('api:cart-add-present')
         response = self.client.post(url, data=data)
-        self.check_add_to_cart(response)
+        self.check_add_to_cart(response, url)
 
     def test_add_bouquet_to_cart_valid(self):
         self.client.force_login(user=self.user)
@@ -64,7 +70,7 @@ class CartTests(APITestCase):
         data = {'product_id': product.pk, 'bouquet_size': bouquet.size}
         url = reverse('api:cart-add-bouquet')
         response = self.client.post(url, data=data)
-        self.check_add_to_cart(response)
+        self.check_add_to_cart(response, url)
 
     def test_add_present_to_cart_not_valid(self):
         self.client.force_login(user=self.user)

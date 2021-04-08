@@ -1,6 +1,7 @@
 from rest_framework import status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.mixins import ListModelMixin
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from api.filters import ProductFilter
@@ -69,13 +70,20 @@ class ReviewViewSet(DisableRetrieveMixin, ModelViewSet):
 
 
 class BaseGenericViewSet(GenericViewSet):
-    serializer_action_classes = {}
+    serializer_classes_by_action = {}
+    permission_classes_by_action = {}
 
     def get_serializer_class(self):
         try:
-            return self.serializer_action_classes[self.action]
+            return self.serializer_classes_by_action[self.action]
         except (AttributeError, KeyError):
             return super().get_serializer_class()
+
+    def get_permissions(self):
+        try:
+            return [permission() for permission in self.permission_classes_by_action[self.action]]
+        except (AttributeError, KeyError):
+            return super().get_permissions()
 
     def validate_serializer(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -88,7 +96,7 @@ class CartViewSet(BaseGenericViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
-    serializer_action_classes = {
+    serializer_classes_by_action = {
         'list': CartSerializer,
         'add_present': AddPresentToCartSerializer,
         'add_bouquet': AddBouquetToCartSerializer,
@@ -106,7 +114,7 @@ class CartViewSet(BaseGenericViewSet):
         return serializer
 
     def response_after_add(self, cart):
-        cart_serializer = self.serializer_class(cart).data
+        cart_serializer = self.serializer_class(cart, context={'request': self.request}).data
         return Response(cart_serializer, status=status.HTTP_201_CREATED)
 
     @action(detail=False, methods=['post'], url_name='add-present')
@@ -135,7 +143,7 @@ class OrderViewSet(BaseGenericViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    serializer_action_classes = {
+    serializer_classes_by_action = {
         'list': serializer_class,
         'create': OrderCreateSerializer
     }
@@ -160,12 +168,23 @@ class OrderViewSet(BaseGenericViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class ProductViewSet(DisableRetrieveMixin, ModelViewSet):
-    http_method_names = ('get',)
+class ProductViewSet(ListModelMixin, BaseGenericViewSet):
+    http_method_names = ('get', 'post')
     queryset = Product.objects.active()
+    filterset_class = ProductFilter
     serializer_class = ProductSerializer
-    serializer_action_classes = {
+    serializer_classes_by_action = {
         'list': serializer_class,
     }
-    filterset_class = ProductFilter
+    permission_classes_by_action = {
+        'create_present': (permissions.IsAdminUser,),
+        'create_bouquet': (permissions.IsAdminUser,),
+    }
 
+    @action(detail=False, methods=['post'], url_name='create-present')
+    def create_present(self, request):
+        return Response()
+
+    @action(detail=False, methods=['post'], url_name='create-bouquet')
+    def create_bouquet(self, request):
+        return Response()
