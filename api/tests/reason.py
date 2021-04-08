@@ -24,7 +24,7 @@ class ReasonTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, ReasonSerializer(self.active_reason).data)
 
-    def test_retrieve_not_active_category(self):
+    def test_retrieve_not_active_reason(self):
         url = reverse('api:category-detail', args=[self.not_active_reason.pk])
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

@@ -9,6 +9,7 @@ from api.viewsets import (
     OrderViewSet,
     ReasonViewSet,
     ReviewViewSet,
+    ProductViewSet,
 )
 
 
@@ -21,3 +22,4 @@ router.register(r'callback', CallbackViewSet)
 router.register(r'review', ReviewViewSet)
 router.register(r'cart', CartViewSet)
 router.register(r'orders', OrderViewSet)
+router.register(r'products', ProductViewSet)

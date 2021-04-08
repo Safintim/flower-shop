@@ -6,3 +6,4 @@ from api.tests.flower import *
 from api.tests.reason import *
 from api.tests.review import *
 from api.tests.order import *
+from api.tests.product import *

@@ -163,7 +163,5 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.FormParser',
         'rest_framework.parsers.MultiPartParser',
     ),
-    # 'DEFAULT_FILTER_BACKENDS': (
-        # 'rest_framework_filters.backends.RestFrameworkFilterBackend',
-    # ),
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }

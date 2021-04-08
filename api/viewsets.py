@@ -3,6 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
+from api.filters import ProductFilter
 from api.serializers import (
     AddBouquetToCartSerializer,
     AddPresentToCartSerializer,
@@ -16,10 +17,11 @@ from api.serializers import (
     ReviewSerializer,
     OrderSerializer,
     OrderCreateSerializer,
+    ProductSerializer,
 )
 from cart.models import Cart, CartProduct
 from core.models import Callback
-from main.models import Color, Category, Reason, Flower
+from main.models import Color, Category, Reason, Flower, Product
 from orders.models import Order
 from reviews.models import Review
 
@@ -156,3 +158,14 @@ class OrderViewSet(BaseGenericViewSet):
         order = serializer.save(user=request.user)
         order.create_order_products()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class ProductViewSet(DisableRetrieveMixin, ModelViewSet):
+    http_method_names = ('get',)
+    queryset = Product.objects.active()
+    serializer_class = ProductSerializer
+    serializer_action_classes = {
+        'list': serializer_class,
+    }
+    filterset_class = ProductFilter
+

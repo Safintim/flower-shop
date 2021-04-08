@@ -1,7 +1,5 @@
-from collections import OrderedDict
-
 from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer, Serializer
+from rest_framework.serializers import ModelSerializer, Serializer, HyperlinkedModelSerializer
 
 from cart.models import Cart, CartProduct
 from core.models import Callback
@@ -56,7 +54,9 @@ class ReviewSerializer(ModelSerializer):
         fields = ('id', 'phone', 'name', 'city', 'image', 'social_link', 'text')
 
 
-class ProductSerializer(ModelSerializer):
+class ProductSerializer(HyperlinkedModelSerializer):
+    detail = serializers.HyperlinkedIdentityField(view_name='product-detail', read_only=True, lookup_field='slug')
+
     class Meta:
         model = Product
         fields = (
@@ -68,7 +68,7 @@ class ProductSerializer(ModelSerializer):
             'is_hit',
             'is_new',
             'small_image',
-            'big_image',
+            'detail'
         )
 
 
