@@ -1,3 +1,4 @@
+from PIL import Image
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer, Serializer, HyperlinkedModelSerializer
 
@@ -70,6 +71,44 @@ class ProductSerializer(HyperlinkedModelSerializer):
             'small_image',
             'detail'
         )
+
+
+class ProductPresentCreateSerializer(ModelSerializer):
+    SMALL_RESOLUTION = (372, 372)
+    BIG_RESOLUTION = (640, 640)
+
+    class Meta:
+        model = Product
+        fields = (
+            'title',
+            'price',
+            'discount',
+            'is_active',
+            'is_hit',
+            'is_new',
+            'small_image',
+            'big_image',
+            'categories',
+            'reasons',
+        )
+
+    def create(self, validated_data):
+        obj = super().create(validated_data)
+        obj.categories.add(Category.objects.filter(title='Подарки').first())
+        return obj
+
+    def validate_image(self, image, sizes):
+        image_obj = Image.open(image)
+        width, height = sizes
+        if image_obj.width != width or image_obj.height != height:
+            raise serializers.ValidationError(f'Размер должен быть {width}x{height}', code='required')
+        return image
+
+    def validate_small_image(self, image):
+        return self.validate_image(image, self.SMALL_RESOLUTION)
+
+    def validate_big_image(self, image):
+        return self.validate_image(image, self.BIG_RESOLUTION)
 
 
 class BouquetFlowerSerializer(ModelSerializer):

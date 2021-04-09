@@ -1,3 +1,6 @@
+import tempfile
+from PIL import Image
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.request import Request
@@ -6,6 +9,8 @@ from rest_framework.test import APITestCase
 
 from api.serializers import ProductSerializer
 from main.models import Product, Flower, BouquetFlower, Bouquet, Category, Color, Reason
+
+User = get_user_model()
 
 
 class ProductTests(APITestCase):
@@ -97,6 +102,8 @@ class ProductTests(APITestCase):
         self.bouquet_product2.save()
         self.bouquet_product3.save()
 
+        self.user = User.objects.create_superuser(phone='897657653412', password='1234567')
+
     def get_context(self, url):
         factory = APIRequestFactory()
         request = factory.get(url)
@@ -169,3 +176,52 @@ class ProductTests(APITestCase):
         response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    def get_image(self, sizes):
+        image = Image.new('RGB', sizes)
+        tmp_file = tempfile.NamedTemporaryFile(suffix='.jpg')
+        image.save(tmp_file)
+        tmp_file.seek(0)
+        return tmp_file
+
+    def get_small_image(self):
+        return self.get_image((372, 372))
+
+    def get_big_image(self):
+        return self.get_image((640, 640))
+
+    def test_create_present_valid(self):
+        self.client.force_login(user=self.user)
+        data = {
+            'title': 'Конфеты Rafaello',
+            'price': 600,
+            'discount': 5,
+            'small_image': self.get_small_image(),
+            'big_image': self.get_big_image(),
+            'is_active': 'on',
+            'is_new': 'on',
+            'is_hit': 'on',
+            'categories': [str(self.category2.pk)],
+            'reasons': [str(self.reason1.pk)],
+        }
+        url = reverse('api:product-create-present')
+        response = self.client.post(url, data=data, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        product = Product.objects.filter(title=data['title']).first()
+        self.assertTrue(product.small_image is not None)
+        self.assertTrue(product.is_active)
+
+    def test_create_present_not_valid(self):
+        self.client.force_login(user=self.user)
+        data = {
+            'title': 'Конфеты Rafaello',
+            'price': 600,
+            'small_image': self.get_image((100, 100)),
+            'reasons': [str(self.reason1.pk)],
+        }
+        url = reverse('api:product-create-present')
+        response = self.client.post(url, data=data, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        print(response.data)
+        self.assertTrue('small_image' in response.data)
+        self.assertTrue('big_image' in response.data)
+        self.assertTrue('categories' in response.data)

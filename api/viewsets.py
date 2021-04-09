@@ -18,7 +18,7 @@ from api.serializers import (
     ReviewSerializer,
     OrderSerializer,
     OrderCreateSerializer,
-    ProductSerializer,
+    ProductSerializer, ProductPresentCreateSerializer,
 )
 from cart.models import Cart, CartProduct
 from core.models import Callback
@@ -175,6 +175,7 @@ class ProductViewSet(ListModelMixin, BaseGenericViewSet):
     serializer_class = ProductSerializer
     serializer_classes_by_action = {
         'list': serializer_class,
+        'create_present': ProductPresentCreateSerializer,
     }
     permission_classes_by_action = {
         'create_present': (permissions.IsAdminUser,),
@@ -183,7 +184,9 @@ class ProductViewSet(ListModelMixin, BaseGenericViewSet):
 
     @action(detail=False, methods=['post'], url_name='create-present')
     def create_present(self, request):
-        return Response()
+        serializer = self.validate_serializer(request)
+        serializer.save(type=Product.Type.PRESENT)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @action(detail=False, methods=['post'], url_name='create-bouquet')
     def create_bouquet(self, request):
