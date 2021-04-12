@@ -7,7 +7,7 @@ from rest_framework.request import Request
 from rest_framework.test import APIRequestFactory
 from rest_framework.test import APITestCase
 
-from api.serializers import ProductSerializer, ProductPresentCreateSerializer, ProductBouquetCreateSerializer
+from api.serializers import ProductSerializer
 from main.models import Product, Flower, BouquetFlower, Bouquet, Category, Color, Reason
 
 User = get_user_model()
@@ -249,24 +249,77 @@ class ProductTests(APITestCase):
         self.assertFalse(product.is_active)
         self.assertEqual(product.type, Product.Type.BOUQUET)
 
+    def test_add_bouquets_valid(self):
+        self.client.force_login(user=self.user)
+        product = Product.objects.create(
+            type=Product.Type.BOUQUET,
+            title='Лучший Букет из пион',
+        )
 
-# 'bouquets': [
-#                 {
-#                     'size': Bouquet.Size.SM.value,
-#                     'flowers': [
-#                         {
-#                             'count': 5,
-#                             'flower': self.flower1.pk
-#                         }
-#                     ],
-#                 },
-#                 {
-#                     'size': Bouquet.Size.MD.value,
-#                     'flowers': [
-#                         {
-#                             'count': 10,
-#                             'flower': self.flower2.pk
-#                         }
-#                     ],
-#                 },
-#             ]
+        data = {
+            'SMALL': {
+                'flowers': [
+                    {
+                        'count': 5,
+                        'flower': self.flower1.pk
+                    }
+                ]
+            },
+            'MIDDLE': {
+                'flowers': [
+                    {
+                        'count': 10,
+                        'flower': self.flower2.pk
+                    }
+                ]
+            },
+        }
+
+        url = reverse('api:product-add-bouquets', args=[product.pk])
+        response = self.client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data, ProductSerializer(product, context=self.get_context(url)).data)
+        self.assertEqual(product.bouquets.count(), 2)
+        self.assertEqual(product.get_small_bouquet().flowers.first(), self.flower1)
+        self.assertEqual(product.get_middle_bouquet().flowers.first(), self.flower2)
+
+    def test_add_bouquets_not_valid(self):
+        self.client.force_login(user=self.user)
+        product = Product.objects.create(
+            type=Product.Type.BOUQUET,
+            title='Лучший Букет из пион',
+        )
+
+        data = {
+            'SMALL': {
+                'flowers': [
+                    {
+                        'count': 5,
+                        'flower': self.flower1.pk
+                    }
+                ]
+            },
+        }
+
+        url = reverse('api:product-add-bouquets', args=[product.pk])
+        response = self.client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTrue('MIDDLE' in response.data)
+
+    def test_add_bouquets_with_empty_flowers_not_valid(self):
+        self.client.force_login(user=self.user)
+        product = Product.objects.create(
+            type=Product.Type.BOUQUET,
+            title='Лучший Букет из пион',
+        )
+
+        data = {
+            'MIDDLE': {
+                'flowers': []
+            },
+        }
+
+        url = reverse('api:product-add-bouquets', args=[product.pk])
+        response = self.client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTrue('MIDDLE' in response.data)

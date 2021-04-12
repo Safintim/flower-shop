@@ -70,11 +70,16 @@ class BouquetSerializer(ModelSerializer):
 
 
 class BouquetCreateSerializer(ModelSerializer):
-    flowers = BouquetFlowerSerializer(source='flowers_set', many=True)
+    flowers = BouquetFlowerSerializer(source='flowers_set', many=True, required=True)
 
     class Meta:
         model = Bouquet
-        fields = ('size', 'flowers')
+        fields = ('flowers',)
+
+    def validate_flowers(self, value):
+        if not value:
+            raise serializers.ValidationError('cannot be empty')
+        return value
 
 
 class ProductSerializer(HyperlinkedModelSerializer):
@@ -155,6 +160,25 @@ class ProductBouquetCreateSerializer(ProductValidateImageMixin, ModelSerializer)
     def create(self, validated_data):
         validated_data['is_active'] = False
         return super().create(validated_data)
+
+
+class AddBouquetsSerializer(Serializer):
+    SMALL = BouquetCreateSerializer(required=False)
+    MIDDLE = BouquetCreateSerializer(required=True)
+    BIG = BouquetCreateSerializer(required=False)
+
+    def create(self, validated_data):
+        product = self.context.get('product')
+        for size, flowers in validated_data.items():
+            bouquet = Bouquet.objects.create(size=size)
+            BouquetFlower.objects.bulk_create(
+                [BouquetFlower(bouquet=bouquet, **flower) for flower in flowers.get('flowers_set')]
+            )
+            product.bouquets.add(bouquet)
+        return product
+
+    def to_representation(self, instance):
+        return ProductSerializer(instance, context=self.context).data
 
 
 class CartProductSerializer(ModelSerializer):

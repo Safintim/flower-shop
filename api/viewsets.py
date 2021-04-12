@@ -1,4 +1,4 @@
-from rest_framework import status, permissions, parsers
+from rest_framework import status, permissions, exceptions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.mixins import ListModelMixin
@@ -6,6 +6,7 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from api.filters import ProductFilter
 from api.serializers import (
+    AddBouquetsSerializer,
     AddBouquetToCartSerializer,
     AddPresentToCartSerializer,
     CallbackSerializer,
@@ -85,8 +86,10 @@ class BaseGenericViewSet(GenericViewSet):
         except (AttributeError, KeyError):
             return super().get_permissions()
 
-    def validate_serializer(self, request):
-        serializer = self.get_serializer(data=request.data)
+    def validate_serializer(self, request, **kwargs):
+        context = self.get_serializer_context()
+        context.update(kwargs)
+        serializer = self.get_serializer(data=request.data, context=context)
         serializer.is_valid(raise_exception=True)
         return serializer
 
@@ -177,11 +180,17 @@ class ProductViewSet(ListModelMixin, BaseGenericViewSet):
         'list': serializer_class,
         'create_present': ProductPresentCreateSerializer,
         'create_bouquet': ProductBouquetCreateSerializer,
+        'add_bouquets': AddBouquetsSerializer
     }
     permission_classes_by_action = {
         'create_present': (permissions.IsAdminUser,),
         'create_bouquet': (permissions.IsAdminUser,),
     }
+
+    def get_queryset(self):
+        if self.action == 'add_bouquets':
+            return Product.objects.all()
+        return super().get_queryset()
 
     @action(detail=False, methods=['post'], url_name='create-present')
     def create_present(self, request):
@@ -195,7 +204,9 @@ class ProductViewSet(ListModelMixin, BaseGenericViewSet):
         serializer.save(type=Product.Type.BOUQUET)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    # @action(detail=True, methods=['post'], url_name='add-bouquets')
-    # def add_bouquets(self, request, pk=None):
-    #     serializer = self.validate_serializer(request)
-    #     return Response(status=status.HTTP_201_CREATED)
+    @action(detail=True, methods=['post'], url_name='add-bouquets')
+    def add_bouquets(self, request, **kwargs):
+        product = self.get_object()
+        serializer = self.validate_serializer(request, product=product)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
