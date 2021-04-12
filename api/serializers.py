@@ -158,13 +158,16 @@ class ProductBouquetCreateSerializer(ProductValidateImageMixin, ModelSerializer)
         )
 
     def create(self, validated_data):
-        validated_data['is_active'] = False
-        return super().create(validated_data)
+        product = super().create(validated_data)
+        if not product.get_middle_bouquet():
+            product.is_active = False
+            product.save()
+        return product
 
 
 class AddBouquetsSerializer(Serializer):
     SMALL = BouquetCreateSerializer(required=False)
-    MIDDLE = BouquetCreateSerializer(required=True)
+    MIDDLE = BouquetCreateSerializer(required=False)
     BIG = BouquetCreateSerializer(required=False)
 
     def create(self, validated_data):
@@ -176,6 +179,16 @@ class AddBouquetsSerializer(Serializer):
             )
             product.bouquets.add(bouquet)
         return product
+
+    # def update(self, product, validated_data):
+    #     for size, flowers in validated_data.items():
+    #         bouquet = product.get_bouquet_by_size(size)
+    #         BouquetFlower.objects.bulk_create(
+    #             [BouquetFlower(bouquet=bouquet, **flower) for flower in flowers.get('flowers_set')]
+    #         )
+    #         product.bouquets.add(bouquet)
+    #     return product
+
 
     def to_representation(self, instance):
         return ProductSerializer(instance, context=self.context).data

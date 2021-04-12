@@ -283,29 +283,6 @@ class ProductTests(APITestCase):
         self.assertEqual(product.get_small_bouquet().flowers.first(), self.flower1)
         self.assertEqual(product.get_middle_bouquet().flowers.first(), self.flower2)
 
-    def test_add_bouquets_not_valid(self):
-        self.client.force_login(user=self.user)
-        product = Product.objects.create(
-            type=Product.Type.BOUQUET,
-            title='Лучший Букет из пион',
-        )
-
-        data = {
-            'SMALL': {
-                'flowers': [
-                    {
-                        'count': 5,
-                        'flower': self.flower1.pk
-                    }
-                ]
-            },
-        }
-
-        url = reverse('api:product-add-bouquets', args=[product.pk])
-        response = self.client.post(url, data=data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertTrue('MIDDLE' in response.data)
-
     def test_add_bouquets_with_empty_flowers_not_valid(self):
         self.client.force_login(user=self.user)
         product = Product.objects.create(
