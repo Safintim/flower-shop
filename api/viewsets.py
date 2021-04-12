@@ -1,4 +1,4 @@
-from rest_framework import status, permissions
+from rest_framework import status, permissions, parsers
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.mixins import ListModelMixin
@@ -18,7 +18,7 @@ from api.serializers import (
     ReviewSerializer,
     OrderSerializer,
     OrderCreateSerializer,
-    ProductSerializer, ProductPresentCreateSerializer,
+    ProductSerializer, ProductPresentCreateSerializer, ProductBouquetCreateSerializer,
 )
 from cart.models import Cart, CartProduct
 from core.models import Callback
@@ -176,6 +176,7 @@ class ProductViewSet(ListModelMixin, BaseGenericViewSet):
     serializer_classes_by_action = {
         'list': serializer_class,
         'create_present': ProductPresentCreateSerializer,
+        'create_bouquet': ProductBouquetCreateSerializer,
     }
     permission_classes_by_action = {
         'create_present': (permissions.IsAdminUser,),
@@ -190,4 +191,11 @@ class ProductViewSet(ListModelMixin, BaseGenericViewSet):
 
     @action(detail=False, methods=['post'], url_name='create-bouquet')
     def create_bouquet(self, request):
-        return Response()
+        serializer = self.validate_serializer(request)
+        serializer.save(type=Product.Type.BOUQUET)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    # @action(detail=True, methods=['post'], url_name='add-bouquets')
+    # def add_bouquets(self, request, pk=None):
+    #     serializer = self.validate_serializer(request)
+    #     return Response(status=status.HTTP_201_CREATED)

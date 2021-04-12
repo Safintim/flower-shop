@@ -7,7 +7,7 @@ from rest_framework.request import Request
 from rest_framework.test import APIRequestFactory
 from rest_framework.test import APITestCase
 
-from api.serializers import ProductSerializer
+from api.serializers import ProductSerializer, ProductPresentCreateSerializer, ProductBouquetCreateSerializer
 from main.models import Product, Flower, BouquetFlower, Bouquet, Category, Color, Reason
 
 User = get_user_model()
@@ -197,18 +197,21 @@ class ProductTests(APITestCase):
             'discount': 5,
             'small_image': self.get_small_image(),
             'big_image': self.get_big_image(),
-            'is_active': 'on',
-            'is_new': 'on',
-            'is_hit': 'on',
-            'categories': [str(self.category2.pk)],
-            'reasons': [str(self.reason1.pk)],
+            'is_active': True,
+            'is_new': True,
+            'is_hit': True,
+            'categories': [self.category2.pk],
+            'reasons': [self.reason1.pk],
         }
         url = reverse('api:product-create-present')
         response = self.client.post(url, data=data, format='multipart')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
         product = Product.objects.filter(title=data['title']).first()
         self.assertTrue(product.small_image is not None)
         self.assertTrue(product.is_active)
+        self.assertTrue(product.is_hit)
+        self.assertEqual(product.type, Product.Type.PRESENT)
 
     def test_create_present_not_valid(self):
         self.client.force_login(user=self.user)
@@ -216,12 +219,54 @@ class ProductTests(APITestCase):
             'title': 'Конфеты Rafaello',
             'price': 600,
             'small_image': self.get_image((100, 100)),
-            'reasons': [str(self.reason1.pk)],
+            'reasons': [self.reason1.pk],
         }
         url = reverse('api:product-create-present')
         response = self.client.post(url, data=data, format='multipart')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        print(response.data)
         self.assertTrue('small_image' in response.data)
         self.assertTrue('big_image' in response.data)
         self.assertTrue('categories' in response.data)
+
+    def test_create_bouquet_valid(self):
+        self.client.force_login(user=self.user)
+        data = {
+            'title': 'Лучший Букет из пион',
+            'discount': 5,
+            'small_image': self.get_small_image(),
+            'big_image': self.get_big_image(),
+            'is_active': True,
+            'is_new': True,
+            'is_hit': True,
+            'categories': [self.category2.pk],
+            'reasons': [self.reason1.pk],
+            'color': self.reason1.pk,
+        }
+        url = reverse('api:product-create-bouquet')
+        response = self.client.post(url, data=data, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        product = Product.objects.filter(title=data['title']).first()
+        self.assertFalse(product.is_active)
+        self.assertEqual(product.type, Product.Type.BOUQUET)
+
+
+# 'bouquets': [
+#                 {
+#                     'size': Bouquet.Size.SM.value,
+#                     'flowers': [
+#                         {
+#                             'count': 5,
+#                             'flower': self.flower1.pk
+#                         }
+#                     ],
+#                 },
+#                 {
+#                     'size': Bouquet.Size.MD.value,
+#                     'flowers': [
+#                         {
+#                             'count': 10,
+#                             'flower': self.flower2.pk
+#                         }
+#                     ],
+#                 },
+#             ]

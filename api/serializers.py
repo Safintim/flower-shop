@@ -55,6 +55,28 @@ class ReviewSerializer(ModelSerializer):
         fields = ('id', 'phone', 'name', 'city', 'image', 'social_link', 'text')
 
 
+class BouquetFlowerSerializer(ModelSerializer):
+    class Meta:
+        model = BouquetFlower
+        fields = ('count', 'flower')
+
+
+class BouquetSerializer(ModelSerializer):
+    flowers = BouquetFlowerSerializer(source='flowers_set', many=True, read_only=True)
+
+    class Meta:
+        model = Bouquet
+        fields = ('id', 'size', 'price', 'flowers')
+
+
+class BouquetCreateSerializer(ModelSerializer):
+    flowers = BouquetFlowerSerializer(source='flowers_set', many=True)
+
+    class Meta:
+        model = Bouquet
+        fields = ('size', 'flowers')
+
+
 class ProductSerializer(HyperlinkedModelSerializer):
     detail = serializers.HyperlinkedIdentityField(view_name='product-detail', read_only=True, lookup_field='slug')
 
@@ -73,10 +95,25 @@ class ProductSerializer(HyperlinkedModelSerializer):
         )
 
 
-class ProductPresentCreateSerializer(ModelSerializer):
+class ProductValidateImageMixin:
     SMALL_RESOLUTION = (372, 372)
     BIG_RESOLUTION = (640, 640)
 
+    def validate_image(self, image, sizes):
+        image_obj = Image.open(image)
+        width, height = sizes
+        if image_obj.width != width or image_obj.height != height:
+            raise serializers.ValidationError(f'Размер должен быть {width}x{height}', code='required')
+        return image
+
+    def validate_small_image(self, image):
+        return self.validate_image(image, self.SMALL_RESOLUTION)
+
+    def validate_big_image(self, image):
+        return self.validate_image(image, self.BIG_RESOLUTION)
+
+
+class ProductPresentCreateSerializer(ProductValidateImageMixin, ModelSerializer):
     class Meta:
         model = Product
         fields = (
@@ -97,32 +134,27 @@ class ProductPresentCreateSerializer(ModelSerializer):
         obj.categories.add(Category.objects.filter(title='Подарки').first())
         return obj
 
-    def validate_image(self, image, sizes):
-        image_obj = Image.open(image)
-        width, height = sizes
-        if image_obj.width != width or image_obj.height != height:
-            raise serializers.ValidationError(f'Размер должен быть {width}x{height}', code='required')
-        return image
 
-    def validate_small_image(self, image):
-        return self.validate_image(image, self.SMALL_RESOLUTION)
-
-    def validate_big_image(self, image):
-        return self.validate_image(image, self.BIG_RESOLUTION)
-
-
-class BouquetFlowerSerializer(ModelSerializer):
+class ProductBouquetCreateSerializer(ProductValidateImageMixin, ModelSerializer):
     class Meta:
-        model = BouquetFlower
-        fields = ('count', 'flower')
+        model = Product
+        fields = (
+            'title',
+            'price',
+            'discount',
+            'is_active',
+            'is_hit',
+            'is_new',
+            'small_image',
+            'big_image',
+            'categories',
+            'reasons',
+            'color',
+        )
 
-
-class BouquetSerializer(ModelSerializer):
-    flowers = BouquetFlowerSerializer(source='flowers_set', many=True, read_only=True)
-
-    class Meta:
-        model = Bouquet
-        fields = ('id', 'size', 'price', 'flowers')
+    def create(self, validated_data):
+        validated_data['is_active'] = False
+        return super().create(validated_data)
 
 
 class CartProductSerializer(ModelSerializer):
