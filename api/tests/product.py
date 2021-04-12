@@ -300,3 +300,28 @@ class ProductTests(APITestCase):
         response = self.client.post(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertTrue('MIDDLE' in response.data)
+
+    def test_add_bouquets_with_exists(self):
+        self.client.force_login(user=self.user)
+        product = Product.objects.create(
+            type=Product.Type.BOUQUET,
+            title='Лучший Букет из пион',
+        )
+
+        product.bouquets.add(self.bouquet1)
+
+        data = {
+            'MIDDLE': {
+                'flowers': [
+                    {
+                        'count': 10,
+                        'flower': self.flower2.pk
+                    }
+                ]
+            },
+        }
+
+        url = reverse('api:product-add-bouquets', args=[product.pk])
+        response = self.client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTrue('MIDDLE' in response.data)

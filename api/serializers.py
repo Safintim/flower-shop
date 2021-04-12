@@ -173,6 +173,9 @@ class AddBouquetsSerializer(Serializer):
     def create(self, validated_data):
         product = self.context.get('product')
         for size, flowers in validated_data.items():
+            if product.bouquets.filter(size=size).exists():
+                raise serializers.ValidationError({size: 'bouquet with this size already exists'})
+
             bouquet = Bouquet.objects.create(size=size)
             BouquetFlower.objects.bulk_create(
                 [BouquetFlower(bouquet=bouquet, **flower) for flower in flowers.get('flowers_set')]
