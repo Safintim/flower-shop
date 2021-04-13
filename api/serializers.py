@@ -65,7 +65,7 @@ class BouquetFlowerSerializer(ModelSerializer):
 
 
 class BouquetSerializer(ModelSerializer):
-    flowers = BouquetFlowerSerializer(source='flowers_set', many=True, read_only=True)
+    flowers = BouquetFlowerSerializer(source='bouquetflower_set', many=True, read_only=True)
 
     class Meta:
         model = Bouquet
@@ -90,9 +90,23 @@ class ProductSerializer(HyperlinkedModelSerializer):
         )
 
 
-class ProductValidateImageMixin:
+class ProductCreateBase(ModelSerializer):
     SMALL_RESOLUTION = (372, 372)
     BIG_RESOLUTION = (640, 640)
+
+    class Meta:
+        model = Product
+        fields = (
+            'title',
+            'discount',
+            'is_active',
+            'is_hit',
+            'is_new',
+            'small_image',
+            'big_image',
+            'categories',
+            'reasons',
+        )
 
     def validate_image(self, image, sizes):
         image_obj = Image.open(image)
@@ -108,44 +122,20 @@ class ProductValidateImageMixin:
         return self.validate_image(image, self.BIG_RESOLUTION)
 
 
-class ProductPresentCreateSerializer(ProductValidateImageMixin, ModelSerializer):
-    class Meta:
-        model = Product
-        fields = (
-            'title',
-            'price',
-            'discount',
-            'is_active',
-            'is_hit',
-            'is_new',
-            'small_image',
-            'big_image',
-            'categories',
-            'reasons',
-        )
+class ProductPresentCreateSerializer(ProductCreateBase):
+    class Meta(ProductCreateBase.Meta):
+        fields = ProductCreateBase.Meta.fields + ('price',)
 
     def create(self, validated_data):
-        obj = super().create(validated_data)
-        obj.categories.add(Category.objects.filter(title='Подарки').first())
-        return obj
+        product = super().create(validated_data)
+        product.categories.add(Category.objects.filter(title='Подарки').first())
+        return product
 
 
-class ProductBouquetCreateSerializer(ProductValidateImageMixin, ModelSerializer):
+class ProductBouquetCreateSerializer(ProductCreateBase):
     class Meta:
         model = Product
-        fields = (
-            'title',
-            'price',
-            'discount',
-            'is_active',
-            'is_hit',
-            'is_new',
-            'small_image',
-            'big_image',
-            'categories',
-            'reasons',
-            'color',
-        )
+        fields = ProductCreateBase.Meta.fields + ('color',)
 
     def create(self, validated_data):
         product = super().create(validated_data)

@@ -1,4 +1,4 @@
-from rest_framework import status, permissions, exceptions
+from rest_framework import status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.mixins import ListModelMixin
