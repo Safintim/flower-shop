@@ -254,13 +254,14 @@ class ProductTests(APITestCase):
         return Product.objects.create(
             type=Product.Type.BOUQUET,
             title='Лучший Букет из пион',
+            is_active=True
         )
 
     def test_add_bouquets_not_valid(self):
         self.client.force_login(user=self.user)
         product = self.get_product()
         data = {}
-        url = reverse('api:product-add-bouquets', args=[product.pk])
+        url = reverse('api:product-bouquets', args=[product.pk])
         response = self.client.post(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertListEqual(['SMALL', 'MIDDLE', 'BIG'], list(response.data.keys()))
@@ -276,7 +277,7 @@ class ProductTests(APITestCase):
             'MIDDLE': [],
             'BIG': [],
         }
-        url = reverse('api:product-add-bouquets', args=[product.pk])
+        url = reverse('api:product-bouquets', args=[product.pk])
         response = self.client.post(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIsNone(product.get_small_bouquet())
@@ -300,7 +301,7 @@ class ProductTests(APITestCase):
             'MIDDLE': [],
             'BIG': [],
         }
-        url = reverse('api:product-add-bouquets', args=[product.pk])
+        url = reverse('api:product-bouquets', args=[product.pk])
         response = self.client.post(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         bouquet_flower = product.get_small_bouquet().bouquetflower_set.first()
@@ -326,7 +327,7 @@ class ProductTests(APITestCase):
         self.assertEqual(sm, bouquet)
         self.assertEqual(sm_bouquet_flower.count, bouquet_flower.count)
 
-        url = reverse('api:product-add-bouquets', args=[product.pk])
+        url = reverse('api:product-bouquets', args=[product.pk])
         response = self.client.post(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIsNone(product.get_small_bouquet())
@@ -365,7 +366,7 @@ class ProductTests(APITestCase):
         }
         self.assertEqual(bouquet.bouquetflower_set.count(), 2)
 
-        url = reverse('api:product-add-bouquets', args=[product.pk])
+        url = reverse('api:product-bouquets', args=[product.pk])
         response = self.client.post(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 

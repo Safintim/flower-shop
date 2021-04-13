@@ -1,4 +1,4 @@
-from rest_framework import status, permissions
+from rest_framework import status, permissions, exceptions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.mixins import ListModelMixin
@@ -180,12 +180,12 @@ class ProductViewSet(ListModelMixin, BaseGenericViewSet):
         'list': serializer_class,
         'create_present': ProductPresentCreateSerializer,
         'create_bouquet': ProductBouquetCreateSerializer,
-        'add_bouquets': AddBouquetsSerializer
+        'bouquets': AddBouquetsSerializer
     }
     permission_classes_by_action = {
         'create_present': (permissions.IsAdminUser,),
         'create_bouquet': (permissions.IsAdminUser,),
-        'add_bouquets': (permissions.IsAdminUser,),
+        'bouquets': (permissions.IsAdminUser,),
     }
 
     def get_queryset(self):
@@ -205,8 +205,8 @@ class ProductViewSet(ListModelMixin, BaseGenericViewSet):
         serializer.save(type=Product.Type.BOUQUET)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @action(detail=True, methods=['post'], url_name='add-bouquets')
-    def add_bouquets(self, request, **kwargs):
+    @action(detail=True, methods=['post'])
+    def bouquets(self, request, **kwargs):
         product = self.get_object()
         serializer = self.validate_serializer(request, product=product)
         serializer.save()
