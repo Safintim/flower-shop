@@ -22,6 +22,7 @@ class ProductTests(APITestCase):
         self.flower1 = Flower.objects.create(title='Пион', price=80, is_active=True, is_add_filter=True)
         self.flower2 = Flower.objects.create(title='Лилия', price=100, is_active=True, is_add_filter=True)
         self.flower3 = Flower.objects.create(title='Одуванчик', price=50, is_active=True, is_add_filter=True)
+        self.flower4 = Flower.objects.create(title='Кактус', price=50, is_active=True, is_add_filter=True)
 
         self.bouquet1 = Bouquet.objects.create(size=Bouquet.Size.MD)
         self.bouquet2 = Bouquet.objects.create(size=Bouquet.Size.MD)
@@ -249,79 +250,130 @@ class ProductTests(APITestCase):
         self.assertFalse(product.is_active)
         self.assertEqual(product.type, Product.Type.BOUQUET)
 
-    def test_add_bouquets_valid(self):
-        self.client.force_login(user=self.user)
-        product = Product.objects.create(
+    def get_product(self):
+        return Product.objects.create(
             type=Product.Type.BOUQUET,
             title='Лучший Букет из пион',
         )
 
+    def test_add_bouquets_not_valid(self):
+        self.client.force_login(user=self.user)
+        product = self.get_product()
+        data = {}
+        url = reverse('api:product-add-bouquets', args=[product.pk])
+        response = self.client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertListEqual(['SMALL', 'MIDDLE', 'BIG'], list(response.data.keys()))
+
+    def test_add_bouquets_not_exists_size_and_empty_flowers(self):
+        '''
+            Если букет с таким размером не существует и список пуст, то игнорирование
+        '''
+        self.client.force_login(user=self.user)
+        product = self.get_product()
         data = {
-            'SMALL': {
-                'flowers': [
-                    {
-                        'count': 5,
-                        'flower': self.flower1.pk
-                    }
-                ]
-            },
-            'MIDDLE': {
-                'flowers': [
-                    {
-                        'count': 10,
-                        'flower': self.flower2.pk
-                    }
-                ]
-            },
+            'SMALL': [],
+            'MIDDLE': [],
+            'BIG': [],
         }
+        url = reverse('api:product-add-bouquets', args=[product.pk])
+        response = self.client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertIsNone(product.get_small_bouquet())
+        self.assertIsNone(product.get_middle_bouquet())
+        self.assertIsNone(product.get_big_bouquet())
+
+    def test_add_bouquets_create(self):
+        '''
+            Если букет с таким размером не существует и список НЕ пуст,
+            создаст букет с данным размером и данными цветами
+        '''
+        self.client.force_login(user=self.user)
+        product = self.get_product()
+        data = {
+            'SMALL': [
+                {
+                    'count': 10,
+                    'flower': self.flower2.pk
+                }
+            ],
+            'MIDDLE': [],
+            'BIG': [],
+        }
+        url = reverse('api:product-add-bouquets', args=[product.pk])
+        response = self.client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        bouquet_flower = product.get_small_bouquet().bouquetflower_set.first()
+        self.assertEqual(bouquet_flower.count, data['SMALL'][0]['count'])
+        self.assertEqual(bouquet_flower.flower.pk, data['SMALL'][0]['flower'])
+
+    def test_add_bouquets_delete(self):
+        '''
+            Если букет с таким размером существует и список пуст, удалит данный букет со всеми цветами
+        '''
+        self.client.force_login(user=self.user)
+        product = self.get_product()
+        bouquet = Bouquet.objects.create(size=Bouquet.Size.SM)
+        bouquet_flower = BouquetFlower.objects.create(bouquet=bouquet, count=5, flower=self.flower2)
+        product.bouquets.add(bouquet)
+        data = {
+            'SMALL': [],
+            'MIDDLE': [],
+            'BIG': [],
+        }
+        sm = product.get_small_bouquet()
+        sm_bouquet_flower = sm.bouquetflower_set.first()
+        self.assertEqual(sm, bouquet)
+        self.assertEqual(sm_bouquet_flower.count, bouquet_flower.count)
 
         url = reverse('api:product-add-bouquets', args=[product.pk])
         response = self.client.post(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data, ProductSerializer(product, context=self.get_context(url)).data)
-        self.assertEqual(product.bouquets.count(), 2)
-        self.assertEqual(product.get_small_bouquet().flowers.first(), self.flower1)
-        self.assertEqual(product.get_middle_bouquet().flowers.first(), self.flower2)
+        self.assertIsNone(product.get_small_bouquet())
+        self.assertEqual(product.bouquets.count(), 0)
+        self.assertFalse(BouquetFlower.objects.filter(pk=bouquet_flower.pk).exists())
 
-    def test_add_bouquets_with_empty_flowers_not_valid(self):
+    def test_add_bouquets_change(self):
+        '''
+            Если букет с таким размером существует и список не пуст, объекты без id создать,
+            объекты с id обновить, существующие и неуказанные объекты с id удалить
+        '''
         self.client.force_login(user=self.user)
-        product = Product.objects.create(
-            type=Product.Type.BOUQUET,
-            title='Лучший Букет из пион',
-        )
-
+        product = self.get_product()
+        bouquet = Bouquet.objects.create(size=Bouquet.Size.SM)
+        bouquet_flower1 = BouquetFlower.objects.create(bouquet=bouquet, count=5, flower=self.flower1)
+        bouquet_flower2 = BouquetFlower.objects.create(bouquet=bouquet, count=10, flower=self.flower2)
+        product.bouquets.add(bouquet)
         data = {
-            'MIDDLE': {
-                'flowers': []
-            },
+            'SMALL': [
+                {
+                  'id': bouquet_flower1.pk,
+                  'count': 15,
+                  'flower': bouquet_flower1.flower.pk
+                },
+                {
+                    'count': 20,
+                    'flower': self.flower3.pk
+                },
+                {
+                    'count': 1,
+                    'flower': self.flower4.pk
+                },
+            ],
+            'MIDDLE': [],
+            'BIG': [],
         }
+        self.assertEqual(bouquet.bouquetflower_set.count(), 2)
 
         url = reverse('api:product-add-bouquets', args=[product.pk])
         response = self.client.post(url, data=data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertTrue('MIDDLE' in response.data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    def test_add_bouquets_with_exists(self):
-        self.client.force_login(user=self.user)
-        product = Product.objects.create(
-            type=Product.Type.BOUQUET,
-            title='Лучший Букет из пион',
-        )
-
-        product.bouquets.add(self.bouquet1)
-
-        data = {
-            'MIDDLE': {
-                'flowers': [
-                    {
-                        'count': 10,
-                        'flower': self.flower2.pk
-                    }
-                ]
-            },
-        }
-
-        url = reverse('api:product-add-bouquets', args=[product.pk])
-        response = self.client.post(url, data=data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertTrue('MIDDLE' in response.data)
+        sm = product.get_small_bouquet()
+        bouquet_flowers = sm.bouquetflower_set.all()
+        self.assertEqual(product.bouquets.count(), 1)
+        self.assertEqual(bouquet_flowers.count(), 3)
+        self.assertTrue(bouquet_flowers.filter(pk=bouquet_flower1.pk, count=data['SMALL'][0]['count']).exists())
+        self.assertTrue(bouquet_flowers.filter(flower=self.flower3, count=20).exists())
+        self.assertTrue(bouquet_flowers.filter(flower=self.flower4, count=1).exists())
+        self.assertFalse(bouquet_flowers.filter(pk=bouquet_flower2.pk).exists())

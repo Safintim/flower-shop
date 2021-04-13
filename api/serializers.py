@@ -1,3 +1,4 @@
+import copy
 from PIL import Image
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer, Serializer, HyperlinkedModelSerializer
@@ -56,9 +57,11 @@ class ReviewSerializer(ModelSerializer):
 
 
 class BouquetFlowerSerializer(ModelSerializer):
+    id = serializers.IntegerField(source='pk', required=False)
+
     class Meta:
         model = BouquetFlower
-        fields = ('count', 'flower')
+        fields = ('id', 'count', 'flower')
 
 
 class BouquetSerializer(ModelSerializer):
@@ -67,19 +70,6 @@ class BouquetSerializer(ModelSerializer):
     class Meta:
         model = Bouquet
         fields = ('id', 'size', 'price', 'flowers')
-
-
-class BouquetCreateSerializer(ModelSerializer):
-    flowers = BouquetFlowerSerializer(source='flowers_set', many=True, required=True)
-
-    class Meta:
-        model = Bouquet
-        fields = ('flowers',)
-
-    def validate_flowers(self, value):
-        if not value:
-            raise serializers.ValidationError('cannot be empty')
-        return value
 
 
 class ProductSerializer(HyperlinkedModelSerializer):
@@ -166,32 +156,58 @@ class ProductBouquetCreateSerializer(ProductValidateImageMixin, ModelSerializer)
 
 
 class AddBouquetsSerializer(Serializer):
-    SMALL = BouquetCreateSerializer(required=False)
-    MIDDLE = BouquetCreateSerializer(required=False)
-    BIG = BouquetCreateSerializer(required=False)
+    SMALL = BouquetFlowerSerializer(many=True)
+    MIDDLE = BouquetFlowerSerializer(many=True)
+    BIG = BouquetFlowerSerializer(many=True)
+
+    def create_bouquet_flowers(self, bouquet, flowers):
+        qs = BouquetFlower.objects.filter(bouquet=bouquet)
+        all_pks = list(qs.values_list('pk', flat=True))
+        BouquetFlower.objects.bulk_create(
+            [BouquetFlower(bouquet=bouquet, **flower) for flower in flowers]
+        )
+        return qs.exclude(pk__in=all_pks).values_list('pk', flat=True)
+
+    def update_bouquet_flowers(self, bouquet, flowers):
+        qs = BouquetFlower.objects.filter(bouquet=bouquet)
+        flowers = copy.deepcopy(flowers)
+        for flower in flowers:
+            pk = flower.pop('pk')
+            qs.filter(pk=pk).update(**flower)
+
+    def delete_bouquet_flowers(self, bouquet, exclude_ids):
+        BouquetFlower.objects.filter(bouquet=bouquet).exclude(id__in=exclude_ids).delete()
+
+    def create_bouquet(self, product, size, flowers):
+        bouquet = Bouquet.objects.create(size=size)
+        self.create_bouquet_flowers(bouquet, flowers)
+        product.bouquets.add(bouquet)
+
+    def change_bouquet(self, bouquet, flowers):
+        created_ids = self.create_bouquet_flowers(
+            bouquet, filter(lambda flower: 'pk' not in flower, flowers)
+        )
+        self.update_bouquet_flowers(bouquet, filter(lambda flower: 'pk' in flower, flowers))
+        updated_ids = list(map(lambda f: f['pk'], filter(lambda flower: 'pk' in flower, flowers)))
+        exclude_flower_ids = list(created_ids) + updated_ids
+        self.delete_bouquet_flowers(bouquet, exclude_flower_ids)
+
+    def delete_bouquet(self, bouquet):
+        bouquet.bouquetflower_set.all().delete()
+        bouquet.delete()
 
     def create(self, validated_data):
         product = self.context.get('product')
         for size, flowers in validated_data.items():
-            if product.bouquets.filter(size=size).exists():
-                raise serializers.ValidationError({size: 'bouquet with this size already exists'})
+            bouquet = product.get_bouquet_by_size(size)
+            if not bouquet and flowers:
+                self.create_bouquet(product, size, flowers)
+            elif bouquet and not flowers:
+                self.delete_bouquet(bouquet)
+            elif bouquet and flowers:
+                self.change_bouquet(bouquet, flowers)
 
-            bouquet = Bouquet.objects.create(size=size)
-            BouquetFlower.objects.bulk_create(
-                [BouquetFlower(bouquet=bouquet, **flower) for flower in flowers.get('flowers_set')]
-            )
-            product.bouquets.add(bouquet)
         return product
-
-    # def update(self, product, validated_data):
-    #     for size, flowers in validated_data.items():
-    #         bouquet = product.get_bouquet_by_size(size)
-    #         BouquetFlower.objects.bulk_create(
-    #             [BouquetFlower(bouquet=bouquet, **flower) for flower in flowers.get('flowers_set')]
-    #         )
-    #         product.bouquets.add(bouquet)
-    #     return product
-
 
     def to_representation(self, instance):
         return ProductSerializer(instance, context=self.context).data

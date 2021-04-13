@@ -1,4 +1,4 @@
-from rest_framework import status, permissions, exceptions
+from rest_framework import status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.mixins import ListModelMixin
@@ -185,6 +185,7 @@ class ProductViewSet(ListModelMixin, BaseGenericViewSet):
     permission_classes_by_action = {
         'create_present': (permissions.IsAdminUser,),
         'create_bouquet': (permissions.IsAdminUser,),
+        'add_bouquets': (permissions.IsAdminUser,),
     }
 
     def get_queryset(self):

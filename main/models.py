@@ -132,13 +132,13 @@ class Product(SlugifyMixin, CreationModificationModel, CommonFields):
         return self.bouquets.order_by('price').first()
 
     def get_small_bouquet(self):
-        return self.bouquets.filter(size=Bouquet.Size.SM).first()
+        return self.get_bouquet_by_size(Bouquet.Size.SM)
 
     def get_middle_bouquet(self):
-        return self.bouquets.filter(size=Bouquet.Size.MD).first()
+        return self.get_bouquet_by_size(Bouquet.Size.MD)
 
     def get_big_bouquet(self):
-        return self.bouquets.filter(size=Bouquet.Size.BG).first()
+        return self.get_bouquet_by_size(Bouquet.Size.BG)
 
     def get_bouquet_by_size(self, size):
         return self.bouquets.filter(size=size).first()
