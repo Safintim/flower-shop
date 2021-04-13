@@ -53,9 +53,7 @@ urlpatterns = [
     path('products/present/create/', views.ProductPresentCreateView.as_view(), name='product-present-create'),
     path('products/bouquet/create/', views.ProductBouquetCreateView.as_view(), name='product-bouquet-create'),
 
-    # path('products/<int:pk>/delete/', views.FlowerDeleteView.as_view(), name='product-delete'),
-    # path('products/bouquet/<int:pk>/small/create/', views.BouquetSmallCreateView.as_view(), name='bouquet-small-create'),
-    # path('products/bouquet/<int:pk>/small/update/', views.BouquetSmallUpdateView.as_view(), name='bouquet-small-update'),
+    path('products/<int:pk>/delete/', views.FlowerDeleteView.as_view(), name='product-delete'),
 
     path('', views.IndexTemplateView.as_view(), name='index'),
 ]

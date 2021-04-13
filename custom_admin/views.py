@@ -204,6 +204,7 @@ class ProductListView(FilteredSingleTableView):
     table_class = ProductTable
     filterset_class = ProductFilter
     form_helper_class = ProductFilterFormHelper
+    show_button_create = False
     extra_context = {
         'present_create_view_name': 'custom_admin:product-present-create',
         'bouquet_create_view_name': 'custom_admin:product-bouquet-create'
@@ -228,6 +229,7 @@ class ProductPresentUpdateView(PresentUpdateCreate, generic.UpdateView):
 
 
 class BouquetUpdateCreate(BaseTemplateResponseMixin):
+    template_name_suffix = 'edit'
     model = Product
     form_class = ProductBouquetForm
 
@@ -236,71 +238,8 @@ class BouquetUpdateCreate(BaseTemplateResponseMixin):
 
 
 class ProductBouquetCreateView(BouquetUpdateCreate, generic.CreateView):
-    template_name_suffix = 'edit'
+    pass
 
 
 class ProductBouquetUpdateView(BouquetUpdateCreate, generic.UpdateView):
-    template_name_suffix = 'bouquet_edit'
-
-
-# TODO удалить все ниже
-class BouquetSmallCreateView(BaseTemplateResponseMixin, generic.FormView):
-    template_name_suffix = 'bouquet_size_edit'
-    form_class = BouquetFlowerFormSet
-
-    def get_context_data(self, **kwargs):
-        kwargs['title'] = 'Создать букет (маленький)'
-        kwargs['action'] = reverse('custom_admin:bouquet-small-create', kwargs={'pk': self.kwargs['pk']})
-        kwargs['formset'] = kwargs.get('form') or self.get_form()
-        return super().get_context_data(**kwargs)
-
-    def post(self, request, *args, **kwargs):
-        self.product = get_object_or_404(Product, pk=self.kwargs['pk'])
-        if self.product.bouquets.filter(size=Bouquet.Size.SM).exists():
-            return redirect('custom_admin:product-bouquet-update', kwargs={'pk': self.product.pk})
-
-        bouquet = Bouquet.objects.create(size=Bouquet.Size.SM)
-        formset = self.form_class(instance=bouquet, **self.get_form_kwargs())
-        if formset.is_valid():
-            return self.form_valid(formset)
-        else:
-            return self.form_invalid(formset)
-
-    def form_valid(self, formset):
-        formset.save()
-        self.product.bouquets.add(formset.instance)
-        return redirect('custom_admin:product-bouquet-update', kwargs={'pk': self.product.pk})
-
-
-class BouquetSmallUpdateView(BaseTemplateResponseMixin, generic.FormView):
-    template_name_suffix = 'bouquet_size_edit'
-    form_class = BouquetFlowerFormSet
-    model = BouquetFlower
-
-    def get_context_data(self, **kwargs):
-        kwargs['formset'] = kwargs.get('form') or self.get_form()
-        return super().get_context_data(**kwargs)
-
-    def get_object(self, queryset=None):
-        self.product = get_object_or_404(Product, pk=self.kwargs['pk'])
-        bouquet = self.product.bouquets.filter(size=Bouquet.Size.SM).first()
-        return bouquet
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        return super().get(request, *args, **kwargs)
-
-    def get_form(self, form_class=None):
-        return self.form_class(**self.get_form_kwargs(), instance=self.object)
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        return super().post(request, *args, **kwargs)
-
-    def form_valid(self, formset):
-        formset.save()
-        self.product.bouquets.add(formset.instance)
-        return super().form_valid(formset)
-
-    def get_success_url(self):
-        return reverse('custom_admin:product-bouquet-update', kwargs={'pk': self.product.pk})
+    pass
