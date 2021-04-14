@@ -1,0 +1,67 @@
+<div id="app" class="mt-5">
+
+    <div class="row text-center justify-content-center">
+        <div class="col-3 mr-2">
+            {% include 'custom_admin/bouquet_small.html' %}
+        </div>
+        <div class="col-3 mr-2">
+            {% include 'custom_admin/bouquet_middle.html' %}
+        </div>
+        <div class="col-3">
+            {% include 'custom_admin/bouquet_big.html' %}
+        </div>
+    </div>
+</div>
+
+{{ flowers|json_script:'flowers' }}
+<script>
+
+    const flowers = JSON.parse(document.getElementById('flowers').textContent);
+    var app = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#app',
+        data: {
+            message: 'Bouquets',
+            flowers: flowers,
+            SMALL: [
+                {
+                    id: '',
+                    count: 10,
+                    flower: 1
+                }
+            ],
+            MIDDLE: [],
+            BIG: [],
+        },
+        methods: {
+            addNewBouquetFlower: function(bouquet) {
+                bouquet.push({
+                    count: '',
+                    flower: ''
+                });
+            },
+            deleteBouquetFlower: function(bouquet, index) {
+                bouquet.splice(index, 1)
+            },
+            addNewBouquetFlowerToSMALL: function () {
+                this.addNewBouquetFlower(this.SMALL)
+            },
+            deleteBouquetFlowerFromSMALL: function (index) {
+                this.deleteBouquetFlower(this.SMALL, index)
+            },
+            addNewBouquetFlowerToMIDDLE: function () {
+                this.addNewBouquetFlower(this.MIDDLE)
+            },
+            deleteBouquetFlowerFromMIDDLE: function (index) {
+                this.deleteBouquetFlower(this.MIDDLE, index)
+            },
+            addNewBouquetFlowerToBIG: function () {
+                this.addNewBouquetFlower(this.BIG)
+            },
+            deleteBouquetFlowerFromBIG: function (index) {
+                this.deleteBouquetFlower(this.BIG, index)
+            },
+        }
+    })
+
+</script>

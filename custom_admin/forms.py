@@ -1,9 +1,8 @@
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, HTML, Row, Fieldset, Column
 from django import forms
-from django.forms import inlineformset_factory
 
-from main.models import Product, Category, Reason, Bouquet, BouquetFlower, Color
+from main.models import Product, Category, Reason, BouquetFlower, Color
 
 
 def get_link(css_class, action, text):
@@ -11,7 +10,9 @@ def get_link(css_class, action, text):
 
 
 def get_submit(is_update):
-    return '<input type="submit" name="save" value="Сохранить" class="btn btn-primary mr-2" id="submit-id-save">' if is_update else ''
+    if is_update:
+        return '<input type="submit" name="save" value="Сохранить" class="btn btn-primary mr-2" id="submit-id-save">'
+    return ''
 
 
 class CreateUpdateFormHelper(FormHelper):
@@ -181,25 +182,3 @@ class BouquetFlowerForm(forms.ModelForm):
             ),
         )
         return helper
-
-
-# TODO удалить все ниже
-BouquetFlowerFormSet = inlineformset_factory(
-    Bouquet,
-    BouquetFlower,
-    form=BouquetFlowerForm,
-    extra=0,
-    can_delete=True,
-    min_num=1,
-    validate_min=True,
-)
-
-BouquetFlowerMiddleFormSet = inlineformset_factory(
-    Bouquet,
-    BouquetFlower,
-    form=BouquetFlowerForm,
-    extra=0,
-    can_delete=True,
-    min_num=1,
-    validate_min=True,
-)

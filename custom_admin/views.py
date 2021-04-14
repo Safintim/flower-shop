@@ -1,19 +1,45 @@
 from django.contrib.auth import get_user_model
-from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 from django.views import generic
 
+from api.serializers import FlowerSerializer
 from cart.models import Cart
 from core.models import Callback, Configuration
 from custom_admin.filter_helpers import ProductFilterFormHelper
-from custom_admin.filters import CategoryFilter, ReasonFilter, ColorFilter, FlowerFilter, ProductFilter, ReviewFilter, \
-    CallbackFilter, UserFilter, CartFilter, OrderFilter
-from custom_admin.forms import ProductPresentForm, ProductBouquetForm, BouquetFlowerFormSet
-from custom_admin.mixins import FilteredSingleTableView, DeleteMixin, BaseTemplateResponseMixin, \
-    DetailMixin, UpdateMixin, CreateMixin
-from custom_admin.tables import CategoryTable, ReasonTable, ColorTable, FlowerTable, ProductTable, ReviewTable, \
-    CallbackTable, UserTable, CartTable, OrderTable
-from main.models import Category, Reason, Color, Flower, Product, Bouquet, BouquetFlower
+from custom_admin.filters import (
+    CategoryFilter,
+    ReasonFilter,
+    ColorFilter,
+    FlowerFilter,
+    ProductFilter,
+    ReviewFilter,
+    CallbackFilter,
+    UserFilter,
+    CartFilter,
+    OrderFilter
+)
+from custom_admin.forms import ProductPresentForm, ProductBouquetForm
+from custom_admin.mixins import (
+    BaseTemplateResponseMixin,
+    CreateMixin,
+    DeleteMixin,
+    DetailMixin,
+    FilteredSingleTableView,
+    UpdateMixin
+)
+from custom_admin.tables import (
+    CategoryTable,
+    ReasonTable,
+    ColorTable,
+    FlowerTable,
+    ProductTable,
+    ReviewTable,
+    CallbackTable,
+    UserTable,
+    CartTable,
+    OrderTable
+)
+from main.models import Category, Reason, Color, Flower, Product
 from orders.models import Order
 from reviews.models import Review
 
@@ -242,4 +268,6 @@ class ProductBouquetCreateView(BouquetUpdateCreate, generic.CreateView):
 
 
 class ProductBouquetUpdateView(BouquetUpdateCreate, generic.UpdateView):
-    pass
+    def get_context_data(self, **kwargs):
+        kwargs['flowers'] = FlowerSerializer(Flower.objects.active(), many=True).data
+        return super().get_context_data(**kwargs)
