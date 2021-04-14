@@ -6,9 +6,9 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from api.filters import ProductFilter
 from api.serializers import (
-    AddBouquetsSerializer,
     AddBouquetToCartSerializer,
     AddPresentToCartSerializer,
+    BouquetsBySizeSerializer,
     CallbackSerializer,
     CartSerializer,
     ColorSerializer,
@@ -180,7 +180,7 @@ class ProductViewSet(ListModelMixin, BaseGenericViewSet):
         'list': serializer_class,
         'create_present': ProductPresentCreateSerializer,
         'create_bouquet': ProductBouquetCreateSerializer,
-        'bouquets': AddBouquetsSerializer
+        'bouquets': BouquetsBySizeSerializer
     }
     permission_classes_by_action = {
         'create_present': (permissions.IsAdminUser,),

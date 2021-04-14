@@ -6,12 +6,12 @@
         </svg>
     </span>
 </h4>
-<div class="form-row mb-3" v-for="(bouquetFlower, index) in MIDDLE">
+<div class="form-row mb-3" v-for="(bouquetFlower, index) in bouquets.MIDDLE">
     <div class="col-4">
-        <input v-model="bouquetFlower.count" type="number" name="count" class="form-control">
+        <input required min=1 v-model="bouquetFlower.count" type="number" name="count" class="form-control">
     </div>
     <div class="col-7">
-        <select v-model="bouquetFlower.flower" class="form-control">
+        <select required v-model="bouquetFlower.flower" class="form-control">
             <option value="" selected="">---------</option>
             <option v-for="flower in flowers" :key="flower.id" :value="flower.id">[[ flower.title ]]</option>
         </select>

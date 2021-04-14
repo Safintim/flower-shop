@@ -145,7 +145,7 @@ class ProductBouquetCreateSerializer(ProductCreateBase):
         return product
 
 
-class AddBouquetsSerializer(Serializer):
+class BouquetsBySizeSerializer(Serializer):
     SMALL = BouquetFlowerSerializer(many=True)
     MIDDLE = BouquetFlowerSerializer(many=True)
     BIG = BouquetFlowerSerializer(many=True)
@@ -200,7 +200,17 @@ class AddBouquetsSerializer(Serializer):
         return product
 
     def to_representation(self, instance):
-        return ProductSerializer(instance, context=self.context).data
+        sm_bouquet = instance.get_small_bouquet()
+        md_bouquet = instance.get_middle_bouquet()
+        bg_bouquet = instance.get_big_bouquet()
+        bouquet_flowers_small = sm_bouquet.bouquetflower_set.all() if sm_bouquet else []
+        bouquet_flowers_middle = md_bouquet.bouquetflower_set.all() if md_bouquet else []
+        bouquet_flowers_big = bg_bouquet.bouquetflower_set.all() if bg_bouquet else []
+        return {
+            'SMALL': BouquetFlowerSerializer(bouquet_flowers_small, many=True).data,
+            'MIDDLE': BouquetFlowerSerializer(bouquet_flowers_middle, many=True).data,
+            'BIG': BouquetFlowerSerializer(bouquet_flowers_big, many=True).data,
+        }
 
 
 class CartProductSerializer(ModelSerializer):

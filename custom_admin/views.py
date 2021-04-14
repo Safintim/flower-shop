@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.views import generic
 
-from api.serializers import FlowerSerializer
+from api.serializers import FlowerSerializer, BouquetsBySizeSerializer
 from cart.models import Cart
 from core.models import Callback, Configuration
 from custom_admin.filter_helpers import ProductFilterFormHelper
@@ -270,4 +270,5 @@ class ProductBouquetCreateView(BouquetUpdateCreate, generic.CreateView):
 class ProductBouquetUpdateView(BouquetUpdateCreate, generic.UpdateView):
     def get_context_data(self, **kwargs):
         kwargs['flowers'] = FlowerSerializer(Flower.objects.active(), many=True).data
+        kwargs['bouquets'] = BouquetsBySizeSerializer(self.object).data
         return super().get_context_data(**kwargs)

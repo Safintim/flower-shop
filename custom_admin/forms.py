@@ -161,24 +161,3 @@ class ProductBouquetForm(ProductForm):
     @property
     def helper(self):
         return BouquetFormHelper()
-
-
-class BouquetFlowerForm(forms.ModelForm):
-    class Meta:
-        model = BouquetFlower
-        exclude = ('id',)
-
-    @property
-    def helper(self):
-        helper = FormHelper()
-        helper.form_tag = False
-        helper.disable_csrf = True
-        helper.layout = Layout(
-            Row(
-                Column('count', css_class='col-2'),
-                Column('flower', css_class='col-8'),
-                Column('DELETE', css_class='col-8'),
-                css_class='justify-content-center'
-            ),
-        )
-        return helper

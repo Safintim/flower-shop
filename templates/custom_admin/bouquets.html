@@ -1,39 +1,55 @@
 <div id="app" class="mt-5">
-
-    <div class="row text-center justify-content-center">
-        <div class="col-3 mr-2">
-            {% include 'custom_admin/bouquet_small.html' %}
+    <form @submit.prevent="saveBouquets" method="post">
+        <div class="row text-center justify-content-center">
+            <div class="col-3 mr-2">
+                {% include 'custom_admin/bouquet_small.html' %}
+            </div>
+            <div class="col-3 mr-2">
+                {% include 'custom_admin/bouquet_middle.html' %}
+            </div>
+            <div class="col-3">
+                {% include 'custom_admin/bouquet_big.html' %}
+            </div>
         </div>
-        <div class="col-3 mr-2">
-            {% include 'custom_admin/bouquet_middle.html' %}
+        <div class="row my-5 text-center">
+            <div class="col">
+                <button type="submit" class="btn btn-primary">Сохранить букеты</button>
+            </div>
         </div>
-        <div class="col-3">
-            {% include 'custom_admin/bouquet_big.html' %}
-        </div>
-    </div>
+    </form>
 </div>
 
+{{ bouquets|json_script:'bouquets' }}
 {{ flowers|json_script:'flowers' }}
 <script>
-
+    axios.defaults.xsrfCookieName = 'csrftoken';
+    axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
     const flowers = JSON.parse(document.getElementById('flowers').textContent);
+    const bouquets = JSON.parse(document.getElementById('bouquets').textContent);
     var app = new Vue({
         delimiters: ['[[', ']]'],
         el: '#app',
         data: {
             message: 'Bouquets',
             flowers: flowers,
-            SMALL: [
-                {
-                    id: '',
-                    count: 10,
-                    flower: 1
-                }
-            ],
-            MIDDLE: [],
-            BIG: [],
+            bouquets: bouquets
         },
         methods: {
+            saveBouquets: function() {
+                console.log(this.bouquets)
+                axios
+                    .post('{% url "api:product-bouquets" object.pk %}', this.bouquets)
+                    .then(response => {
+                        console.log(response)
+                        this.bouquets = response.data
+                    })
+                    .catch(error => {
+                        console.log(error.response.data);
+
+                        this.errored = true;
+                    })
+                    .finally(() => (this.loading = false));
+            },
             addNewBouquetFlower: function(bouquet) {
                 bouquet.push({
                     count: '',
@@ -44,22 +60,22 @@
                 bouquet.splice(index, 1)
             },
             addNewBouquetFlowerToSMALL: function () {
-                this.addNewBouquetFlower(this.SMALL)
+                this.addNewBouquetFlower(this.bouquets.SMALL)
             },
             deleteBouquetFlowerFromSMALL: function (index) {
-                this.deleteBouquetFlower(this.SMALL, index)
+                this.deleteBouquetFlower(this.bouquets.SMALL, index)
             },
             addNewBouquetFlowerToMIDDLE: function () {
-                this.addNewBouquetFlower(this.MIDDLE)
+                this.addNewBouquetFlower(this.bouquets.MIDDLE)
             },
             deleteBouquetFlowerFromMIDDLE: function (index) {
-                this.deleteBouquetFlower(this.MIDDLE, index)
+                this.deleteBouquetFlower(this.bouquets.MIDDLE, index)
             },
             addNewBouquetFlowerToBIG: function () {
-                this.addNewBouquetFlower(this.BIG)
+                this.addNewBouquetFlower(this.bouquets.BIG)
             },
             deleteBouquetFlowerFromBIG: function (index) {
-                this.deleteBouquetFlower(this.BIG, index)
+                this.deleteBouquetFlower(this.bouquets.BIG, index)
             },
         }
     })
